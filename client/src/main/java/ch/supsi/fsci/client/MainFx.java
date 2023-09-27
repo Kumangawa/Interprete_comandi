@@ -1,5 +1,8 @@
 package ch.supsi.fsci.client;
 
+import ch.supsi.fsci.client.controller.CommandLineController;
+import ch.supsi.fsci.client.model.CommandLineModel;
+import ch.supsi.fsci.client.view.CommandLineView;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -70,6 +73,12 @@ public class MainFx extends Application {
 
         // scene
         Scene mainScene = new Scene(borderPane);
+
+        //CommandLine
+        CommandLineView commandLineView = new CommandLineView();
+        CommandLineModel commandLineModel = new CommandLineModel();
+        CommandLineController commandLineController = new CommandLineController(commandTextField, commandLineModel, commandLineView);
+        commandLineController.inizialize();
 
         // put the scene onto the primary stage
         stage.setTitle(applicationTitle);
