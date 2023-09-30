@@ -26,7 +26,7 @@ public class FileSystemModel {
     }
 
     /*
-     *
+     *Questo metodo restituisce la cartella che dovrebbe ottenere tramite il path specificato
      * */
     private DirectoryModel search(final String path){
         //toDo: distinguere se la stringa é un path assoluto(dalla root) => \B\E o relativo (cd E) => E\D\F
