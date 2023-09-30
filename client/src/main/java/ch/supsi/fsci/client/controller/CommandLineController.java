@@ -30,7 +30,7 @@ public class CommandLineController {
             // Clear the text field
             commandLineView.clearText(textField);
 
-            textArea.setText(output);
+            textArea.appendText(output+'\n');
         });
     }
 
