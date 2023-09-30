@@ -3,6 +3,7 @@ package ch.supsi.fsci.client.controller;
 import ch.supsi.fsci.client.model.CommandLineModel;
 import ch.supsi.fsci.client.view.CommandLineView;
 import javafx.event.ActionEvent;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import org.junit.jupiter.api.Test;
 import org.testfx.framework.junit5.ApplicationTest;
@@ -21,9 +22,11 @@ public class CommandLineControllerTest extends ApplicationTest {
         CommandLineModel commandLineModel = mock(CommandLineModel.class);
         CommandLineView commandLineView = mock(CommandLineView.class);
         TextField textField = new TextField("Test Input");
-        CommandLineController commandLineController = new CommandLineController(textField, commandLineModel, commandLineView);
+        TextArea textArea = new TextArea("Test output");
+        CommandLineController commandLineController = new CommandLineController(textField, commandLineModel, commandLineView,
+                textArea);
 
-        commandLineController.inizialize();
+        commandLineController.initialize();
 
         // Simulate the user action of pressing the "Enter" key in the TextField.
         // This should trigger the EventHandler defined in your controller.

@@ -9,53 +9,82 @@ public class FileSystemModel {
     private final DirectoryModel cur;
     private final String separator = FileSystems.getDefault().getSeparator();
 
-    FileSystemModel() {
+    public FileSystemModel() {
         DirectoryModel root = new DirectoryModel(separator);
         this.root = root;
         this.cur = root;
+        add("A");
+        add("B");
     }
 
     /*
      * Questo metodo restituisce true se il path é di tipo assoluto,
      * restituisce false se il path é relativo
      * */
-    public boolean isAbsolutePath(final String path){
+    private boolean isAbsolutePath(final String path){
         return path.startsWith(separator);
     }
 
     /*
      *
      * */
-    public DirectoryModel search(final String path){
+    private DirectoryModel search(final String path){
         //toDo: distinguere se la stringa é un path assoluto(dalla root) => \B\E o relativo (cd E) => E\D\F
         if(isAbsolutePath(path)){//caso path assoluto \B\F
             int counter = 0;
             List<String> orderedPath = (Arrays.stream(path.split(separator + separator)).skip(1).toList());
-            DirectoryModel cur = root;
+            DirectoryModel cur_temp = root;
             while(counter!=orderedPath.size()){
-                for(DirectoryModel dir : cur.getDir()){
+                for(DirectoryModel dir : cur_temp.getDir()){
                     if(dir.getName().equals(orderedPath.get(counter))){
-                        cur = dir;
+                        cur_temp = dir;
                         counter++;
                         break;
                     }
                 }
             }
-            System.out.println("Directory di destinazione: " + cur.getName());
+            System.out.println("Directory di destinazione: " + cur_temp.getName());
+            return cur_temp;
         }
         return cur;
     }
 
-    public void cd(String path){ // /B/E
+    public String cd(String path){ // /B/E
+        return search(path).getName();
+    }
+
+    public void pwd() {
+    }
+
+    public void mkdir(final String path) {
+    }
+
+    public void ls() {
 
     }
 
-    public void add(final String directoryName){
+    public void mv(final String origin, final String destination) {
+
+    }
+
+    public void rm(final String path) {
+
+    }
+
+    public void help() {
+
+    }
+
+    public void clear() {
+
+    }
+
+    private void add(final String directoryName){
         DirectoryModel newDir = new DirectoryModel(directoryName);
         root.getDir().add(newDir);
     }
 
-    public void add(final DirectoryModel dir){
+    private void add(final DirectoryModel dir){
         root.getDir().add(dir);
     }
 
