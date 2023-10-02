@@ -29,7 +29,7 @@ public class CommandLineController {
             commandLineView.clearText(textField);
             // Add the text in the output area
             outputAreaView.addText(output);
-            outputAreaView.clearOutputArea();
+            //outputAreaView.clearOutputArea();
         });
     }
 
