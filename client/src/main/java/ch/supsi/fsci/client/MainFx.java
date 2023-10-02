@@ -4,7 +4,7 @@ import ch.supsi.fsci.client.controller.CommandLineController;
 import ch.supsi.fsci.client.model.CommandLineModel;
 import ch.supsi.fsci.client.view.CommandLineView;
 import ch.supsi.fsci.client.view.OutputAreaView;
-import ch.supsi.fsci.engine.FileSystemModel;
+import ch.supsi.fsci.engine.Model.FileSystemModel;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;

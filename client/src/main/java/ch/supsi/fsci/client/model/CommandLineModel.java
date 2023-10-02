@@ -1,6 +1,8 @@
 package ch.supsi.fsci.client.model;
 
-import ch.supsi.fsci.engine.FileSystemModel;
+
+
+import ch.supsi.fsci.engine.Model.FileSystemModel;
 
 import java.lang.reflect.Method;
 
