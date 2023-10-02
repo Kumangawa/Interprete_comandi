@@ -1,7 +1,8 @@
-package ch.supsi.fsci.engine;
+package ch.supsi.fsci.engine.Model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 class DirectoryModel {
     private final String name;
@@ -23,5 +24,18 @@ class DirectoryModel {
 
     public List<DirectoryModel> getDir() {
         return dir;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        DirectoryModel that = (DirectoryModel) o;
+        return Objects.equals(name, that.name) && Objects.equals(dir, that.dir);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, dir);
     }
 }
