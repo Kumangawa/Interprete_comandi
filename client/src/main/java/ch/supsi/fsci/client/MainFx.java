@@ -3,6 +3,7 @@ package ch.supsi.fsci.client;
 import ch.supsi.fsci.client.controller.CommandLineController;
 import ch.supsi.fsci.client.model.CommandLineModel;
 import ch.supsi.fsci.client.view.CommandLineView;
+import ch.supsi.fsci.client.view.OutputAreaView;
 import ch.supsi.fsci.engine.FileSystemModel;
 import javafx.application.Application;
 import javafx.geometry.Insets;
@@ -75,11 +76,14 @@ public class MainFx extends Application {
         // scene
         Scene mainScene = new Scene(borderPane);
 
+        //OutputArea
+        OutputAreaView outputAreaView = new OutputAreaView(outputArea);
+
         //CommandLine
         CommandLineView commandLineView = new CommandLineView();
         CommandLineModel commandLineModel = new CommandLineModel(new FileSystemModel());
-        CommandLineController commandLineController = new CommandLineController(commandTextField, commandLineModel, commandLineView,
-                outputArea);
+        CommandLineController commandLineController = new CommandLineController(commandTextField, commandLineModel,
+                commandLineView, outputAreaView);
         commandLineController.initialize();
 
         // put the scene onto the primary stage

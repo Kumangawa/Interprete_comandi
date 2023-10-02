@@ -2,8 +2,8 @@ package ch.supsi.fsci.client.controller;
 
 import ch.supsi.fsci.client.model.CommandLineModel;
 import ch.supsi.fsci.client.view.CommandLineView;
+import ch.supsi.fsci.client.view.OutputAreaView;
 import javafx.event.ActionEvent;
-import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import org.junit.jupiter.api.Test;
 import org.testfx.framework.junit5.ApplicationTest;
@@ -18,13 +18,17 @@ public class CommandLineControllerTest extends ApplicationTest {
      */
     @Test
     public void testInitialize() {
-        // Create a mock for CommandLineModel, CommandLineView
-        CommandLineModel commandLineModel = mock(CommandLineModel.class);
+        // Create a mock for OutputAreaView, CommandLineModel, CommandLineView
+        OutputAreaView outputAreaView = mock(OutputAreaView.class);
         CommandLineView commandLineView = mock(CommandLineView.class);
+        CommandLineModel commandLineModel = mock(CommandLineModel.class);
         TextField textField = new TextField("Test Input");
-        TextArea textArea = new TextArea("Test output");
-        CommandLineController commandLineController = new CommandLineController(textField, commandLineModel, commandLineView,
-                textArea);
+
+        // Set up the behavior of the CommandLineModel mock
+        when(commandLineModel.setText(anyString())).thenReturn("Test Output");
+
+        CommandLineController commandLineController = new CommandLineController(textField, commandLineModel,
+                commandLineView, outputAreaView);
 
         commandLineController.initialize();
 
@@ -36,6 +40,8 @@ public class CommandLineControllerTest extends ApplicationTest {
 
         // Verify that the setText and clearText methods were called.
         verify(commandLineModel, atLeastOnce()).setText("Test Input");
-        verify(commandLineView, atLeastOnce()).clearText(any(TextField.class));
+        verify(commandLineView, atLeastOnce()).clearText(textField);
+        // Verify that the addText method of the outputAreaView was called with the expected output
+        verify(outputAreaView, atLeastOnce()).addText("Test Output");
     }
 }

@@ -2,23 +2,21 @@ package ch.supsi.fsci.client.controller;
 
 import ch.supsi.fsci.client.model.CommandLineModelInterface;
 import ch.supsi.fsci.client.view.CommandLineViewInterface;
-import javafx.scene.control.TextArea;
+import ch.supsi.fsci.client.view.OutputAreaViewInterface;
 import javafx.scene.control.TextField;
 
 public class CommandLineController {
     private TextField textField;
     private CommandLineModelInterface commandLineModel;
     private CommandLineViewInterface commandLineView;
-
-    // TODO: Separate this into different controller?
-    private TextArea textArea;
+    private OutputAreaViewInterface outputAreaView;
 
     public CommandLineController(TextField textField, CommandLineModelInterface commandLineModel, CommandLineViewInterface commandLineView,
-                                 TextArea textArea) {
+                                 OutputAreaViewInterface outputAreaView) {
         this.textField = textField;
-        this.textArea = textArea;
         this.commandLineModel = commandLineModel;
         this.commandLineView = commandLineView;
+        this.outputAreaView = outputAreaView;
     }
 
     public void initialize() {
@@ -26,11 +24,12 @@ public class CommandLineController {
         textField.setOnAction(event -> {
             // Get the entered text
             String input = textField.getText();
-            final String output = commandLineModel.setText(input);
+            String output = commandLineModel.setText(input);
             // Clear the text field
             commandLineView.clearText(textField);
-
-            textArea.appendText(output+'\n');
+            // Add the text in the output area
+            outputAreaView.addText(output);
+            outputAreaView.clearOutputArea();
         });
     }
 

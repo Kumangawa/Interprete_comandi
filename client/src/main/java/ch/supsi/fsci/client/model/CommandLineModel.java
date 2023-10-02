@@ -5,12 +5,13 @@ import ch.supsi.fsci.engine.FileSystemModel;
 import java.lang.reflect.Method;
 
 public class CommandLineModel implements CommandLineModelInterface {
-    final FileSystemModel fileSystem;
+    final private FileSystemModel fileSystem;
 
     public CommandLineModel(final FileSystemModel fileSystem) {
         this.fileSystem = fileSystem;
     }
 
+    @Override
     public String setText(String text) {
         // 1. Check if given command is valid.
         text = text.trim();
