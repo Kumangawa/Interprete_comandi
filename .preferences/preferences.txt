@@ -1,0 +1,5 @@
+"language": "en",
+"prefCommandSpacerWidth": 11,
+"commandFieldPrefColumnCount": 80,
+"prefOutputAreaRowCount": 25,
+"prefInsetsSize": 7
