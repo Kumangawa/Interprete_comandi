@@ -6,6 +6,8 @@ import ch.supsi.fsci.client.view.CommandLineView;
 import ch.supsi.fsci.client.view.OutputAreaView;
 import ch.supsi.fsci.engine.CommandDispatcher.CommandExecutionController;
 import ch.supsi.fsci.engine.Model.FileSystemModel;
+import ch.supsi.fsci.engine.Model.Persistence;
+import ch.supsi.fsci.engine.Model.Preference;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -24,6 +26,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Map;
 
 public class MainFx extends Application {
     private final static String separator = File.separator;
@@ -35,28 +38,48 @@ public class MainFx extends Application {
     private TextArea outputArea;
     private int prefOutputAreaRowCount;
     private int prefInsetsSize;
-    private final static String pathToPreferences = System.getProperty("user.dir")
-            + separator +
-            ".preferences" +
-            separator +
-            "preferences.txt";
-    private static final File preferences = new File(pathToPreferences);
 
-    public MainFx() {
-        final HashMap<String, String> preferencesData = preferencesData();
+    public MainFx(){
+        // persistence
+        Persistence persistence = new Persistence();
+        persistence.initializeExplicit();
+        HashMap<String, String> preferencesData = persistence.getPreference();
+
+        /**
+         * TODO: c'è un errore nella lettura del file e non va bene fare
+         *      preferencesData(key), siccome ritorna null,
+         *      motivo sconosciuto, possibile contrasto con la ',' o spazio o endline
+         */
+
+        String[][] preferencesArray = new String[preferencesData.size()][2];
+        int index = 0;
+        for (Map.Entry<String, String> entry : preferencesData.entrySet()) {
+            String key = entry.getKey();
+            String value = entry.getValue();
+
+            preferencesArray[index][0] = key;
+            preferencesArray[index][1] = value;
+
+            index++;
+        }
 
         this.applicationTitle = "command interpreter for fs simulator";
         this.commandLabel = new Label("command");
-        this.prefCommandSpacerWidth = Integer.parseInt(preferencesData.get("prefCommandSpacerWidth"));
+
+        this.prefCommandSpacerWidth = Integer.parseInt(preferencesArray[0][1]);
+        this.commandFieldPrefColumnCount = Integer.parseInt(preferencesArray[2][1]);
+        this.prefOutputAreaRowCount = Integer.parseInt(preferencesArray[3][1]);
+        this.prefInsetsSize = Integer.parseInt(preferencesArray[4][1]);
+
+
         this.commandTextField = new TextField();
-        this.commandFieldPrefColumnCount = Integer.parseInt(preferencesData.get("commandFieldPrefColumnCount"));
         this.outputArea = new TextArea();
-        this.prefOutputAreaRowCount = Integer.parseInt(preferencesData.get("prefOutputAreaRowCount"));
-        this.prefInsetsSize = Integer.parseInt(preferencesData.get("prefInsetsSize"));
     }
 
     @Override
-    public void start(Stage stage) throws Exception {
+    public void start(Stage stage){
+
+
         // spacer
         Region spacer = new Region();
         spacer.setPrefWidth(prefCommandSpacerWidth);
@@ -121,29 +144,6 @@ public class MainFx extends Application {
         // show the primary stage
         stage.setResizable(false);
         stage.show();
-    }
-
-    public static HashMap<String, String> preferencesData(){
-        final HashMap<String, String> preferencesData = new HashMap<>();
-        try (BufferedReader reader = new BufferedReader(new FileReader(pathToPreferences))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                // Dividi ogni riga in chiave e valore utilizzando il separatore ":"
-                String[] parts = line.split(":");
-                if (parts.length == 2) {
-                    String key = parts[0].trim();
-                    String value = parts[1].trim();
-                    // Remove comma
-                    value = value.substring(0, value.length() - 1);
-
-                    preferencesData.put(key, value);
-                    System.out.println("Key-value: " + key + ", " + value);
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return preferencesData;
     }
 
     public static void main(String[] args) {
