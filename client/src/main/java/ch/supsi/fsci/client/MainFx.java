@@ -19,8 +19,14 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.stage.Stage;
 
-public class MainFx extends Application {
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.HashMap;
 
+public class MainFx extends Application {
+    private final static String separator = File.separator;
     private String applicationTitle;
     private Label commandLabel;
     private int prefCommandSpacerWidth;
@@ -29,16 +35,24 @@ public class MainFx extends Application {
     private TextArea outputArea;
     private int prefOutputAreaRowCount;
     private int prefInsetsSize;
+    private final static String pathToPreferences = System.getProperty("user.dir")
+            + separator +
+            ".preferences" +
+            separator +
+            "preferences.txt";
+    private static final File preferences = new File(pathToPreferences);
 
     public MainFx() {
+        final HashMap<String, String> preferencesData = preferencesData();
+
         this.applicationTitle = "command interpreter for fs simulator";
         this.commandLabel = new Label("command");
-        this.prefCommandSpacerWidth = 11;
+        this.prefCommandSpacerWidth = Integer.parseInt(preferencesData.get("prefCommandSpacerWidth"));
         this.commandTextField = new TextField();
-        this.commandFieldPrefColumnCount = 80;
+        this.commandFieldPrefColumnCount = Integer.parseInt(preferencesData.get("commandFieldPrefColumnCount"));
         this.outputArea = new TextArea();
-        this.prefOutputAreaRowCount = 25;
-        this.prefInsetsSize = 7;
+        this.prefOutputAreaRowCount = Integer.parseInt(preferencesData.get("prefOutputAreaRowCount"));
+        this.prefInsetsSize = Integer.parseInt(preferencesData.get("prefInsetsSize"));
     }
 
     @Override
@@ -107,6 +121,26 @@ public class MainFx extends Application {
         // show the primary stage
         stage.setResizable(false);
         stage.show();
+    }
+
+    public static HashMap<String, String> preferencesData(){
+        final HashMap<String, String> preferencesData = new HashMap<>();
+        try (BufferedReader reader = new BufferedReader(new FileReader(pathToPreferences))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                // Dividi ogni riga in chiave e valore utilizzando il separatore ":"
+                String[] parts = line.split(":");
+                if (parts.length == 2) {
+                    String key = parts[0].trim();
+                    String value = parts[1].trim();
+
+                    preferencesData.put(key, value);
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return preferencesData;
     }
 
     public static void main(String[] args) {
