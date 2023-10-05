@@ -133,8 +133,11 @@ public class MainFx extends Application {
                 if (parts.length == 2) {
                     String key = parts[0].trim();
                     String value = parts[1].trim();
+                    // Remove comma
+                    value = value.substring(0, value.length() - 1);
 
                     preferencesData.put(key, value);
+                    System.out.println("Key-value: " + key + ", " + value);
                 }
             }
         } catch (IOException e) {
