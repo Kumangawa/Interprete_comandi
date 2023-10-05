@@ -1,7 +1,5 @@
-package ch.supsi.fsci.engine.CommandDispatcher.Commands;
+package ch.supsi.fsci.engine.Commands;
 
-import ch.supsi.fsci.engine.CommandDispatcher.CommandInfo;
-import ch.supsi.fsci.engine.CommandDispatcher.CommandInterface;
 import ch.supsi.fsci.engine.Model.FileSystemModel;
 
 @CommandInfo(name = "mv", totalArguments = 2)

@@ -2,11 +2,9 @@ package ch.supsi.fsci.client.model;
 
 
 
-import ch.supsi.fsci.engine.CommandDispatcher.CommandExecutionController;
-import ch.supsi.fsci.engine.CommandDispatcher.CommandInterface;
+import ch.supsi.fsci.client.controller.CommandExecutionController;
+import ch.supsi.fsci.engine.Commands.CommandInterface;
 import ch.supsi.fsci.engine.Model.FileSystemModel;
-
-import java.util.Arrays;
 
 public class CommandLineModel implements CommandLineModelInterface {
     final private FileSystemModel fileSystem;
@@ -18,13 +16,9 @@ public class CommandLineModel implements CommandLineModelInterface {
     }
 
     @Override
-    public String setText(String text) {
-        text = text.trim();
-        final String[] commandParts = text.split("\\s+");
-
+    public String setText(final String input) {
         try {
-            final CommandInterface command = commandExecutionController.getDispatchedCommand(commandParts[0],
-                    Arrays.copyOfRange(commandParts, 1, commandParts.length));
+            final CommandInterface command = commandExecutionController.getDispatchedCommand(input);
             return command.execute();
         }
         catch (final Exception e) {

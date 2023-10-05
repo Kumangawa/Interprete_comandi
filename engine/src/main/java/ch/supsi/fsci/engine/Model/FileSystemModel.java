@@ -59,6 +59,14 @@ public class FileSystemModel {
         }
     }
 
+    /* TODO
+       - add all commands
+         - if the command executes gracefully, return the output
+         - else, throw an exception describing the error
+           - create new exception classes for custom errors for clarity?
+       => all exceptions will then be caught in setText(), and their message will be displayed to the user
+     */
+
     public String cd(String path){ // /B/E
         return search(path).getName();
     }

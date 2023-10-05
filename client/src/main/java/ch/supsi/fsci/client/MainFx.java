@@ -4,10 +4,9 @@ import ch.supsi.fsci.client.controller.CommandLineController;
 import ch.supsi.fsci.client.model.CommandLineModel;
 import ch.supsi.fsci.client.view.CommandLineView;
 import ch.supsi.fsci.client.view.OutputAreaView;
-import ch.supsi.fsci.engine.CommandDispatcher.CommandExecutionController;
+import ch.supsi.fsci.client.controller.CommandExecutionController;
 import ch.supsi.fsci.engine.Model.FileSystemModel;
 import ch.supsi.fsci.engine.Model.Persistence;
-import ch.supsi.fsci.engine.Model.Preference;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -21,10 +20,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.stage.Stage;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -121,7 +117,8 @@ public class MainFx extends Application {
         final FileSystemModel fileSystemModel = new FileSystemModel();
 
         // CommandDispatcher
-        final CommandExecutionController commandExecutionController = new CommandExecutionController(fileSystemModel);
+        final CommandExecutionController commandExecutionController =
+                new CommandExecutionController(fileSystemModel, "ch.supsi.fsci.engine.CommandDispatcher.Commands");
 
         //CommandLine
         CommandLineView commandLineView = new CommandLineView();

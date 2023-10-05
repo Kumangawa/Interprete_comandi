@@ -1,6 +1,4 @@
-package ch.supsi.fsci.engine.CommandDispatcher.Commands;
-import ch.supsi.fsci.engine.CommandDispatcher.CommandInfo;
-import ch.supsi.fsci.engine.CommandDispatcher.CommandInterface;
+package ch.supsi.fsci.engine.Commands;
 import ch.supsi.fsci.engine.Model.FileSystemModel;
 
 @CommandInfo(name = "cd", totalArguments = 1)
