@@ -2,51 +2,34 @@ package ch.supsi.fsci.client.model;
 
 
 
+import ch.supsi.fsci.engine.CommandDispatcher.CommandExecutionController;
+import ch.supsi.fsci.engine.CommandDispatcher.CommandInterface;
 import ch.supsi.fsci.engine.Model.FileSystemModel;
 
-import java.lang.reflect.Method;
+import java.util.Arrays;
 
 public class CommandLineModel implements CommandLineModelInterface {
     final private FileSystemModel fileSystem;
+    final private CommandExecutionController commandExecutionController;
 
-    public CommandLineModel(final FileSystemModel fileSystem) {
+    public CommandLineModel(final FileSystemModel fileSystem, final CommandExecutionController commandExecutionController) {
         this.fileSystem = fileSystem;
+        this.commandExecutionController = commandExecutionController;
     }
 
     @Override
     public String setText(String text) {
-        // 1. Check if given command is valid.
         text = text.trim();
         final String[] commandParts = text.split("\\s+");
-        boolean isCommandCorrect = commandParts.length > 0 && checkCommandExistence(commandParts[0]);
 
-        // 2. Dispatch method call based on the given text. Command + factory pattern for this?
-        // For now, this is just a "crude" implementation, and we assume that the input is correct.
-        if (isCommandCorrect) {
-            switch (commandParts[0]) {
-                case "pwd": fileSystem.pwd(); return "";
-                case "mkdir": fileSystem.mkdir(commandParts[1]); return "";
-                case "ls": fileSystem.ls(); return "";
-                case "cd": return "changed directory to: " + fileSystem.cd(commandParts[1]);
-                case "mv": fileSystem.mv(commandParts[1], commandParts[2]); return "";
-                case "rm": fileSystem.rm(commandParts[1]); return "";
-                case "help": fileSystem.help(); return "";
-                case "clear": fileSystem.clear(); return "";
-                default: return "error";
-                // handle previously not found errors
-            }
+        try {
+            final CommandInterface command = commandExecutionController.getDispatchedCommand(commandParts[0],
+                    Arrays.copyOfRange(commandParts, 1, commandParts.length));
+            return command.execute();
         }
-        return "error";
-    }
-
-    private boolean checkCommandExistence(final String cmd) {
-        // getMethods only retrieves public methods (the actual commands)
-        for (final Method method: FileSystemModel.class.getMethods()) {
-            if (method.getName().equals(cmd)) {
-                return true;
-            }
+        catch (final Exception e) {
+            e.printStackTrace();
+            return e.getMessage();
         }
-        return false;
     }
-
 }

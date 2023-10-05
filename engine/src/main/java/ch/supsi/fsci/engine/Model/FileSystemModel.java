@@ -63,26 +63,29 @@ public class FileSystemModel {
         return search(path).getName();
     }
 
-    public void pwd() {
+    public String pwd() {
+        // Return current working directory
+        return "";
     }
 
-    public void mkdir(final String path) {
+    public String mkdir(final String path) {
+        return "";
     }
 
-    public void ls() {
-
+    public String ls() {
+        return "";
     }
 
-    public void mv(final String origin, final String destination) {
-
+    public String mv(final String origin, final String destination) {
+        return "";
     }
 
-    public void rm(final String path) {
-
+    public String rm(final String path) {
+        return "";
     }
 
-    public void help() {
-
+    public String help() {
+        return "";
     }
 
     public void clear() {

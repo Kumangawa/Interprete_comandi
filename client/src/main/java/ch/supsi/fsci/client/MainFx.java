@@ -4,6 +4,7 @@ import ch.supsi.fsci.client.controller.CommandLineController;
 import ch.supsi.fsci.client.model.CommandLineModel;
 import ch.supsi.fsci.client.view.CommandLineView;
 import ch.supsi.fsci.client.view.OutputAreaView;
+import ch.supsi.fsci.engine.CommandDispatcher.CommandExecutionController;
 import ch.supsi.fsci.engine.Model.FileSystemModel;
 import javafx.application.Application;
 import javafx.geometry.Insets;
@@ -79,9 +80,15 @@ public class MainFx extends Application {
         //OutputArea
         OutputAreaView outputAreaView = new OutputAreaView(outputArea);
 
+        // FileSystemModel
+        final FileSystemModel fileSystemModel = new FileSystemModel();
+
+        // CommandDispatcher
+        final CommandExecutionController commandExecutionController = new CommandExecutionController(fileSystemModel);
+
         //CommandLine
         CommandLineView commandLineView = new CommandLineView();
-        CommandLineModel commandLineModel = new CommandLineModel(new FileSystemModel());
+        CommandLineModel commandLineModel = new CommandLineModel(fileSystemModel, commandExecutionController);
         CommandLineController commandLineController = new CommandLineController(commandTextField, commandLineModel,
                 commandLineView, outputAreaView);
         commandLineController.initialize();
