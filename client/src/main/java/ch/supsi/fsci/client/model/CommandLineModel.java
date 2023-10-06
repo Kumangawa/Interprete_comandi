@@ -3,7 +3,7 @@ package ch.supsi.fsci.client.model;
 
 
 import ch.supsi.fsci.client.controller.CommandExecutionController;
-import ch.supsi.fsci.engine.Commands.CommandInterface;
+import ch.supsi.fsci.engine.CommandPattern.CommandInterface;
 import ch.supsi.fsci.engine.Model.FileSystemModel;
 
 public class CommandLineModel implements CommandLineModelInterface {

@@ -1,5 +1,7 @@
-package ch.supsi.fsci.engine.Commands;
+package ch.supsi.fsci.engine.CommandPattern.Commands;
 
+import ch.supsi.fsci.engine.CommandPattern.CommandInfo;
+import ch.supsi.fsci.engine.CommandPattern.CommandInterface;
 import ch.supsi.fsci.engine.Model.FileSystemModel;
 
 @CommandInfo(name = "help", totalArguments = 0)

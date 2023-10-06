@@ -117,8 +117,8 @@ public class MainFx extends Application {
         final FileSystemModel fileSystemModel = new FileSystemModel();
 
         // CommandDispatcher
-        final CommandExecutionController commandExecutionController =
-                new CommandExecutionController(fileSystemModel, "ch.supsi.fsci.engine.CommandDispatcher.Commands");
+        final CommandExecutionController commandExecutionController = new CommandExecutionController(fileSystemModel);
+        commandExecutionController.initializeAllCommands("ch.supsi.fsci.engine.CommandPattern.Commands");
 
         //CommandLine
         CommandLineView commandLineView = new CommandLineView();

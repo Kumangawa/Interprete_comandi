@@ -1,6 +1,10 @@
-package ch.supsi.fsci.engine.Commands;
+package ch.supsi.fsci.engine.CommandPattern.Commands;
 
+import ch.supsi.fsci.engine.CommandPattern.CommandInfo;
+import ch.supsi.fsci.engine.CommandPattern.CommandInterface;
 import ch.supsi.fsci.engine.Model.FileSystemModel;
+
+import java.util.StringTokenizer;
 
 @CommandInfo(name = "mv", totalArguments = 2)
 public class MvCommand implements CommandInterface {
@@ -8,10 +12,10 @@ public class MvCommand implements CommandInterface {
     private final String origin;
     private final String destination;
 
-    public MvCommand(final FileSystemModel receiver, final String... arguments) {
+    public MvCommand(final FileSystemModel receiver, final StringTokenizer arguments) {
         this.receiver = receiver;
-        this.origin = arguments[0];
-        this.destination = arguments[1];
+        this.origin = arguments.nextToken();
+        this.destination = arguments.nextToken();
     }
 
     @Override

@@ -1,4 +1,4 @@
-package ch.supsi.fsci.engine.Commands;
+package ch.supsi.fsci.engine.CommandPattern;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

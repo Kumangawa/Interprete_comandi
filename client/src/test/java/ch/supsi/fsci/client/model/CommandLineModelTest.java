@@ -5,12 +5,15 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+/* TODO: Complete the tests once all commands have been implemented! */
+
 public class CommandLineModelTest {
     @Test
     public void testSetText() {
         FileSystemModel fileSystemModel = new FileSystemModel();
         CommandExecutionController commandExecutionController =
-                new CommandExecutionController(fileSystemModel, "ch.supsi.fsci.engine.CommandDispatcher.Commands");
+                new CommandExecutionController(fileSystemModel);
+        commandExecutionController.initializeAllCommands("ch.supsi.fsci.engine.CommandPattern.Commands");
         final CommandLineModel commandLineModel = new CommandLineModel(fileSystemModel, commandExecutionController);
         assertEquals(commandLineModel.setText("pwd"), "");
         assertEquals(commandLineModel.setText("mkdir test"), "");
