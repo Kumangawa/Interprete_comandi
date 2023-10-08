@@ -100,7 +100,10 @@ public class FileSystemModel {
 
     }
 
-    private void add(final String directoryName){
+    // Todo: Remove package-protected, make method private
+    // When command to add new sub directories is finished
+    // (currently this is used in tests for the equals method, but it shouldn't)
+    void add(final String directoryName){
         DirectoryModel newDir = new DirectoryModel(directoryName);
         root.getDir().add(newDir);
     }

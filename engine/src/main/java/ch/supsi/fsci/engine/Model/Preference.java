@@ -54,7 +54,5 @@ public class Preference {
                 this.prefInsetsSize = Integer.parseInt(value);
                 break;
         }
-
-
     }
 }
