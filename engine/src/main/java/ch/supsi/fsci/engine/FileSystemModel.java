@@ -85,6 +85,7 @@ public class FileSystemModel {
        => all exceptions will then be caught in setText(), and their message will be displayed to the user
      */
 
+    //testare
     public DirectoryModel cd(final String path){ // /B/E
         cur = search(path);
         return cur;
