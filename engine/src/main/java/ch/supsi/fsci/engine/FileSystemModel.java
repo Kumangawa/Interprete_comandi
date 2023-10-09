@@ -1,4 +1,4 @@
-package ch.supsi.fsci.engine.Model;
+package ch.supsi.fsci.engine;
 
 import java.nio.file.FileSystems;
 import java.util.Arrays;

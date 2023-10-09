@@ -2,7 +2,7 @@ package ch.supsi.fsci.engine.CommandPattern.Commands;
 
 import ch.supsi.fsci.engine.CommandPattern.CommandInfo;
 import ch.supsi.fsci.engine.CommandPattern.CommandInterface;
-import ch.supsi.fsci.engine.Model.FileSystemModel;
+import ch.supsi.fsci.engine.FileSystemModel;
 
 @CommandInfo(name = "ls", totalArguments = 0)
 public class LsCommand implements CommandInterface {

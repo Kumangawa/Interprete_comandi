@@ -4,9 +4,8 @@ import ch.supsi.fsci.engine.CommandPattern.CommandInterface;
 import ch.supsi.fsci.engine.CommandPattern.Commands.*;
 import ch.supsi.fsci.engine.Exceptions.WrongCommandArgumentNumber;
 import ch.supsi.fsci.engine.Exceptions.WrongCommandName;
-import ch.supsi.fsci.engine.Model.FileSystemModel;
+import ch.supsi.fsci.engine.FileSystemModel;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

@@ -1,6 +1,6 @@
 package ch.supsi.fsci.client.model;
 import ch.supsi.fsci.client.controller.CommandExecutionController;
-import ch.supsi.fsci.engine.Model.FileSystemModel;
+import ch.supsi.fsci.engine.FileSystemModel;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

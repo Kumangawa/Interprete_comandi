@@ -4,7 +4,7 @@ package ch.supsi.fsci.client.model;
 
 import ch.supsi.fsci.client.controller.CommandExecutionController;
 import ch.supsi.fsci.engine.CommandPattern.CommandInterface;
-import ch.supsi.fsci.engine.Model.FileSystemModel;
+import ch.supsi.fsci.engine.FileSystemModel;
 
 public class CommandLineModel implements CommandLineModelInterface {
     final private FileSystemModel fileSystem;

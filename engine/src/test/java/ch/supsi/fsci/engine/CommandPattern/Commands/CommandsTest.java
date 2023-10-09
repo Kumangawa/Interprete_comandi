@@ -1,4 +1,4 @@
-package ch.supsi.engine.Model.CommandPattern.Commands;
+package ch.supsi.fsci.engine.CommandPattern.Commands;
 
 import ch.supsi.fsci.engine.CommandPattern.CommandInfo;
 import ch.supsi.fsci.engine.CommandPattern.CommandInterface;

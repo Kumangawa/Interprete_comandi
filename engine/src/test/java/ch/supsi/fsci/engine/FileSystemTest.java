@@ -1,4 +1,4 @@
-package ch.supsi.fsci.engine.Model;
+package ch.supsi.fsci.engine;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
