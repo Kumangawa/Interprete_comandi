@@ -72,8 +72,11 @@ public class FileSystemModel {
     }
 
     public String pwd() {
-        // Return current working directory
-        return "";
+        final StringBuilder stringBuilder = new StringBuilder("Current working directory: /");
+        for (final DirectoryModel currentDirectory: cur.getDir()) {
+            stringBuilder.append(currentDirectory.getName()).append('/');
+        }
+        return stringBuilder.toString();
     }
 
     public String mkdir(final String path) {
@@ -93,7 +96,13 @@ public class FileSystemModel {
     }
 
     public String help() {
-        return "";
+        return "ls (list directory content): ls \n" +
+                "mkdir (make directory): mkdir <dir name> \n" +
+                "pwd (print working directory): pwd \n " +
+                "cd (current directory): cd \n " +
+                "mv (move): mv <origin> <destination> \n" +
+                "rm (remove): rm <path> \n" +
+                "clear: clears the previous outputs";
     }
 
     public void clear() {
