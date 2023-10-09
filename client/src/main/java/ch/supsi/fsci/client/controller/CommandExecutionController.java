@@ -2,8 +2,8 @@ package ch.supsi.fsci.client.controller;
 
 import ch.supsi.fsci.engine.CommandPattern.CommandInfo;
 import ch.supsi.fsci.engine.CommandPattern.CommandInterface;
-import ch.supsi.fsci.engine.Exceptions.WrongCommandArgumentNumber;
-import ch.supsi.fsci.engine.Exceptions.WrongCommandName;
+import ch.supsi.fsci.engine.Exceptions.WrongCommandArgumentNumberException;
+import ch.supsi.fsci.engine.Exceptions.WrongCommandNameException;
 import ch.supsi.fsci.engine.FileSystemModel;
 
 import java.lang.reflect.InvocationTargetException;
@@ -54,8 +54,8 @@ public class CommandExecutionController {
      * @description: This function attempts to parse the given command. It makes a syntax check (command name
      * and number of arguments provided for the given command name) and, if the check succeeds, instantiates
      * the correct command object and returns it for execution.
-     * @throws WrongCommandArgumentNumber: if the number of arguments for the given command is incorrect
-     * @throws WrongCommandName: if the provided command name does not exist.
+     * @throws WrongCommandArgumentNumberException : if the number of arguments for the given command is incorrect
+     * @throws WrongCommandNameException : if the provided command name does not exist.
      *
      * @implNote: All other exceptions that are thrown signal an implementation error.
      * For example, if a command's constructor contains the wrong parameters, this function will not be able
@@ -71,13 +71,13 @@ public class CommandExecutionController {
                 final CommandInfo annotation = genericCommand.getAnnotation(CommandInfo.class);
 
                 if (annotation.totalArguments() != tokenizer.countTokens()) {
-                    throw new WrongCommandArgumentNumber(commandName, annotation.totalArguments(), tokenizer.countTokens());
+                    throw new WrongCommandArgumentNumberException(commandName, annotation.totalArguments(), tokenizer.countTokens());
                 }
                 return tokenizer.countTokens() > 0
                         ? genericCommand.getConstructor(FileSystemModel.class, StringTokenizer.class).newInstance(fileSystemModel, tokenizer)
                         : genericCommand.getConstructor(FileSystemModel.class).newInstance(fileSystemModel);
             }
-            throw new WrongCommandName(commandName);
+            throw new WrongCommandNameException(commandName);
         }
         throw new IllegalArgumentException("Input is empty.");
     }

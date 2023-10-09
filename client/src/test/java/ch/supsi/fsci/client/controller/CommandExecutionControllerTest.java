@@ -2,8 +2,8 @@ package ch.supsi.fsci.client.controller;
 
 import ch.supsi.fsci.engine.CommandPattern.CommandInterface;
 import ch.supsi.fsci.engine.CommandPattern.Commands.*;
-import ch.supsi.fsci.engine.Exceptions.WrongCommandArgumentNumber;
-import ch.supsi.fsci.engine.Exceptions.WrongCommandName;
+import ch.supsi.fsci.engine.Exceptions.WrongCommandArgumentNumberException;
+import ch.supsi.fsci.engine.Exceptions.WrongCommandNameException;
 import ch.supsi.fsci.engine.FileSystemModel;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -75,7 +75,7 @@ public class CommandExecutionControllerTest {
 
         final String[] invalidCommandNames = { "mve file1 file2", "cr path", "la", "mkdlr dir", "piwd", "rmm dir" };
         for (final String currentInvalidCommandName: invalidCommandNames) {
-            assertThrows(WrongCommandName.class, () -> controller.getDispatchedCommand(currentInvalidCommandName));
+            assertThrows(WrongCommandNameException.class, () -> controller.getDispatchedCommand(currentInvalidCommandName));
         }
     }
 
@@ -95,7 +95,7 @@ public class CommandExecutionControllerTest {
                 "mv file1 file2 file3", "mv", "mv file1", "cd", "cd path0 path", "ls one",
                 "mkdir dir dir2", "mkdir", "pwd one", "rm" };
         for (final String currentInvalidCommandArgument: invalidCommandArgument) {
-            assertThrows(WrongCommandArgumentNumber.class, () -> controller.getDispatchedCommand(currentInvalidCommandArgument));
+            assertThrows(WrongCommandArgumentNumberException.class, () -> controller.getDispatchedCommand(currentInvalidCommandArgument));
         }
     }
 }
