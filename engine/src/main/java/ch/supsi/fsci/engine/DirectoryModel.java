@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-class DirectoryModel {
+public class DirectoryModel {
     private final String name;
     private final List<DirectoryModel> dir;
 
@@ -16,6 +16,14 @@ class DirectoryModel {
     public DirectoryModel(final String name){
         this.name=name;
         this.dir = new ArrayList<>();
+    }
+
+    /*
+    * questo modo é momentaneo, serve solo per comodità per fare dei test
+    * */
+
+    public void add(final DirectoryModel dirToAdd){
+        dir.add(dirToAdd);
     }
 
     public String getName() {

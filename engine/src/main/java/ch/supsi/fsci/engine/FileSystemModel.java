@@ -1,5 +1,7 @@
 package ch.supsi.fsci.engine;
 
+import ch.supsi.fsci.engine.Exceptions.DirectoryNotFound;
+
 import java.nio.file.FileSystems;
 import java.util.Arrays;
 import java.util.List;
@@ -7,15 +9,13 @@ import java.util.Objects;
 
 public class FileSystemModel {
     private final DirectoryModel root;
-    private final DirectoryModel cur;
+    private DirectoryModel cur;
     private final String separator = FileSystems.getDefault().getSeparator();
 
     public FileSystemModel() {
         DirectoryModel root = new DirectoryModel(separator);
         this.root = root;
         this.cur = root;
-        add("A");
-        add("B");
     }
 
     /*
@@ -32,12 +32,13 @@ public class FileSystemModel {
      * toDo: se il path non esiste, é il caso di ritornare null? È una buona soluzione?
      * toDo: implementare la ricerca per path relativo
      * */
-    private DirectoryModel search(final String path){
+    protected DirectoryModel search(final String path){
+        int counter = 0; //serve a scendere nella gerarchia e corrisponde ai livelli della lista orderedPath
+        int oldCounter = 0; //serve a controllare se si é trovata la directory specificata
+        DirectoryModel cur_temp;
         if(isAbsolutePath(path)){//caso path assoluto \B\F
-            int counter = 0; //serve a scendere nella gerarchia e corrisponde ai livelli della lista orderedPath
-            int oldCounter = 0; //serve a controllare se si é trovata la directory specificata
             List<String> orderedPath = (Arrays.stream(path.split(separator + separator)).skip(1).toList());
-            DirectoryModel cur_temp = root; //dato che é un absolute path, la prima cartella é la root
+            cur_temp = root; //dato che é un absolute path, la prima cartella é la root
             while(counter!=orderedPath.size()){ //quando si arriva alla fine del path corrisponde alla cartella di dest.
                 oldCounter = counter;
                 for(DirectoryModel dir : cur_temp.getDir()){
@@ -48,14 +49,31 @@ public class FileSystemModel {
                     }
                 }
                 if(oldCounter==counter){//se counter non é stato incrementato, significa che non si é trovata la dir e quindi non esiste
-                    System.out.println("Path non valido");
-                    return null;
+                   //dovrà ritornare la cartella cur
+                    throw new DirectoryNotFound(path, orderedPath.get(orderedPath.size()-1));
                 }
             }
             System.out.println("Directory di destinazione: " + cur_temp.getName());
             return cur_temp;
         } else {
-            return cur;
+            List<String> orderedRelativePath = (Arrays.stream(path.split(separator + separator)).toList());
+            cur_temp = cur;
+            while(counter!=orderedRelativePath.size()){
+                oldCounter = counter;
+                for(DirectoryModel dir : cur_temp.getDir()){
+                    if(dir.getName().equals(orderedRelativePath.get(counter))){ //al livello corrente si controlla la cartella giusta
+                        cur_temp = dir;//quando si trova la cartella giusta si cambia la cur
+                        counter++;//scendiamo di un livello di profondità nella gerarchia
+                        break;//rompiamo il ciclo
+                    }
+                }
+                if(oldCounter==counter){//se counter non é stato incrementato, significa che non si é trovata la dir e quindi non esiste
+                    //dovrà ritornare la cartella cur
+                    throw new DirectoryNotFound(path, orderedRelativePath.get(orderedRelativePath.size()-1));
+                }
+            }
+            System.out.println("Directory di destinazione: " + cur_temp.getName());
+            return cur_temp;
         }
     }
 
@@ -67,8 +85,9 @@ public class FileSystemModel {
        => all exceptions will then be caught in setText(), and their message will be displayed to the user
      */
 
-    public String cd(String path){ // /B/E
-        return search(path).getName();
+    public DirectoryModel cd(final String path){ // /B/E
+        cur = search(path);
+        return cur;
     }
 
     public String pwd() {
@@ -108,7 +127,7 @@ public class FileSystemModel {
         root.getDir().add(newDir);
     }
 
-    private void add(final DirectoryModel dir){
+    protected void add(final DirectoryModel dir){
         root.getDir().add(dir);
     }
 

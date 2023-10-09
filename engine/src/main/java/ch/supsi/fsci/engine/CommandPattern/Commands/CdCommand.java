@@ -1,6 +1,7 @@
 package ch.supsi.fsci.engine.CommandPattern.Commands;
 import ch.supsi.fsci.engine.CommandPattern.CommandInfo;
 import ch.supsi.fsci.engine.CommandPattern.CommandInterface;
+import ch.supsi.fsci.engine.DirectoryModel;
 import ch.supsi.fsci.engine.FileSystemModel;
 
 import java.util.StringTokenizer;
@@ -17,6 +18,6 @@ public class CdCommand implements CommandInterface {
 
     @Override
     public String execute() {
-       return receiver.cd(path);
+       return receiver.cd(path).getName();
     }
 }
