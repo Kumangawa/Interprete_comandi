@@ -68,7 +68,7 @@ public class FileSystemTest {
     public void testConstructor() {
         final DirectoryModel root = fileSystemModel.getRoot();
         assertNotNull(root);
-        assertEquals(6, root.getDir().size());
+        assertEquals(3, root.getDir().size());
         assertEquals(root.getDir().size(), sameFileSystemModel.getRoot().getDir().size());
     }
 
