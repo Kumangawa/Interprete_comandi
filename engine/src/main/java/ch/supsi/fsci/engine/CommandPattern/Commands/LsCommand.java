@@ -4,7 +4,7 @@ import ch.supsi.fsci.engine.CommandPattern.CommandInfo;
 import ch.supsi.fsci.engine.CommandPattern.CommandInterface;
 import ch.supsi.fsci.engine.FileSystemModel;
 
-@CommandInfo(name = "ls", totalArguments = 0)
+@CommandInfo(name = "ls", totalArguments = 0, commandSyntax = "ls")
 public class LsCommand implements CommandInterface {
     private final FileSystemModel receiver;
 

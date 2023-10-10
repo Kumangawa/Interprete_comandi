@@ -4,7 +4,7 @@ import ch.supsi.fsci.engine.CommandPattern.CommandInfo;
 import ch.supsi.fsci.engine.CommandPattern.CommandInterface;
 import ch.supsi.fsci.engine.FileSystemModel;
 
-@CommandInfo(name = "pwd", totalArguments = 0)
+@CommandInfo(name = "pwd", totalArguments = 0, commandSyntax = "pwd")
 public class PwdCommand implements CommandInterface {
     private final FileSystemModel receiver;
 

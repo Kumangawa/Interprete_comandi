@@ -10,4 +10,5 @@ import java.lang.annotation.Target;
 public @interface CommandInfo {
     String name();
     int totalArguments();
+    String commandSyntax();
 }

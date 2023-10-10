@@ -6,7 +6,7 @@ import ch.supsi.fsci.engine.FileSystemModel;
 
 import java.util.StringTokenizer;
 
-@CommandInfo(name = "mkdir", totalArguments = 1)
+@CommandInfo(name = "mkdir", totalArguments = 1, commandSyntax = "mkdir <directory>")
 public class MkdirCommand implements CommandInterface {
     private final FileSystemModel receiver;
     private final String directoryName;

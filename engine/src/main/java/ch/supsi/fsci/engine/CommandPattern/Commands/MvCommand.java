@@ -6,7 +6,7 @@ import ch.supsi.fsci.engine.FileSystemModel;
 
 import java.util.StringTokenizer;
 
-@CommandInfo(name = "mv", totalArguments = 2)
+@CommandInfo(name = "mv", totalArguments = 2, commandSyntax = "mv <src> <dest>")
 public class MvCommand implements CommandInterface {
     private final FileSystemModel receiver;
     private final String origin;

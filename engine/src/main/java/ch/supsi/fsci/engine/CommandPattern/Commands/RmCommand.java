@@ -6,7 +6,7 @@ import ch.supsi.fsci.engine.FileSystemModel;
 
 import java.util.StringTokenizer;
 
-@CommandInfo(name = "rm", totalArguments = 1)
+@CommandInfo(name = "rm", totalArguments = 1, commandSyntax = "rm <path>")
 public class RmCommand implements CommandInterface {
     private final FileSystemModel receiver;
     private final String path;

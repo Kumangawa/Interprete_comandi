@@ -4,7 +4,7 @@ import ch.supsi.fsci.engine.CommandPattern.CommandInfo;
 import ch.supsi.fsci.engine.CommandPattern.CommandInterface;
 import ch.supsi.fsci.engine.FileSystemModel;
 
-@CommandInfo(name = "help", totalArguments = 0)
+@CommandInfo(name = "help", totalArguments = 0, commandSyntax = "help")
 public class HelpCommand implements CommandInterface {
     private final FileSystemModel receiver;
 

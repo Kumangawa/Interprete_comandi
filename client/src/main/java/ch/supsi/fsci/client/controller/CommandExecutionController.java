@@ -71,7 +71,7 @@ public class CommandExecutionController {
                 final CommandInfo annotation = genericCommand.getAnnotation(CommandInfo.class);
 
                 if (annotation.totalArguments() != tokenizer.countTokens()) {
-                    throw new WrongCommandArgumentNumberException(commandName, annotation.totalArguments(), tokenizer.countTokens());
+                    throw new WrongCommandArgumentNumberException(commandName, annotation.commandSyntax(), annotation.totalArguments(), tokenizer.countTokens());
                 }
                 return tokenizer.countTokens() > 0
                         ? genericCommand.getConstructor(FileSystemModel.class, StringTokenizer.class).newInstance(fileSystemModel, tokenizer)
