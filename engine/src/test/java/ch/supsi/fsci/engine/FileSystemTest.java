@@ -55,6 +55,16 @@ public class FileSystemTest {
     }
 
     @Test
+    public void testPwd() {
+        // Initially pwd should return the root
+        assertEquals("Current working directory: \\", fileSystemModel.pwd());
+        fileSystemModel.cd("A");
+        assertEquals("Current working directory: \\A", fileSystemModel.pwd());
+        fileSystemModel.cd("D");
+        assertEquals("Current working directory: \\A\\D", fileSystemModel.pwd());
+    }
+
+    @Test
     public void testConstructor() {
         final DirectoryModel root = fileSystemModel.getRoot();
         assertNotNull(root);

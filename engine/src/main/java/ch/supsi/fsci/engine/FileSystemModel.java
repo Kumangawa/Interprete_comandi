@@ -16,6 +16,18 @@ public class FileSystemModel {
         DirectoryModel root = new DirectoryModel(separator);
         this.root = root;
         this.cur = root;
+
+        DirectoryModel A = new DirectoryModel("A");
+        DirectoryModel B = new DirectoryModel("B");
+        DirectoryModel C = new DirectoryModel("C");
+        A.add(new DirectoryModel("D"));
+        B.add(new DirectoryModel("E"));
+        B.add(new DirectoryModel("F"));
+        C.add(new DirectoryModel("G"));
+
+        add(A);
+        add(B);
+        add(C);
     }
 
     /*
@@ -92,11 +104,27 @@ public class FileSystemModel {
     }
 
     public String pwd() {
-        final StringBuilder stringBuilder = new StringBuilder("Current working directory: /");
-        for (final DirectoryModel currentDirectory: cur.getDir()) {
-            stringBuilder.append(currentDirectory.getName()).append('/');
+        final StringBuilder stringBuilder = new StringBuilder();
+        DirectoryModel currentDirectory = cur;
+
+        while (currentDirectory != null) {
+            stringBuilder.insert(0, (currentDirectory != root ? separator : "") + currentDirectory.getName());
+            currentDirectory = getParentDirectory(currentDirectory);
         }
+        stringBuilder.insert(0, "Current working directory: ");
         return stringBuilder.toString();
+    }
+
+    private DirectoryModel getParentDirectory(final DirectoryModel directory) {
+        if (directory == root) {
+            return null;
+        }
+        for (final DirectoryModel subDir : root.getDir()) {
+            if (subDir.getDir().contains(directory)) {
+                return subDir;
+            }
+        }
+        return null;
     }
 
     public String mkdir(final String path) {
@@ -118,8 +146,8 @@ public class FileSystemModel {
     public String help() {
         return "ls (list directory content): ls \n" +
                 "mkdir (make directory): mkdir <dir name> \n" +
-                "pwd (print working directory): pwd \n " +
-                "cd (current directory): cd \n " +
+                "pwd (print working directory): pwd \n" +
+                "cd (current directory): cd \n" +
                 "mv (move): mv <origin> <destination> \n" +
                 "rm (remove): rm <path> \n" +
                 "clear: clears the previous outputs";
