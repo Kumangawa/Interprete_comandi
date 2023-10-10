@@ -68,8 +68,8 @@ public class FileSystemTest {
     public void testConstructor() {
         final DirectoryModel root = fileSystemModel.getRoot();
         assertNotNull(root);
-        // Todo: change '2' later, this is hardcoded (currently the constructor adds 2 subdirectories!)
-        assertEquals(fileSystemModel.getRoot().getDir().size(), root.getDir().size());
+        assertEquals(6, root.getDir().size());
+        assertEquals(root.getDir().size(), sameFileSystemModel.getRoot().getDir().size());
     }
 
     @Test

@@ -16,18 +16,6 @@ public class FileSystemModel {
         DirectoryModel root = new DirectoryModel(separator);
         this.root = root;
         this.cur = root;
-
-        DirectoryModel A = new DirectoryModel("A");
-        DirectoryModel B = new DirectoryModel("B");
-        DirectoryModel C = new DirectoryModel("C");
-        A.add(new DirectoryModel("D"));
-        B.add(new DirectoryModel("E"));
-        B.add(new DirectoryModel("F"));
-        C.add(new DirectoryModel("G"));
-
-        add(A);
-        add(B);
-        add(C);
     }
 
     /*
