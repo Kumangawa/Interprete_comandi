@@ -41,41 +41,20 @@ public class MainFx extends Application {
         persistence.initializeExplicit();
         HashMap<String, String> preferencesData = persistence.getPreference();
 
-        /**
-         * TODO: c'è un errore nella lettura del file e non va bene fare
-         *      preferencesData(key), siccome ritorna null,
-         *      motivo sconosciuto, possibile contrasto con la ',' o spazio o endline
-         */
-
-        String[][] preferencesArray = new String[preferencesData.size()][2];
-        int index = 0;
-        for (Map.Entry<String, String> entry : preferencesData.entrySet()) {
-            String key = entry.getKey();
-            String value = entry.getValue();
-
-            preferencesArray[index][0] = key;
-            preferencesArray[index][1] = value;
-
-            index++;
-        }
-
         this.applicationTitle = "command interpreter for fs simulator";
         this.commandLabel = new Label("command");
-
-        this.prefCommandSpacerWidth = Integer.parseInt(preferencesArray[0][1]);
-        this.commandFieldPrefColumnCount = Integer.parseInt(preferencesArray[2][1]);
-        this.prefOutputAreaRowCount = Integer.parseInt(preferencesArray[3][1]);
-        this.prefInsetsSize = Integer.parseInt(preferencesArray[4][1]);
-
-
         this.commandTextField = new TextField();
         this.outputArea = new TextArea();
+
+        this.prefCommandSpacerWidth = Integer.parseInt(preferencesData.get("prefCommandSpacerWidth"));
+        this.commandFieldPrefColumnCount = Integer.parseInt(preferencesData.get("commandFieldPrefColumnCount"));
+        this.prefOutputAreaRowCount = Integer.parseInt(preferencesData.get("prefOutputAreaRowCount"));
+        this.prefInsetsSize = Integer.parseInt(preferencesData.get("prefInsetsSize"));
+
     }
 
     @Override
     public void start(Stage stage){
-
-
         // spacer
         Region spacer = new Region();
         spacer.setPrefWidth(prefCommandSpacerWidth);

@@ -15,12 +15,18 @@ public class CommandLineModelTest {
                 new CommandExecutionController(fileSystemModel);
         commandExecutionController.initializeAllCommands("ch.supsi.fsci.engine.CommandPattern.Commands");
         final CommandLineModel commandLineModel = new CommandLineModel(fileSystemModel, commandExecutionController);
-        assertEquals(commandLineModel.setText("pwd"), "");
+        assertEquals(commandLineModel.setText("pwd"), "Current working directory: \\");
         assertEquals(commandLineModel.setText("mkdir test"), "");
         assertEquals(commandLineModel.setText("ls"), "");
-        assertEquals(commandLineModel.setText("cd \\A"), "A");
+        assertEquals(commandLineModel.setText("cd \\A"), "The directory A has not been found with the \\A path");
         assertEquals(commandLineModel.setText("mv test test1"), "");
         assertEquals(commandLineModel.setText("rm test"), "");
-        assertEquals(commandLineModel.setText("help"), "");
+        assertEquals(commandLineModel.setText("help"), "ls (list directory content): ls \n" +
+                "mkdir (make directory): mkdir <dir name> \n" +
+                "pwd (print working directory): pwd \n" +
+                "cd (current directory): cd \n" +
+                "mv (move): mv <origin> <destination> \n" +
+                "rm (remove): rm <path> \n" +
+                "clear: clears the previous outputs");
     }
 }

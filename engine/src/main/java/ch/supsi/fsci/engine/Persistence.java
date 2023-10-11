@@ -7,10 +7,16 @@ import java.nio.file.Paths;
 import java.util.HashMap;
 
 public class Persistence {
-    public static final String PREFERENCE_FILE_PATH = System.getProperty("user.home") + File.separator + "GUI" + File.separator + "preferences.txt";
+    public static String PREFERENCE_FILE_PATH = System.getProperty("user.home") + File.separator + "GUI" + File.separator + "preferences.txt";
     private Preference preference;
-    private boolean initialized;
 
+    // Constructor
+    public Persistence(){
+        PREFERENCE_FILE_PATH = System.getProperty("user.home") + File.separator + "GUI" + File.separator + "preferences.txt";
+        this.preference = new Preference();
+    }
+
+    // private
     private synchronized static void createFolderGUI() {
         try {
             Path defaultPath = Paths.get(PREFERENCE_FILE_PATH).getParent();
@@ -23,23 +29,22 @@ public class Persistence {
 
     private void savePreference() {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(PREFERENCE_FILE_PATH))) {
-            writer.write("\"language\": \"" + preference.getLanguage() + "\"\n");
-            writer.write("\"prefCommandSpacerWidth\": " + preference.getPrefCommandSpacerWidth() + "\n");
-            writer.write("\"commandFieldPrefColumnCount\": " + preference.getCommandFieldPrefColumnCount() + "\n");
-            writer.write("\"prefOutputAreaRowCount\": " + preference.getPrefOutputAreaRowCount() + "\n");
-            writer.write("\"prefInsetsSize\": " + preference.getPrefInsetsSize() + "\n");
+            writer.write("language: " + preference.getLanguage() + "\n");
+            writer.write("prefCommandSpacerWidth: " + preference.getPrefCommandSpacerWidth() + "\n");
+            writer.write("commandFieldPrefColumnCount: " + preference.getCommandFieldPrefColumnCount() + "\n");
+            writer.write("prefOutputAreaRowCount: " + preference.getPrefOutputAreaRowCount() + "\n");
+            writer.write("prefInsetsSize: " + preference.getPrefInsetsSize() + "\n");
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    //public
+    // public
     public void initializeExplicit(){
         File preferenceFile = new File(PREFERENCE_FILE_PATH);
         if (preferenceFile.exists()) {
             try (BufferedReader br = new BufferedReader(new FileReader(preferenceFile))) {
                 String line;
-                Preference preference = new Preference();
                 while ((line = br.readLine()) != null) {
                     String[] parts = line.split(":");
                     if (parts.length == 2) {
@@ -48,16 +53,13 @@ public class Persistence {
                         preference.setPreference(key, value);
                     }
                 }
-                this.preference = preference;
             } catch (IOException e) {
                 e.printStackTrace();
             }
         } else {
-            this.preference = new Preference();
             createFolderGUI();
-            savePreference();
         }
-        this.initialized = true;
+        savePreference();
     }
 
     public HashMap<String, String> getPreference() {
@@ -76,5 +78,13 @@ public class Persistence {
             e.printStackTrace();
         }
         return preferencesData;
+    }
+
+    public void setPreferenceFilePath(String path){
+        PREFERENCE_FILE_PATH = path;
+    }
+
+    public String getPreferenceFilePath(){
+        return PREFERENCE_FILE_PATH;
     }
 }
