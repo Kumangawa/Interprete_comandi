@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.Set;
 import java.util.StringTokenizer;
 
+import ch.supsi.fsci.engine.Localization;
 import org.reflections.Reflections;
 
 public class CommandExecutionController {
@@ -72,7 +73,7 @@ public class CommandExecutionController {
                 final CommandInfo annotation = genericCommand.getAnnotation(CommandInfo.class);
 
                 if (annotation.totalArguments() != tokenizer.countTokens()) {
-                    throw new WrongCommandArgumentNumberException(commandName, annotation.commandSyntax(), annotation.totalArguments(), tokenizer.countTokens());
+                    throw new WrongCommandArgumentNumberException(String.format(Localization.localize("WrongCommand.ArgumentNumberException"),commandName,annotation.totalArguments(),tokenizer.countTokens(),annotation.commandSyntax()));
                 }
 
                 // Implement a pattern for delayed construction?
@@ -80,7 +81,7 @@ public class CommandExecutionController {
                         ? genericCommand.getConstructor(FileSystemModel.class, StringTokenizer.class).newInstance(fileSystemModel, tokenizer)
                         : genericCommand.getConstructor(FileSystemModel.class).newInstance(fileSystemModel);
             }
-            throw new WrongCommandNameException(commandName);
+            throw new WrongCommandNameException(String.format(Localization.localize("WrongCommand.NameException"), commandName));
         }
         throw new IllegalArgumentException("Input is empty.");
     }

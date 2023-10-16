@@ -11,8 +11,10 @@ public class FileSystemModel {
     private final DirectoryModel root;
     private DirectoryModel cur;
     private final String separator = FileSystems.getDefault().getSeparator();
+    private Localization localization;
 
     public FileSystemModel() {
+        localization = new Localization();
         DirectoryModel root = new DirectoryModel(separator);
         this.root = root;
         this.cur = root;
@@ -50,7 +52,7 @@ public class FileSystemModel {
                 }
                 if(oldCounter==counter){//se counter non é stato incrementato, significa che non si é trovata la dir e quindi non esiste
                    //dovrà ritornare la cartella cur
-                    throw new DirectoryNotFound(path, orderedPath.get(orderedPath.size()-1));
+                    throw new DirectoryNotFound(String.format(localization.localize("DirectoryNotFound"), orderedPath.get(orderedPath.size()-1), path));
                 }
             }
             System.out.println("Directory di destinazione: " + cur_temp.getName());
@@ -69,7 +71,7 @@ public class FileSystemModel {
                 }
                 if(oldCounter==counter){//se counter non é stato incrementato, significa che non si é trovata la dir e quindi non esiste
                     //dovrà ritornare la cartella cur
-                    throw new DirectoryNotFound(path, orderedRelativePath.get(orderedRelativePath.size()-1));
+                    throw new DirectoryNotFound(String.format(localization.localize("DirectoryNotFound"), orderedRelativePath.get(orderedRelativePath.size()-1),path));
                 }
             }
             System.out.println("Directory di destinazione: " + cur_temp.getName());
@@ -99,7 +101,8 @@ public class FileSystemModel {
             stringBuilder.insert(0, (currentDirectory != root ? separator : "") + currentDirectory.getName());
             currentDirectory = getParentDirectory(currentDirectory);
         }
-        stringBuilder.insert(0, "Current working directory: ");
+
+        stringBuilder.insert(0, String.format(localization.localize("command.pwd")));
         return stringBuilder.toString();
     }
 
@@ -132,13 +135,7 @@ public class FileSystemModel {
     }
 
     public String help() {
-        return "ls (list directory content): ls \n" +
-                "mkdir (make directory): mkdir <dir name> \n" +
-                "pwd (print working directory): pwd \n" +
-                "cd (current directory): cd \n" +
-                "mv (move): mv <origin> <destination> \n" +
-                "rm (remove): rm <path> \n" +
-                "clear: clears the previous outputs";
+        return String.format(localization.localize("command.help"));
     }
 
     public void clear() {
