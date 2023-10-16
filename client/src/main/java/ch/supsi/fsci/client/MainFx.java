@@ -6,6 +6,7 @@ import ch.supsi.fsci.client.view.CommandLineView;
 import ch.supsi.fsci.client.view.OutputAreaView;
 import ch.supsi.fsci.client.controller.CommandExecutionController;
 import ch.supsi.fsci.engine.FileSystemModel;
+import ch.supsi.fsci.engine.Localization;
 import ch.supsi.fsci.engine.Persistence;
 import javafx.application.Application;
 import javafx.geometry.Insets;
@@ -22,7 +23,7 @@ import javafx.stage.Stage;
 
 import java.io.File;
 import java.util.HashMap;
-import java.util.Map;
+import java.util.Locale;
 
 public class MainFx extends Application {
     private final static String separator = File.separator;
@@ -47,6 +48,7 @@ public class MainFx extends Application {
         this.outputArea = new TextArea();
 
         this.prefCommandSpacerWidth = Integer.parseInt(preferencesData.get("prefCommandSpacerWidth"));
+        Localization.initialize("i18n.translations", Locale.forLanguageTag(preferencesData.get("language")));
         this.commandFieldPrefColumnCount = Integer.parseInt(preferencesData.get("commandFieldPrefColumnCount"));
         this.prefOutputAreaRowCount = Integer.parseInt(preferencesData.get("prefOutputAreaRowCount"));
         this.prefInsetsSize = Integer.parseInt(preferencesData.get("prefInsetsSize"));
