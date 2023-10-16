@@ -73,6 +73,28 @@ public class FileSystemTest {
     }
 
     @Test
+    public void testMkdir(){
+        final String nomeCartella = "H";
+        fileSystemModel.cd("\\C");
+        fileSystemModel.mkdir(nomeCartella);
+        assertEquals((new DirectoryModel(nomeCartella)), fileSystemModel.cd("\\C\\H"));
+    }
+
+    @Test
+    public void testLs(){
+        FileSystemModel fileSystemToTest = new FileSystemModel();
+        fileSystemToTest.mkdir("A");
+        fileSystemToTest.mkdir("B");
+        fileSystemToTest.mkdir("C");
+        assertEquals("A B C ", fileSystemModel.ls());
+    }
+
+    @Test
+    public void testSize(){
+        assertEquals(3, fileSystemModel.getRoot().getDir().size());
+    }
+
+    @Test
     public void testSearch(){
         final String absolutePath = "\\B\\F";
         final String wrongAbsolutePath = "\\B\\X";
