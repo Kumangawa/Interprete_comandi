@@ -4,6 +4,8 @@ import ch.supsi.fsci.engine.Exceptions.DirectoryNotFound;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.io.File;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class FileSystemTest {
@@ -81,5 +83,27 @@ public class FileSystemTest {
         assertEquals(expectedF, fileSystemModel.search(absolutePath));
         assertEquals(expectedF, fileSystemModel.search(relativePath));
         assertThrows(DirectoryNotFound.class, () -> fileSystemModel.search(wrongAbsolutePath));
+    }
+
+    @Test
+    public void testMkdir(){
+        final String nomeCartella = "H";
+        fileSystemModel.cd("\\C");
+        fileSystemModel.mkdir(nomeCartella);
+        assertEquals((new DirectoryModel(nomeCartella)), fileSystemModel.cd("\\C\\H"));
+    }
+
+    @Test
+    public void testLs(){
+        FileSystemModel fileSystemToTest = new FileSystemModel();
+        fileSystemToTest.mkdir("A");
+        fileSystemToTest.mkdir("B");
+        fileSystemToTest.mkdir("C");
+        assertEquals("A B C ", fileSystemModel.ls());
+    }
+
+    @Test
+    public void testSize(){
+        assertEquals(3, fileSystemModel.getRoot().getDir().size());
     }
 }

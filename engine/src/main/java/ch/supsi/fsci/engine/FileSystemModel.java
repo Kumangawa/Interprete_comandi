@@ -28,6 +28,29 @@ public class FileSystemModel {
         return path.startsWith(separator);
     }
 
+    public DirectoryModel iterate(DirectoryModel startingDirectory, String path){
+        int counter = 0;
+        int oldCounter = 0;
+        DirectoryModel cur_temp = startingDirectory;
+        List<String> orderedPath = (Arrays.stream(path.split(separator + separator)).skip(1).toList());
+        while(counter!=orderedPath.size()){ //quando si arriva alla fine del path corrisponde alla cartella di dest.
+            oldCounter = counter;
+            for(DirectoryModel dir : cur_temp.getDir()){
+                if(dir.getName().equals(orderedPath.get(counter))){ //al livello corrente si controlla la cartella giusta
+                    cur_temp = dir;//quando si trova la cartella giusta si cambia la cur
+                    counter++;//scendiamo di un livello di profondità nella gerarchia
+                    break;//rompiamo il ciclo
+                }
+            }
+            if(oldCounter==counter){//se counter non é stato incrementato, significa che non si é trovata la dir e quindi non esiste
+                //dovrà ritornare la cartella cur
+                throw new DirectoryNotFound(String.format(localization.localize("DirectoryNotFound"), orderedPath.get(orderedPath.size()-1), path));
+            }
+        }
+        System.out.println("Directory di destinazione: " + cur_temp.getName());
+        return cur_temp;
+    }
+
     /*
      *Questo metodo restituisce la cartella che dovrebbe ottenere tramite il path specificato
      * toDo: se il path non esiste, segnalarlo e terminare -> Fatto
@@ -118,12 +141,25 @@ public class FileSystemModel {
         return null;
     }
 
-    public String mkdir(final String path) {
-        return "";
+    /*
+    * Mkdir prende un solo parametro: il nome della cartella da creare all'interno della cartella corrente
+    * @param nomeCartella é solo il nome della cartella, non tutto il comando
+    * */
+    public String mkdir(final String nomeCartella) {
+        cur.add(new DirectoryModel(nomeCartella));
+        return "new directory created: " + nomeCartella;
     }
 
+    /*
+    * stampa il contenuto della cartella corrente.
+    * */
     public String ls() {
-        return "";
+        List<DirectoryModel> contenutoCur = cur.getDir();
+        StringBuilder contenuto = new StringBuilder();
+        for(DirectoryModel dir : contenutoCur){
+            contenuto.append(dir.getName()).append(" ");
+        }
+        return contenuto.toString();
     }
 
     public String mv(final String origin, final String destination) {
