@@ -28,11 +28,10 @@ public class FileSystemModel {
         return path.startsWith(separator);
     }
 
-    public DirectoryModel iterate(DirectoryModel startingDirectory, String path){
+    public DirectoryModel iterate(DirectoryModel startingDirectory, List<String> orderedPath){
         int counter = 0;
         int oldCounter = 0;
         DirectoryModel cur_temp = startingDirectory;
-        List<String> orderedPath = (Arrays.stream(path.split(separator + separator)).skip(1).toList());
         while(counter!=orderedPath.size()){ //quando si arriva alla fine del path corrisponde alla cartella di dest.
             oldCounter = counter;
             for(DirectoryModel dir : cur_temp.getDir()){
@@ -44,7 +43,7 @@ public class FileSystemModel {
             }
             if(oldCounter==counter){//se counter non é stato incrementato, significa che non si é trovata la dir e quindi non esiste
                 //dovrà ritornare la cartella cur
-                throw new DirectoryNotFound(String.format(localization.localize("DirectoryNotFound"), orderedPath.get(orderedPath.size()-1), path));
+                throw new DirectoryNotFound(String.format(localization.localize("DirectoryNotFound"), orderedPath.get(orderedPath.size()-1), orderedPath));
             }
         }
         System.out.println("Directory di destinazione: " + cur_temp.getName());
@@ -58,47 +57,12 @@ public class FileSystemModel {
      * toDo: implementare la ricerca per path relativo
      * */
     protected DirectoryModel search(final String path){
-        int counter = 0; //serve a scendere nella gerarchia e corrisponde ai livelli della lista orderedPath
-        int oldCounter = 0; //serve a controllare se si é trovata la directory specificata
-        DirectoryModel cur_temp;
         if(isAbsolutePath(path)){//caso path assoluto \B\F
             List<String> orderedPath = (Arrays.stream(path.split(separator + separator)).skip(1).toList());
-            cur_temp = root; //dato che é un absolute path, la prima cartella é la root
-            while(counter!=orderedPath.size()){ //quando si arriva alla fine del path corrisponde alla cartella di dest.
-                oldCounter = counter;
-                for(DirectoryModel dir : cur_temp.getDir()){
-                    if(dir.getName().equals(orderedPath.get(counter))){ //al livello corrente si controlla la cartella giusta
-                        cur_temp = dir;//quando si trova la cartella giusta si cambia la cur
-                        counter++;//scendiamo di un livello di profondità nella gerarchia
-                        break;//rompiamo il ciclo
-                    }
-                }
-                if(oldCounter==counter){//se counter non é stato incrementato, significa che non si é trovata la dir e quindi non esiste
-                   //dovrà ritornare la cartella cur
-                    throw new DirectoryNotFound(String.format(localization.localize("DirectoryNotFound"), orderedPath.get(orderedPath.size()-1), path));
-                }
-            }
-            System.out.println("Directory di destinazione: " + cur_temp.getName());
-            return cur_temp;
+            return iterate(root, orderedPath);
         } else {
             List<String> orderedRelativePath = (Arrays.stream(path.split(separator + separator)).toList());
-            cur_temp = cur;
-            while(counter!=orderedRelativePath.size()){
-                oldCounter = counter;
-                for(DirectoryModel dir : cur_temp.getDir()){
-                    if(dir.getName().equals(orderedRelativePath.get(counter))){ //al livello corrente si controlla la cartella giusta
-                        cur_temp = dir;//quando si trova la cartella giusta si cambia la cur
-                        counter++;//scendiamo di un livello di profondità nella gerarchia
-                        break;//rompiamo il ciclo
-                    }
-                }
-                if(oldCounter==counter){//se counter non é stato incrementato, significa che non si é trovata la dir e quindi non esiste
-                    //dovrà ritornare la cartella cur
-                    throw new DirectoryNotFound(String.format(localization.localize("DirectoryNotFound"), orderedRelativePath.get(orderedRelativePath.size()-1),path));
-                }
-            }
-            System.out.println("Directory di destinazione: " + cur_temp.getName());
-            return cur_temp;
+            return iterate(cur, orderedRelativePath);
         }
     }
 
