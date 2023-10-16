@@ -5,6 +5,8 @@ import ch.supsi.fsci.client.view.CommandLineViewInterface;
 import ch.supsi.fsci.client.view.OutputAreaViewInterface;
 import javafx.scene.control.TextField;
 
+import java.util.Locale;
+
 public class CommandLineController {
     private TextField textField;
     private CommandLineModelInterface commandLineModel;

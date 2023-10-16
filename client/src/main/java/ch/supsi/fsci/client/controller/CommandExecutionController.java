@@ -31,6 +31,7 @@ public class CommandExecutionController {
      * @brief Given a packageToScan, finds all the classes annotated with CommandInfo and completes the dispatcher's initialization
      * @param packageToScan: the package name that contains command classes annotated with CommandInfo.
      */
+
     public void initializeAllCommands(final String packageToScan) {
         // 1. Scan the package to find all the classes that implement the CommandInterface AND are annotated with CommandInfo.
         final Reflections reflections = new Reflections(packageToScan);
@@ -73,6 +74,8 @@ public class CommandExecutionController {
                 if (annotation.totalArguments() != tokenizer.countTokens()) {
                     throw new WrongCommandArgumentNumberException(commandName, annotation.commandSyntax(), annotation.totalArguments(), tokenizer.countTokens());
                 }
+
+                // Implement a pattern for delayed construction?
                 return tokenizer.countTokens() > 0
                         ? genericCommand.getConstructor(FileSystemModel.class, StringTokenizer.class).newInstance(fileSystemModel, tokenizer)
                         : genericCommand.getConstructor(FileSystemModel.class).newInstance(fileSystemModel);
