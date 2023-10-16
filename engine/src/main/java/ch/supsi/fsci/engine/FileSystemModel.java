@@ -138,8 +138,8 @@ public class FileSystemModel {
         return String.format(localization.localize("command.help"));
     }
 
-    public void clear() {
-
+    public String clear() {
+        return "clear";
     }
 
     // Todo: Remove package-protected, make method private

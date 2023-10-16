@@ -30,8 +30,11 @@ public class CommandLineController {
             // Clear the text field
             commandLineView.clearText(textField);
             // Add the text in the output area
-            outputAreaView.addText(output);
-            //outputAreaView.clearOutputArea();
+            if (output.equals("clear")) {
+                outputAreaView.clearOutputArea();
+            } else {
+                outputAreaView.addText(output);
+            }
         });
     }
 
