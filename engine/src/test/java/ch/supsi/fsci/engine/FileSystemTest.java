@@ -4,6 +4,8 @@ import ch.supsi.fsci.engine.Exceptions.DirectoryNotFound;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.io.File;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class FileSystemTest {
@@ -84,6 +86,7 @@ public class FileSystemTest {
     }
 
     @Test
+<<<<<<< HEAD
     public void testRm() {
         // Test removing an existing directory
         final String existingDirPath = "\\B\\E";
@@ -100,5 +103,26 @@ public class FileSystemTest {
 
         // Verify that the root directory is not removed from the file system
         assertNotNull(fileSystemModel.search("\\"));
+=======
+    public void testMkdir(){
+        final String nomeCartella = "H";
+        fileSystemModel.cd("\\C");
+        fileSystemModel.mkdir(nomeCartella);
+        assertEquals((new DirectoryModel(nomeCartella)), fileSystemModel.cd("\\C\\H"));
+    }
+
+    @Test
+    public void testLs(){
+        FileSystemModel fileSystemToTest = new FileSystemModel();
+        fileSystemToTest.mkdir("A");
+        fileSystemToTest.mkdir("B");
+        fileSystemToTest.mkdir("C");
+        assertEquals("A B C ", fileSystemModel.ls());
+    }
+
+    @Test
+    public void testSize(){
+        assertEquals(3, fileSystemModel.getRoot().getDir().size());
+>>>>>>> adee2c795f4da5fca89f7c689fdf51557050445d
     }
 }

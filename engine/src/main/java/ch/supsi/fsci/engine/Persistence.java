@@ -77,6 +77,7 @@ public class Persistence {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
         return preferencesData;
     }
 

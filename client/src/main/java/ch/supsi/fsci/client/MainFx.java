@@ -52,7 +52,6 @@ public class MainFx extends Application {
         this.commandFieldPrefColumnCount = Integer.parseInt(preferencesData.get("commandFieldPrefColumnCount"));
         this.prefOutputAreaRowCount = Integer.parseInt(preferencesData.get("prefOutputAreaRowCount"));
         this.prefInsetsSize = Integer.parseInt(preferencesData.get("prefInsetsSize"));
-
     }
 
     @Override

@@ -5,6 +5,8 @@ import ch.supsi.fsci.client.view.CommandLineViewInterface;
 import ch.supsi.fsci.client.view.OutputAreaViewInterface;
 import javafx.scene.control.TextField;
 
+import java.util.Locale;
+
 public class CommandLineController {
     private TextField textField;
     private CommandLineModelInterface commandLineModel;
@@ -28,8 +30,11 @@ public class CommandLineController {
             // Clear the text field
             commandLineView.clearText(textField);
             // Add the text in the output area
-            outputAreaView.addText(output);
-            //outputAreaView.clearOutputArea();
+            if (output.equals("clear")) {
+                outputAreaView.clearOutputArea();
+            } else {
+                outputAreaView.addText(output);
+            }
         });
     }
 

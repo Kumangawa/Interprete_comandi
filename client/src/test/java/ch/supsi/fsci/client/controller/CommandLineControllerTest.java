@@ -44,4 +44,9 @@ public class CommandLineControllerTest extends ApplicationTest {
         // Verify that the addText method of the outputAreaView was called with the expected output
         verify(outputAreaView, atLeastOnce()).addText("Test Output");
     }
+
+    @Test
+    public void testClear() {
+        // TODO: Test after design improvements
+    }
 }
