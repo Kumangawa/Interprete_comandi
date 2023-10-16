@@ -82,4 +82,23 @@ public class FileSystemTest {
         assertEquals(expectedF, fileSystemModel.search(relativePath));
         assertThrows(DirectoryNotFound.class, () -> fileSystemModel.search(wrongAbsolutePath));
     }
+
+    @Test
+    public void testRm() {
+        // Test removing an existing directory
+        final String existingDirPath = "\\B\\E";
+        final String expectedOutput = "removed directory: E";
+        assertEquals(expectedOutput, fileSystemModel.rm(existingDirPath));
+
+        // Verify that the directory is removed from the file system
+        assertThrows(DirectoryNotFound.class, () -> fileSystemModel.search(existingDirPath));
+
+        // Test removing the root directory (should not be allowed)
+        final String rootDirPath = "\\";
+        final String rootDirErrorMessage = "\\ non può essere eliminata!";
+        assertEquals(rootDirErrorMessage, fileSystemModel.rm(rootDirPath));
+
+        // Verify that the root directory is not removed from the file system
+        assertNotNull(fileSystemModel.search("\\"));
+    }
 }

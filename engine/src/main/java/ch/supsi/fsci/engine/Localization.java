@@ -12,12 +12,16 @@ public class Localization {
 
     private static ResourceBundle translations;
 
-    public Localization(){
-        if(!inizialize){
-            bundleName =  "i18n.translations";
-            locale = Locale.forLanguageTag("en");
-            translations = ResourceBundle.getBundle(bundleName, locale);
-        }
+    private static final Localization singleton = new Localization();
+
+    private Localization(){
+        bundleName =  "i18n.translations";
+        locale = Locale.forLanguageTag("en");
+        translations = ResourceBundle.getBundle(bundleName, locale);
+    }
+
+    public static Localization getSingleton() {
+        return singleton;
     }
 
     public static void initialize(String bundleNametmp, Locale localetmp) {

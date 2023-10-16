@@ -48,7 +48,7 @@ public class MainFx extends Application {
         this.outputArea = new TextArea();
 
         this.prefCommandSpacerWidth = Integer.parseInt(preferencesData.get("prefCommandSpacerWidth"));
-        Localization.initialize("i18n.translations", Locale.forLanguageTag(preferencesData.get("language")));
+        Localization.getSingleton().initialize("i18n.translations", Locale.forLanguageTag(preferencesData.get("language")));
         this.commandFieldPrefColumnCount = Integer.parseInt(preferencesData.get("commandFieldPrefColumnCount"));
         this.prefOutputAreaRowCount = Integer.parseInt(preferencesData.get("prefOutputAreaRowCount"));
         this.prefInsetsSize = Integer.parseInt(preferencesData.get("prefInsetsSize"));

@@ -11,10 +11,8 @@ public class FileSystemModel {
     private final DirectoryModel root;
     private DirectoryModel cur;
     private final String separator = FileSystems.getDefault().getSeparator();
-    private Localization localization;
 
     public FileSystemModel() {
-        localization = new Localization();
         DirectoryModel root = new DirectoryModel(separator);
         this.root = root;
         this.cur = root;
@@ -52,7 +50,7 @@ public class FileSystemModel {
                 }
                 if(oldCounter==counter){//se counter non é stato incrementato, significa che non si é trovata la dir e quindi non esiste
                    //dovrà ritornare la cartella cur
-                    throw new DirectoryNotFound(String.format(localization.localize("DirectoryNotFound"), orderedPath.get(orderedPath.size()-1), path));
+                    throw new DirectoryNotFound(String.format(Localization.getSingleton().localize("DirectoryNotFound"), orderedPath.get(orderedPath.size()-1), path));
                 }
             }
             System.out.println("Directory di destinazione: " + cur_temp.getName());
@@ -71,7 +69,7 @@ public class FileSystemModel {
                 }
                 if(oldCounter==counter){//se counter non é stato incrementato, significa che non si é trovata la dir e quindi non esiste
                     //dovrà ritornare la cartella cur
-                    throw new DirectoryNotFound(String.format(localization.localize("DirectoryNotFound"), orderedRelativePath.get(orderedRelativePath.size()-1),path));
+                    throw new DirectoryNotFound(String.format(Localization.getSingleton().localize("DirectoryNotFound"), orderedRelativePath.get(orderedRelativePath.size()-1),path));
                 }
             }
             System.out.println("Directory di destinazione: " + cur_temp.getName());
@@ -102,7 +100,7 @@ public class FileSystemModel {
             currentDirectory = getParentDirectory(currentDirectory);
         }
 
-        stringBuilder.insert(0, String.format(localization.localize("command.pwd")));
+        stringBuilder.insert(0, String.format(Localization.getSingleton().localize("command.pwd")));
         return stringBuilder.toString();
     }
 
@@ -131,11 +129,30 @@ public class FileSystemModel {
     }
 
     public String rm(final String path) {
-        return "";
+        // Verifica se il percorso specificato è la radice "/"
+        if (path.equals(getSeparator())) {
+            return getSeparator() + " non può essere eliminata!";
+        }
+
+        // Cerca la directory specificata nel percorso
+        try {
+            DirectoryModel targetDir = search(path);
+
+            // Rimuovi la directory dalla lista delle directory del genitore
+            DirectoryModel parentDir = getParentDirectory(targetDir);
+            if (parentDir != null) {
+                parentDir.getDir().remove(targetDir);
+                return "removed directory: " + targetDir.getName();
+            } else {
+                return "cannot remove root directory";
+            }
+        } catch (DirectoryNotFound e) {
+            return e.getMessage();
+        }
     }
 
     public String help() {
-        return String.format(localization.localize("command.help"));
+        return String.format(Localization.getSingleton().localize("command.help"));
     }
 
     public void clear() {
