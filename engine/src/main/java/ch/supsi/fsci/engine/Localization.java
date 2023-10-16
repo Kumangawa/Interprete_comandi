@@ -4,7 +4,6 @@ import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 public class Localization {
-
     private static boolean inizialize = false;
     private static String bundleName;
 
