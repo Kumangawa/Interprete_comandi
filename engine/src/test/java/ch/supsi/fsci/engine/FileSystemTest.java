@@ -86,7 +86,7 @@ public class FileSystemTest {
         fileSystemToTest.mkdir("A");
         fileSystemToTest.mkdir("B");
         fileSystemToTest.mkdir("C");
-        assertEquals("A B C ", fileSystemModel.ls());
+        assertEquals("A B C ", fileSystemToTest.ls());
     }
 
     @Test
@@ -103,5 +103,43 @@ public class FileSystemTest {
         assertEquals(expectedF, fileSystemModel.search(absolutePath));
         assertEquals(expectedF, fileSystemModel.search(relativePath));
         assertThrows(DirectoryNotFound.class, () -> fileSystemModel.search(wrongAbsolutePath));
+    }
+
+    @Test
+    public void testRm(){
+        FileSystemModel fileSystemToTest = new FileSystemModel();
+        fileSystemToTest.mkdir("G");
+        fileSystemToTest.mkdir("H");
+        fileSystemToTest.mkdir("I");
+        fileSystemToTest.rm("\\G");
+        assertEquals("H I ", fileSystemToTest.ls());
+
+        fileSystemToTest.cd("\\H");
+        fileSystemToTest.mkdir("T");
+        fileSystemToTest.rm("T");
+        assertEquals("", fileSystemToTest.ls());
+
+        fileSystemToTest.rm("\\H");
+        assertEquals("", fileSystemToTest.ls());
+
+        fileSystemToTest.cd("\\");
+        fileSystemToTest.rm("\\H");
+        assertEquals("I ", fileSystemToTest.ls());
+
+        fileSystemToTest.cd("\\I");
+        fileSystemToTest.mkdir("O");
+        assertEquals(String.format(Localization.localize("command.rm.remove.failed")), fileSystemToTest.rm("\\I"));
+        assertEquals("O ", fileSystemToTest.ls());
+
+        fileSystemToTest.cd("\\I\\O");
+        fileSystemToTest.rm("\\I");
+        fileSystemToTest.cd("\\I");
+        assertEquals("O ", fileSystemToTest.ls());
+    }
+
+    @Test
+    public void testMv() {
+
+        // TODO: da completare
     }
 }

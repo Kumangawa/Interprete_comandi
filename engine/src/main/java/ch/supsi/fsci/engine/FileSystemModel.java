@@ -41,7 +41,7 @@ public class FileSystemModel {
             }
             if(oldCounter==counter){//se counter non é stato incrementato, significa che non si é trovata la dir e quindi non esiste
                 //dovrà ritornare la cartella cur
-                throw new DirectoryNotFound(String.format(Localization.getSingleton().localize("DirectoryNotFound"), orderedPath.get(orderedPath.size()-1), orderedPath));
+                throw new DirectoryNotFound(String.format(Localization.localize("DirectoryNotFound"), orderedPath.get(orderedPath.size()-1), orderedPath));
             }
         }
         System.out.println("Directory di destinazione: " + cur_temp.getName());
@@ -88,7 +88,7 @@ public class FileSystemModel {
             currentDirectory = getParentDirectory(currentDirectory);
         }
 
-        stringBuilder.insert(0, String.format(Localization.getSingleton().localize("command.pwd")));
+        stringBuilder.insert(0, String.format(Localization.localize("command.pwd")));
         return stringBuilder.toString();
     }
 
@@ -106,7 +106,7 @@ public class FileSystemModel {
 
     public String mkdir(final String nomeCartella) {
         cur.add(new DirectoryModel(nomeCartella));
-        return "new directory created: " + nomeCartella;
+        return String.format(Localization.localize("command.mkdir")) + nomeCartella;
     }
 
     public String ls() {
@@ -119,34 +119,77 @@ public class FileSystemModel {
     }
 
     public String mv(final String origin, final String destination) {
-        return "";
-    }
-
-    public String rm(final String path) {
-        // Verifica se il percorso specificato è la radice "/"
-        if (path.equals(getSeparator())) {
-            return getSeparator() + " non può essere eliminata!";
-        }
-
-        // Cerca la directory specificata nel percorso
+        // TODO: da completare
         try {
-            DirectoryModel targetDir = search(path);
+            // Cerca la directory di origine
+            DirectoryModel sourceDir = search(origin);
 
-            // Rimuovi la directory dalla lista delle directory del genitore
-            DirectoryModel parentDir = getParentDirectory(targetDir);
-            if (parentDir != null) {
-                parentDir.getDir().remove(targetDir);
-                return "removed directory: " + targetDir.getName();
+            // Verifica se il percorso di destinazione è la radice ("/")
+            if (destination.equals("/")) {
+                return "/ non può essere spostata!";
+            }
+
+            // Cerca la directory di destinazione
+            DirectoryModel destinationDir = search(destination);
+
+            // Verifica se il percorso di destinazione è una sottodirectory della directory di origine
+            if (isDescendant(sourceDir, destinationDir)) {
+                return "Impossibile spostare la directory all'interno di una sua sottodirectory.";
+            }
+
+            // Rimuovi la directory di origine dal suo genitore
+            DirectoryModel sourceParentDir = getParentDirectory(sourceDir);
+            if (sourceParentDir != null) {
+                sourceParentDir.getDir().remove(sourceDir);
+
+                // Aggiungi la directory di origine alla directory di destinazione
+                destinationDir.getDir().add(sourceDir);
+                return "Spostamento avvenuto con successo: " + sourceDir.getName() + " spostata in " + destination;
             } else {
-                return "cannot remove root directory";
+                return "Impossibile spostare la directory di origine.";
             }
         } catch (DirectoryNotFound e) {
             return e.getMessage();
         }
     }
 
+    public String rm(final String path) {
+        if (path.equals("/")) {
+            return String.format(Localization.localize("command.rm.remove.root"));
+        }
+
+        try {
+            DirectoryModel targetDir = search(path);
+
+            if (targetDir == cur || isDescendant(targetDir, cur)) {
+                return String.format(Localization.localize("command.rm.remove.failed"));
+            }
+            DirectoryModel parentDir = getParentDirectory(targetDir);
+            if (parentDir != null) {
+                parentDir.getDir().remove(targetDir);
+            } else {
+                DirectoryModel d = getRoot();
+                d.getDir().remove(targetDir);
+            }
+            return String.format(Localization.localize("command.rm.remove.success"))+ targetDir.getName();
+
+        } catch (DirectoryNotFound e) {
+            return e.getMessage();
+        }
+    }
+
+    private boolean isDescendant(DirectoryModel ancestor, DirectoryModel descendant) {
+        while (descendant != null) {
+            if (descendant == ancestor) {
+                return true;
+            }
+            descendant = getParentDirectory(descendant);
+        }
+        return false;
+    }
+
     public String help() {
-        return String.format(Localization.getSingleton().localize("command.help"));
+        return String.format(Localization.localize("command.help"));
     }
 
     public String clear() {

@@ -16,11 +16,11 @@ public class CommandLineModelTest {
         commandExecutionController.initializeAllCommands("ch.supsi.fsci.engine.CommandPattern.Commands");
         final CommandLineModel commandLineModel = new CommandLineModel(fileSystemModel, commandExecutionController);
         assertEquals(commandLineModel.setText("pwd"), "Current working directory: \\");
-        assertEquals(commandLineModel.setText("mkdir test"), "new directory created: test");
+        assertEquals(commandLineModel.setText("mkdir test"), "New directory created: test");
         assertEquals(commandLineModel.setText("ls"), "test ");
         assertEquals(commandLineModel.setText("cd \\A"), "The directory A has not been found with the [A] path");
-        assertEquals(commandLineModel.setText("mv test test1"), "");
-        assertEquals(commandLineModel.setText("rm test"), "cannot remove root directory");
+        assertEquals(commandLineModel.setText("mv test test1"), "The directory test1 has not been found with the [test1] path");
+        assertEquals(commandLineModel.setText("rm test"), "Removed directory: test");
         assertEquals(commandLineModel.setText("help"), "ls (list directory content): ls \n" +
                 "mkdir (make directory): mkdir <dir name> \n" +
                 "pwd (print working directory): pwd \n" +
