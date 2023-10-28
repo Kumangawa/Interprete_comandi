@@ -1,9 +1,6 @@
 package ch.supsi.fsci.client;
 
-import ch.supsi.fsci.client.controller.CommandLineController;
-import ch.supsi.fsci.client.model.CommandLineModel;
-import ch.supsi.fsci.client.view.CommandLineView;
-import ch.supsi.fsci.client.view.OutputAreaView;
+import ch.supsi.fsci.client.model.CommandExecutionModel;
 import ch.supsi.fsci.client.controller.CommandExecutionController;
 import ch.supsi.fsci.engine.FileSystemModel;
 import ch.supsi.fsci.engine.Localization;
@@ -90,22 +87,14 @@ public class MainFx extends Application {
         // scene
         Scene mainScene = new Scene(borderPane);
 
-        //OutputArea
-        OutputAreaView outputAreaView = new OutputAreaView(outputArea);
-
         // FileSystemModel
         final FileSystemModel fileSystemModel = new FileSystemModel();
 
         // CommandDispatcher
-        final CommandExecutionController commandExecutionController = new CommandExecutionController(fileSystemModel);
-        commandExecutionController.initializeAllCommands("ch.supsi.fsci.engine.CommandPattern.Commands");
-
-        //CommandLine
-        CommandLineView commandLineView = new CommandLineView();
-        CommandLineModel commandLineModel = new CommandLineModel(fileSystemModel, commandExecutionController);
-        CommandLineController commandLineController = new CommandLineController(commandTextField, commandLineModel,
-                commandLineView, outputAreaView);
-        commandLineController.initialize();
+        final CommandExecutionModel commandExecutionModel = new CommandExecutionModel(fileSystemModel);
+        commandExecutionModel.initializeAllCommands("ch.supsi.fsci.engine.CommandPattern.Commands");
+        final CommandExecutionController commandExecutionController = new CommandExecutionController(commandTextField, outputArea, commandExecutionModel);
+        commandExecutionController.initialize();
 
         // put the scene onto the primary stage
         stage.setTitle(applicationTitle);

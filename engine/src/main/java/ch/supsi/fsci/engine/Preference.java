@@ -1,5 +1,7 @@
 package ch.supsi.fsci.engine;
 
+import java.util.Properties;    // TODO: vedi come fare
+
 public class Preference {
     private String language;
     private int prefCommandSpacerWidth;

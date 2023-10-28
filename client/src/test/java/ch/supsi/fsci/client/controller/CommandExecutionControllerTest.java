@@ -1,101 +1,61 @@
 package ch.supsi.fsci.client.controller;
 
+import ch.supsi.fsci.client.model.CommandExecutionModel;
+import ch.supsi.fsci.client.model.CommandExecutionModelInterface;
 import ch.supsi.fsci.engine.CommandPattern.CommandInterface;
-import ch.supsi.fsci.engine.CommandPattern.Commands.*;
-import ch.supsi.fsci.engine.Exceptions.WrongCommandArgumentNumberException;
-import ch.supsi.fsci.engine.Exceptions.WrongCommandNameException;
-import ch.supsi.fsci.engine.FileSystemModel;
+import javafx.event.ActionEvent;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+import org.testfx.framework.junit5.ApplicationTest;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.*;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
-public class CommandExecutionControllerTest {
-    private CommandExecutionController controller;
+import static org.mockito.Mockito.*;
+
+
+public class CommandExecutionControllerTest extends ApplicationTest  {
+
+    private CommandExecutionModelInterface commandExecutionModel;
+    private TextField textField;
+    private TextArea outputArea;
+    private CommandExecutionController commandExecutionController;
 
     @BeforeEach
     public void setUp() {
-        controller = new CommandExecutionController(new FileSystemModel());
+        commandExecutionModel = Mockito.mock(CommandExecutionModelInterface.class);
+        textField = new TextField();
+        outputArea = new TextArea();
+        commandExecutionController = new CommandExecutionController(textField, outputArea, commandExecutionModel);
+        commandExecutionController.initialize();
     }
 
     @Test
-    public void testInitializationOfCommandList() {
-        assertTrue(controller.commandList.isEmpty());
-    }
+    public void testElaborateText() throws Exception {
+        // Arrange
+        String input = "test input";
+        String expectedOutput = "Expected Output";
 
-    @Test
-    public void testInitializeAllCommandsWithValidPackage() {
-        controller.initializeAllCommands("ch.supsi.fsci.engine.CommandPattern.Commands");
+        // Mocking the behavior of commandExecutionModel.getDispatchedCommand()
+        CommandInterface mockCommand = Mockito.mock(CommandInterface.class);
+        when(commandExecutionModel.getDispatchedCommand(input)).thenReturn(mockCommand);
+        when(mockCommand.execute()).thenReturn(expectedOutput);
 
-        assertTrue(controller.commandList.containsKey("cd"));
-        assertTrue(controller.commandList.containsKey("help"));
-        assertTrue(controller.commandList.containsKey("ls"));
-        assertTrue(controller.commandList.containsKey("mkdir"));
-        assertTrue(controller.commandList.containsKey("mv"));
-        assertTrue(controller.commandList.containsKey("pwd"));
-        assertTrue(controller.commandList.containsKey("rm"));
+        // Act
+        textField.setText(input);
+        textField.fireEvent(new javafx.event.ActionEvent());
 
-        assertEquals(CdCommand.class, controller.commandList.get("cd"));
-        assertEquals(HelpCommand.class, controller.commandList.get("help"));
-        assertEquals(LsCommand.class, controller.commandList.get("ls"));
-        assertEquals(MkdirCommand.class, controller.commandList.get("mkdir"));
-        assertEquals(MvCommand.class, controller.commandList.get("mv"));
-        assertEquals(PwdCommand.class, controller.commandList.get("pwd"));
-        assertEquals(RmCommand.class, controller.commandList.get("rm"));
-    }
-
-
-    @Test
-    public void testInitializeAllCommandsWithInvalidPackage() {
-        controller.initializeAllCommands("ch.supsi.fsci.engine.Exceptions");
-        assertTrue(controller.commandList.isEmpty());
-    }
-
-    @Test
-    public void testInitializeAllCommandsWithEmptyPackage() {
-        assertThrows(Exception.class, () -> controller.initializeAllCommands(""));
-        assertTrue(controller.commandList.isEmpty());
-    }
-
-
-    @Test
-    public void testGetDispatchedCommandWithValidCommandAndArguments() throws Exception {
-        controller.initializeAllCommands("ch.supsi.fsci.engine.CommandPattern.Commands");
-
-        final String[] validCommands = { "mv file1 file2", "cd path", "ls", "mkdir dir", "pwd", "rm dir" };
-        for (final String currentValidCommand: validCommands) {
-            CommandInterface command = controller.getDispatchedCommand(currentValidCommand);
-            assertNotNull(command);
-        }
-    }
-
-    @Test
-    public void testGetDispatchedCommandWithInvalidCommandName() {
-        controller.initializeAllCommands("ch.supsi.fsci.engine.CommandPattern.Commands");
-
-        final String[] invalidCommandNames = { "mve file1 file2", "cr path", "la", "mkdlr dir", "piwd", "rmm dir" };
-        for (final String currentInvalidCommandName: invalidCommandNames) {
-            assertThrows(WrongCommandNameException.class, () -> controller.getDispatchedCommand(currentInvalidCommandName));
-        }
-    }
-
-    @Test
-    public void testGetDispatchedCommandWithEmptyInput() {
-        controller.initializeAllCommands("ch.supsi.fsci.engine.CommandPattern.Commands");
-
-        final String input = "";
-        assertThrows(IllegalArgumentException.class, () -> controller.getDispatchedCommand(input));
-    }
-
-    @Test
-    public void testGetDispatchedCommandWithWrongNumberOfArguments() {
-        controller.initializeAllCommands("ch.supsi.fsci.engine.CommandPattern.Commands");
-
-        final String[] invalidCommandArgument = {
-                "mv file1 file2 file3", "mv", "mv file1", "cd", "cd path0 path", "ls one",
-                "mkdir dir dir2", "mkdir", "pwd one", "rm" };
-        for (final String currentInvalidCommandArgument: invalidCommandArgument) {
-            assertThrows(WrongCommandArgumentNumberException.class, () -> controller.getDispatchedCommand(currentInvalidCommandArgument));
-        }
+        // Assert
+        assertEquals("", textField.getText()); // Ensure the text field is cleared
+        assertEquals(expectedOutput + '\n', outputArea.getText()); // Ensure the expected output is appended to outputArea
     }
 }
