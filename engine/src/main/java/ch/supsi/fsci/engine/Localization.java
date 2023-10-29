@@ -4,12 +4,12 @@ import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 public class Localization {
-    private static boolean inizialize = false;
-    private static String bundleName;
+    private boolean inizialize = false;
+    private String bundleName;
 
-    private static Locale locale ;
+    private Locale locale ;
 
-    private static ResourceBundle translations;
+    private ResourceBundle translations;
 
     private static final Localization singleton = new Localization();
 
@@ -23,22 +23,22 @@ public class Localization {
         return singleton;
     }
 
-    public static void initialize(String bundleNametmp, Locale localetmp) {
+    public void initialize(String bundleNametmp, Locale localetmp) {
         bundleName = bundleNametmp;
         locale = localetmp;
         translations = ResourceBundle.getBundle(bundleName, locale);
         inizialize = true;
     }
 
-    public static ResourceBundle getResourceBundle() {
+    public ResourceBundle getResourceBundle() {
         return translations;
     }
 
-    public static boolean isInitialized() {
+    public boolean isInitialized() {
         return inizialize;
     }
 
-    public static String localize(String key) {
+    public String localize(String key) {
         if (key == null || key.isEmpty()) {
             return "";
         }

@@ -20,23 +20,23 @@ public class LocalizationTest {
 
     @Test
     public void testInitialize() {
-        Localization.initialize("i18n.translations", Locale.forLanguageTag("it"));
-        ResourceBundle bundle = Localization.getResourceBundle();
+        Localization.getSingleton().initialize("i18n.translations", Locale.forLanguageTag("it"));
+        ResourceBundle bundle = Localization.getSingleton().getResourceBundle();
         assertEquals("it", bundle.getLocale().getLanguage());
-        assertTrue(Localization.isInitialized());
+        assertTrue(Localization.getSingleton().isInitialized());
     }
 
     @Test
     public void testLocalizeExistingKey() {
-        Localization.initialize("i18n.translations", Locale.forLanguageTag("en"));
-        String localizedString = Localization.localize("test.key");
+        Localization.getSingleton().initialize("i18n.translations", Locale.forLanguageTag("en"));
+        String localizedString = Localization.getSingleton().localize("test.key");
         assertEquals("Existing key value", localizedString);
     }
 
     @Test
     public void testLocalizeMissingKey() {
-        Localization.initialize("i18n.translations", Locale.forLanguageTag("en"));
-        String localizedString = Localization.localize("missing.key");
+        Localization.getSingleton().initialize("i18n.translations", Locale.forLanguageTag("en"));
+        String localizedString = Localization.getSingleton().localize("missing.key");
         assertEquals("missing.key", localizedString);
     }
 }

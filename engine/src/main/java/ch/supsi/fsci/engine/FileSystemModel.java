@@ -41,7 +41,7 @@ public class FileSystemModel {
             }
             if(oldCounter==counter){//se counter non é stato incrementato, significa che non si é trovata la dir e quindi non esiste
                 //dovrà ritornare la cartella cur
-                throw new DirectoryNotFound(String.format(Localization.localize("DirectoryNotFound"), orderedPath.get(orderedPath.size()-1), orderedPath));
+                throw new DirectoryNotFound(String.format(Localization.getSingleton().localize("DirectoryNotFound"), orderedPath.get(orderedPath.size()-1), orderedPath));
             }
         }
         System.out.println("Directory di destinazione: " + cur_temp.getName());
@@ -88,7 +88,7 @@ public class FileSystemModel {
             currentDirectory = getParentDirectory(currentDirectory);
         }
 
-        stringBuilder.insert(0, String.format(Localization.localize("command.pwd")));
+        stringBuilder.insert(0, String.format(Localization.getSingleton().localize("command.pwd")));
         return stringBuilder.toString();
     }
 
@@ -106,7 +106,7 @@ public class FileSystemModel {
 
     public String mkdir(final String nomeCartella) {
         cur.add(new DirectoryModel(nomeCartella));
-        return String.format(Localization.localize("command.mkdir")) + nomeCartella;
+        return String.format(Localization.getSingleton().localize("command.mkdir")) + nomeCartella;
     }
 
     public String ls() {
@@ -155,14 +155,14 @@ public class FileSystemModel {
 
     public String rm(final String path) {
         if (path.equals("/")) {
-            return String.format(Localization.localize("command.rm.remove.root"));
+            return String.format(Localization.getSingleton().localize("command.rm.remove.root"));
         }
 
         try {
             DirectoryModel targetDir = search(path);
 
             if (targetDir == cur || isDescendant(targetDir, cur)) {
-                return String.format(Localization.localize("command.rm.remove.failed"));
+                return String.format(Localization.getSingleton().localize("command.rm.remove.failed"));
             }
             DirectoryModel parentDir = getParentDirectory(targetDir);
             if (parentDir != null) {
@@ -171,7 +171,7 @@ public class FileSystemModel {
                 DirectoryModel d = getRoot();
                 d.getDir().remove(targetDir);
             }
-            return String.format(Localization.localize("command.rm.remove.success"))+ targetDir.getName();
+            return String.format(Localization.getSingleton().localize("command.rm.remove.success"))+ targetDir.getName();
 
         } catch (DirectoryNotFound e) {
             return e.getMessage();
@@ -189,7 +189,7 @@ public class FileSystemModel {
     }
 
     public String help() {
-        return String.format(Localization.localize("command.help"));
+        return String.format(Localization.getSingleton().localize("command.help"));
     }
 
     public String clear() {

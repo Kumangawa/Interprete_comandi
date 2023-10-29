@@ -1,9 +1,7 @@
 package ch.supsi.fsci.client.controller;
 
-import ch.supsi.fsci.client.model.CommandExecutionModel;
 import ch.supsi.fsci.client.model.CommandExecutionModelInterface;
 import ch.supsi.fsci.engine.CommandPattern.CommandInterface;
-import javafx.event.ActionEvent;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,14 +10,6 @@ import org.mockito.Mockito;
 import org.testfx.framework.junit5.ApplicationTest;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.*;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
-import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
-
 import static org.mockito.Mockito.*;
 
 

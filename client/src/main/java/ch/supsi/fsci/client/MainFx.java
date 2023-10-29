@@ -2,9 +2,10 @@ package ch.supsi.fsci.client;
 
 import ch.supsi.fsci.client.model.CommandExecutionModel;
 import ch.supsi.fsci.client.controller.CommandExecutionController;
+import ch.supsi.fsci.engine.Controller.PreferencesController;
 import ch.supsi.fsci.engine.FileSystemModel;
 import ch.supsi.fsci.engine.Localization;
-import ch.supsi.fsci.engine.Persistence;
+import ch.supsi.fsci.engine.Model.PreferencesModel;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -19,7 +20,6 @@ import javafx.scene.layout.Region;
 import javafx.stage.Stage;
 
 import java.io.File;
-import java.util.HashMap;
 import java.util.Locale;
 
 public class MainFx extends Application {
@@ -34,21 +34,20 @@ public class MainFx extends Application {
     private int prefInsetsSize;
 
     public MainFx(){
-        // persistence
-        Persistence persistence = new Persistence();
-        persistence.initializeExplicit();
-        HashMap<String, String> preferencesData = persistence.getPreference();
+        PreferencesController preferencesController = new PreferencesController();
+        PreferencesModel preferencesModel = preferencesController.loadPreferences();
 
         this.applicationTitle = "command interpreter for fs simulator";
         this.commandLabel = new Label("command");
         this.commandTextField = new TextField();
         this.outputArea = new TextArea();
 
-        this.prefCommandSpacerWidth = Integer.parseInt(preferencesData.get("prefCommandSpacerWidth"));
-        Localization.initialize("i18n.translations", Locale.forLanguageTag(preferencesData.get("language")));
-        this.commandFieldPrefColumnCount = Integer.parseInt(preferencesData.get("commandFieldPrefColumnCount"));
-        this.prefOutputAreaRowCount = Integer.parseInt(preferencesData.get("prefOutputAreaRowCount"));
-        this.prefInsetsSize = Integer.parseInt(preferencesData.get("prefInsetsSize"));
+        this.prefCommandSpacerWidth = 11;
+        this.prefInsetsSize = 7;
+        Localization.getSingleton().initialize("i18n.translations", Locale.forLanguageTag(preferencesModel.getPreference("language")));
+        this.commandFieldPrefColumnCount = Integer.parseInt(preferencesModel.getPreference("commandFieldPrefColumnCount"));
+        this.prefOutputAreaRowCount = Integer.parseInt(preferencesModel.getPreference("prefOutputAreaRowCount"));
+
     }
 
     @Override

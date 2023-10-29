@@ -129,7 +129,7 @@ public class FileSystemTest {
 
         fileSystemToTest.cd(File.separator + "I");
         fileSystemToTest.mkdir("O");
-        assertEquals(String.format(Localization.localize("command.rm.remove.failed")), fileSystemToTest.rm(File.separator + "I"));
+        assertEquals(String.format(Localization.getSingleton().localize("command.rm.remove.failed")), fileSystemToTest.rm(File.separator + "I"));
         assertEquals("O ", fileSystemToTest.ls());
 
         fileSystemToTest.cd(File.separator + "I" + File.separator + "O");
