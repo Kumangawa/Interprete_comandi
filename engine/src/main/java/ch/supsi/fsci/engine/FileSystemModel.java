@@ -125,8 +125,8 @@ public class FileSystemModel {
             DirectoryModel sourceDir = search(origin);
 
             // Verifica se il percorso di destinazione è la radice ("/")
-            if (destination.equals("/")) {
-                return "/ non può essere spostata!";
+            if (destination.equals("\\")) {
+                return "\\ non può essere spostata!";
             }
 
             // Cerca la directory di destinazione
@@ -154,7 +154,7 @@ public class FileSystemModel {
     }
 
     public String rm(final String path) {
-        if (path.equals("/")) {
+        if (path.equals("\\")) {
             return String.format(Localization.getSingleton().localize("command.rm.remove.root"));
         }
 
