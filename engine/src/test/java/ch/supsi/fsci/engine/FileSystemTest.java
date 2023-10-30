@@ -50,18 +50,18 @@ public class FileSystemTest {
     //testare ancora
     @Test
     public void testCd() {
-        final String res = fileSystemModel.cd("\\"+ "A").getName();
+        final String res = fileSystemModel.cd(fileSystemModel.getSeparator()+ "A").getName();
         assertEquals("A", res);
     }
 
     @Test
     public void testPwd() {
         // Initially pwd should return the root
-        assertEquals("Current working directory: " + "\\", fileSystemModel.pwd());
+        assertEquals("Current working directory: " + fileSystemModel.getSeparator(), fileSystemModel.pwd());
         fileSystemModel.cd("A");
-        assertEquals("Current working directory: " + "\\"+ "A", fileSystemModel.pwd());
+        assertEquals("Current working directory: " + fileSystemModel.getSeparator()+ "A", fileSystemModel.pwd());
         fileSystemModel.cd("D");
-        assertEquals("Current working directory: " + "\\" + "A" + "\\" + "D", fileSystemModel.pwd());
+        assertEquals("Current working directory: " + fileSystemModel.getSeparator() + "A" + fileSystemModel.getSeparator() + "D", fileSystemModel.pwd());
     }
 
     @Test
@@ -75,9 +75,9 @@ public class FileSystemTest {
     @Test
     public void testMkdir(){
         final String nomeCartella = "H";
-        fileSystemModel.cd("\\" + "C");
+        fileSystemModel.cd(fileSystemModel.getSeparator() + "C");
         fileSystemModel.mkdir(nomeCartella);
-        assertEquals((new DirectoryModel(nomeCartella)), fileSystemModel.cd("\\" + "C" + "\\" + "H"));
+        assertEquals((new DirectoryModel(nomeCartella)), fileSystemModel.cd(fileSystemModel.getSeparator() + "C" + fileSystemModel.getSeparator() + "H"));
     }
 
     @Test
@@ -96,9 +96,9 @@ public class FileSystemTest {
 
     @Test
     public void testSearch(){
-        final String absolutePath = "\\" + "B" + "\\" + "F";
-        final String wrongAbsolutePath = "\\" + "B" + "\\" + "X";
-        final String relativePath = "B" + "\\" + "F";
+        final String absolutePath = fileSystemModel.getSeparator() + "B" + fileSystemModel.getSeparator() + "F";
+        final String wrongAbsolutePath = fileSystemModel.getSeparator() + "B" + fileSystemModel.getSeparator() + "X";
+        final String relativePath = "B" + fileSystemModel.getSeparator() + "F";
         final DirectoryModel expectedF = new DirectoryModel("F");
         assertEquals(expectedF, fileSystemModel.search(absolutePath));
         assertEquals(expectedF, fileSystemModel.search(relativePath));
@@ -110,29 +110,29 @@ public class FileSystemTest {
         fileSystemToTest.mkdir("G");
         fileSystemToTest.mkdir("H");
         fileSystemToTest.mkdir("I");
-        fileSystemToTest.rm("\\" + "G");
+        fileSystemToTest.rm(fileSystemToTest.getSeparator() + "G");
         assertEquals("H I ", fileSystemToTest.ls());
 
-        fileSystemToTest.cd("\\" + "H");
+        fileSystemToTest.cd(fileSystemToTest.getSeparator() + "H");
         fileSystemToTest.mkdir("T");
         fileSystemToTest.rm("T");
         assertEquals("", fileSystemToTest.ls());
 
-        fileSystemToTest.rm("\\" + "H");
+        fileSystemToTest.rm(fileSystemToTest.getSeparator() + "H");
         assertEquals("", fileSystemToTest.ls());
 
-        fileSystemToTest.cd("\\");
-        fileSystemToTest.rm("\\" + "H");
+        fileSystemToTest.cd(fileSystemToTest.getSeparator());
+        fileSystemToTest.rm(fileSystemToTest.getSeparator() + "H");
         assertEquals("I ", fileSystemToTest.ls());
 
-        fileSystemToTest.cd("\\" + "I");
+        fileSystemToTest.cd(fileSystemToTest.getSeparator() + "I");
         fileSystemToTest.mkdir("O");
-        assertEquals(String.format(Localization.getSingleton().localize("command.rm.remove.failed")), fileSystemToTest.rm("\\" + "I"));
+        assertEquals(String.format(Localization.getSingleton().localize("command.rm.remove.failed")), fileSystemToTest.rm(fileSystemToTest.getSeparator() + "I"));
         assertEquals("O ", fileSystemToTest.ls());
 
-        fileSystemToTest.cd("\\" + "I" + "\\" + "O");
-        fileSystemToTest.rm("\\" + "I");
-        fileSystemToTest.cd("\\" + "I");
+        fileSystemToTest.cd(fileSystemToTest.getSeparator() + "I" + fileSystemToTest.getSeparator() + "O");
+        fileSystemToTest.rm(fileSystemToTest.getSeparator() + "I");
+        fileSystemToTest.cd(fileSystemToTest.getSeparator() + "I");
         assertEquals("O ", fileSystemToTest.ls());
     }
 

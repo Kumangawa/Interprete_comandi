@@ -10,7 +10,7 @@ import java.util.Objects;
 public class FileSystemModel {
     private final DirectoryModel root;
     private DirectoryModel cur;
-    private final String separator = FileSystems.getDefault().getSeparator();
+    private final String separator = "/";
 
     public FileSystemModel() {
         DirectoryModel root = new DirectoryModel(separator);
@@ -57,10 +57,10 @@ public class FileSystemModel {
      * */
     protected DirectoryModel search(final String path){
         if(isAbsolutePath(path)){//caso path assoluto \B\F
-            List<String> orderedPath = (Arrays.stream(path.split(separator + separator)).skip(1).toList());
+            List<String> orderedPath = (Arrays.stream(path.split(separator)).skip(1).toList());
             return iterate(root, orderedPath);
         } else {
-            List<String> orderedRelativePath = (Arrays.stream(path.split(separator + separator)).toList());
+            List<String> orderedRelativePath = (Arrays.stream(path.split(separator)).toList());
             return iterate(cur, orderedRelativePath);
         }
     }
@@ -125,8 +125,8 @@ public class FileSystemModel {
             DirectoryModel sourceDir = search(origin);
 
             // Verifica se il percorso di destinazione è la radice ("/")
-            if (destination.equals("\\")) {
-                return "\\ non può essere spostata!";
+            if (destination.equals(separator)) {
+                return "/ non può essere spostata!";
             }
 
             // Cerca la directory di destinazione
@@ -154,7 +154,7 @@ public class FileSystemModel {
     }
 
     public String rm(final String path) {
-        if (path.equals("\\")) {
+        if (path.equals(separator)) {
             return String.format(Localization.getSingleton().localize("command.rm.remove.root"));
         }
 
@@ -236,7 +236,7 @@ public class FileSystemModel {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         FileSystemModel that = (FileSystemModel) o;
-        return Objects.equals(root, that.root) && Objects.equals(cur, that.cur) && Objects.equals(separator, that.separator);
+        return Objects.equals(root, that.root) && Objects.equals(cur, that.cur);
     }
 
     @Override
