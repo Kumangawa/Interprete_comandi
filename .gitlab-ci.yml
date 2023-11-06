@@ -34,7 +34,7 @@ variables:
 stages:
   - install_package
 
-image: maven:3-openjdk-17-slim
+image: gitlab-edu.supsi.ch:5050/dti-isin/labingsw/common:maven3java17
 
 # Cache downloaded dependencies and plugins between builds.
 # To keep cache across branches add 'key: "$CI_JOB_NAME"'
@@ -48,13 +48,14 @@ install-package:
   stage: install_package
 
   script:
+    - Xvfb :99 -screen 0 1920x1080x16 &
     - cd engine
     - 'mvn $MAVEN_CLI_OPTS clean'
     - 'mvn $MAVEN_CLI_OPTS install'
     - cd ..
     - cd client
     - 'mvn $MAVEN_CLI_OPTS clean'
-    - 'mvn $MAVEN_CLI_OPTS package'
+    - 'DISPLAY=:99 mvn $MAVEN_CLI_OPTS -Dheadless package'
     - cd ..
 
   only:
