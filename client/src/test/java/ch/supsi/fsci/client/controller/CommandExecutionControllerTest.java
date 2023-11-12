@@ -31,21 +31,17 @@ public class CommandExecutionControllerTest extends ApplicationTest  {
 
     @Test
     public void testElaborateText() throws Exception {
-        // Arrange
         String input = "test input";
-        String expectedOutput = "Expected Output";
+        String expectedOutput = "test output";
 
-        // Mocking the behavior of commandExecutionModel.getDispatchedCommand()
         CommandInterface mockCommand = Mockito.mock(CommandInterface.class);
         when(commandExecutionModel.getDispatchedCommand(input)).thenReturn(mockCommand);
         when(mockCommand.execute()).thenReturn(expectedOutput);
 
-        // Act
         textField.setText(input);
         textField.fireEvent(new javafx.event.ActionEvent());
 
-        // Assert
-        assertEquals("", textField.getText()); // Ensure the text field is cleared
-        assertEquals(expectedOutput + '\n', outputArea.getText()); // Ensure the expected output is appended to outputArea
+        assertEquals("", textField.getText());
+        assertEquals(expectedOutput + '\n', outputArea.getText());
     }
 }

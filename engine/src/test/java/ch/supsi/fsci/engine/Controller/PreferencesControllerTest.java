@@ -10,11 +10,10 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class PreferencesControllerTest {
-    PreferencesController preferencesController;
+    private PreferencesController preferencesController;
 
     @BeforeEach
     public void setUp() {
@@ -22,8 +21,9 @@ public class PreferencesControllerTest {
         String path = Paths.get(preferencesController.getPreferenceFilePath()).getParent().toString();
         path += File.separator + "test_preferences.txt";
         preferencesController.setPreferenceFilePath(path);
-
     }
+
+
 
     @Test
     public void testInitializeExplicit(){
@@ -32,10 +32,22 @@ public class PreferencesControllerTest {
         assertTrue(new File(preferencesController.getPreferenceFilePath()).exists());
     }
 
+    @Test
+    public void saveAndLoadPreferencesTest() {
+        final PreferencesModel preferences = preferencesController.loadPreferences();
+        preferences.setPreference("language", "it");
+        preferences.setPreference("prefOutputAreaRowCount", "30");
+        preferencesController.savePreferences(preferences);
+        final PreferencesModel loadedPreferences = preferencesController.loadPreferences();
+        assertNotNull(loadedPreferences);
+        assertEquals("it", loadedPreferences.getPreference("language"));
+        assertEquals("30", loadedPreferences.getPreference("prefOutputAreaRowCount"));
+    }
 
     @Test
     public void testGetPreference(){
         PreferencesModel preferencesModel = preferencesController.loadPreferences();
+        assertNotNull(preferencesModel);
         assertEquals(3, preferencesModel.getKeys().size());
         assertEquals("en", preferencesModel.getPreference("language"));
         assertEquals("80", preferencesModel.getPreference("commandFieldPrefColumnCount"));
