@@ -19,11 +19,9 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.stage.Stage;
 
-import java.io.File;
 import java.util.Locale;
 
 public class MainFx extends Application {
-    private final static String separator = File.separator;
     private String applicationTitle;
     private Label commandLabel;
     private int prefCommandSpacerWidth;
@@ -39,8 +37,11 @@ public class MainFx extends Application {
 
         this.applicationTitle = "command interpreter for fs simulator";
         this.commandLabel = new Label("command");
+        this.commandLabel.setId("commandLabel");
         this.commandTextField = new TextField();
+        this.commandTextField.setId("commandTextField");
         this.outputArea = new TextArea();
+        this.outputArea.setId("outputArea");
 
         this.prefCommandSpacerWidth = 11;
         this.prefInsetsSize = 7;
@@ -82,6 +83,7 @@ public class MainFx extends Application {
         BorderPane borderPane = new BorderPane();
         borderPane.setTop(commandLinePane);
         borderPane.setCenter(outputAreaPane);
+        borderPane.setId("borderPane");
 
         // scene
         Scene mainScene = new Scene(borderPane);
