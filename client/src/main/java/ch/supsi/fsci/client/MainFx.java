@@ -2,6 +2,7 @@ package ch.supsi.fsci.client;
 
 import ch.supsi.fsci.client.model.CommandExecutionModel;
 import ch.supsi.fsci.client.controller.CommandExecutionController;
+import ch.supsi.fsci.engine.Controller.FileSystemController;
 import ch.supsi.fsci.engine.Controller.PreferencesController;
 import ch.supsi.fsci.engine.Model.FileSystemModel;
 import ch.supsi.fsci.engine.Interface.FileSystemInterface;
@@ -91,9 +92,10 @@ public class MainFx extends Application {
 
         // FileSystemModel
         final FileSystemInterface fileSystemModel = new FileSystemModel();
+        final FileSystemController fileSystemController = new FileSystemController(fileSystemModel);
 
         // CommandDispatcher
-        final CommandExecutionModel commandExecutionModel = new CommandExecutionModel(fileSystemModel);
+        final CommandExecutionModel commandExecutionModel = new CommandExecutionModel(fileSystemController);
         commandExecutionModel.initializeAllCommands("ch.supsi.fsci.engine.CommandPattern.Commands");
         final CommandExecutionController commandExecutionController = new CommandExecutionController(commandTextField, outputArea, commandExecutionModel);
         commandExecutionController.initialize();

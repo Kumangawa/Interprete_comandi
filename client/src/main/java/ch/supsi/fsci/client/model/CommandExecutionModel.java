@@ -2,6 +2,7 @@ package ch.supsi.fsci.client.model;
 
 import ch.supsi.fsci.engine.CommandPattern.CommandInfo;
 import ch.supsi.fsci.engine.CommandPattern.CommandInterface;
+import ch.supsi.fsci.engine.Controller.FileSystemController;
 import ch.supsi.fsci.engine.Exceptions.WrongCommandArgumentNumberException;
 import ch.supsi.fsci.engine.Exceptions.WrongCommandNameException;
 import ch.supsi.fsci.engine.Interface.FileSystemInterface;
@@ -16,15 +17,15 @@ import java.util.StringTokenizer;
 public class CommandExecutionModel implements CommandExecutionModelInterface{
     // package-protected commandList on purpose for facilitating tests.
     final HashMap<String, Class<? extends CommandInterface>> commandList;
-    private final FileSystemInterface fileSystemModel;
+    private final FileSystemController fileSystemController;
 
     /**
      * @brief Initializes the command executor, which takes care of executing the correct commands automatically.
-     * @param fileSystemModel: the file system which will be used to execute the command methods.
+     * @param fileSystemController: the file system which will be used to execute the command methods.
      */
-    public CommandExecutionModel(final FileSystemInterface fileSystemModel) {
+    public CommandExecutionModel(final FileSystemController fileSystemController) {
         this.commandList = new HashMap<>();
-        this.fileSystemModel = fileSystemModel;
+        this.fileSystemController = fileSystemController;
     }
 
     /**
@@ -77,8 +78,8 @@ public class CommandExecutionModel implements CommandExecutionModelInterface{
 
                 // Implement a pattern for delayed construction?
                 return tokenizer.countTokens() > 0
-                        ? genericCommand.getConstructor(FileSystemInterface.class, StringTokenizer.class).newInstance(fileSystemModel, tokenizer)
-                        : genericCommand.getConstructor(FileSystemInterface.class).newInstance(fileSystemModel);
+                        ? genericCommand.getConstructor(FileSystemController.class, StringTokenizer.class).newInstance(fileSystemController, tokenizer)
+                        : genericCommand.getConstructor(FileSystemController.class).newInstance(fileSystemController);
             }
             throw new WrongCommandNameException(String.format(Localization.getSingleton().localize("WrongCommand.NameException"), commandName));
         }

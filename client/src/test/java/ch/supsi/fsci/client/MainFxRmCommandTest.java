@@ -11,7 +11,8 @@ import static org.testfx.api.FxAssert.verifyThat;
 public class MainFxRmCommandTest  extends AbstractMainGUITest  {
 
     @Test
-    public void testRmCommand() {
+    public void
+    testRmCommand() {
         step("Test command rm", () -> {
             interact(() -> {
                 TextField commandTextField = lookup("#commandTextField").query();
