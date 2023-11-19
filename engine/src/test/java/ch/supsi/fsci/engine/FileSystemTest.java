@@ -139,6 +139,21 @@ public class FileSystemTest {
     @Test
     public void testMv() {
 
-        // TODO: da completare
+        FileSystemModel fileSystem = new FileSystemModel();
+        DirectoryModel A = new DirectoryModel("A");
+        DirectoryModel B = new DirectoryModel("B");
+        DirectoryModel C = new DirectoryModel("C");
+        B.add(new DirectoryModel("E"));
+        B.add(new DirectoryModel("F"));
+        C.add(new DirectoryModel("D"));
+        fileSystem = new FileSystemModel();
+        fileSystem.add(A);
+        fileSystem.add(B);
+        fileSystem.add(C);
+
+        fileSystemModel.mv("/A/D", "/C");
+
+        assertEquals(fileSystem.search("/C/D"), fileSystemModel.search("/C/D"));
+
     }
 }
