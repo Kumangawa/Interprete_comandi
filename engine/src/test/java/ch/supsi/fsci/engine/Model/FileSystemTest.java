@@ -154,9 +154,12 @@ public class FileSystemTest {
         fileSystem.add(B);
         fileSystem.add(C);
 
-        fileSystemModel.mv("/A/D", "/C");
+        String originPath = "/A/D";
+        String destinationPath = "/C";
 
-        assertEquals(fileSystem.search("/C/D"), fileSystemModel.search("/C/D"));
+        assertEquals("Spostamento avvenuto con successo: "
+                + fileSystemModel.search(originPath).getName() + " spostata in "
+                + destinationPath, fileSystemModel.mv(originPath, destinationPath));
 
     }
 }
