@@ -2,13 +2,13 @@ package ch.supsi.fsci.engine.CommandPattern.Commands;
 
 import ch.supsi.fsci.engine.CommandPattern.CommandInfo;
 import ch.supsi.fsci.engine.CommandPattern.CommandInterface;
-import ch.supsi.fsci.engine.FileSystemModel;
+import ch.supsi.fsci.engine.Interface.FileSystemInterface;
 
 @CommandInfo(name = "clear", totalArguments = 0, commandSyntax = "clear")
 public class ClearCommand implements CommandInterface {
-    private final FileSystemModel fileSystemModel;
+    private final FileSystemInterface fileSystemModel;
 
-    public ClearCommand(FileSystemModel fileSystemModel) {
+    public ClearCommand(FileSystemInterface fileSystemModel) {
         this.fileSystemModel = fileSystemModel;
     }
 

@@ -1,15 +1,17 @@
-package ch.supsi.fsci.engine;
+package ch.supsi.fsci.engine.Model;
 
 import ch.supsi.fsci.engine.Exceptions.DirectoryNotFound;
+import ch.supsi.fsci.engine.Interface.FileSystemInterface;
+import ch.supsi.fsci.engine.Localization;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 public class FileSystemTest {
-    private FileSystemModel fileSystemModel;
-    private FileSystemModel sameFileSystemModel;
-    private FileSystemModel differentFileSystemModel;
+    private FileSystemInterface fileSystemModel;
+    private FileSystemInterface sameFileSystemModel;
+    private FileSystemInterface differentFileSystemModel;
 
     @BeforeEach
     public void setUp() {
@@ -50,7 +52,7 @@ public class FileSystemTest {
     //testare ancora
     @Test
     public void testCd() {
-        final String res = fileSystemModel.cd(fileSystemModel.getSeparator()+ "A").getName();
+        final String res = fileSystemModel.cd(fileSystemModel.getSeparator() + "A").getName();
         assertEquals("A", res);
     }
 
@@ -82,7 +84,7 @@ public class FileSystemTest {
 
     @Test
     public void testLs(){
-        FileSystemModel fileSystemToTest = new FileSystemModel();
+        FileSystemInterface fileSystemToTest = new FileSystemModel();
         fileSystemToTest.mkdir("A");
         fileSystemToTest.mkdir("B");
         fileSystemToTest.mkdir("C");
@@ -106,7 +108,8 @@ public class FileSystemTest {
     }
 
     @Test
-    public void testRm(){FileSystemModel fileSystemToTest = new FileSystemModel();
+    public void testRm(){
+        FileSystemInterface fileSystemToTest = new FileSystemModel();
         fileSystemToTest.mkdir("G");
         fileSystemToTest.mkdir("H");
         fileSystemToTest.mkdir("I");
@@ -139,7 +142,7 @@ public class FileSystemTest {
     @Test
     public void testMv() {
 
-        FileSystemModel fileSystem = new FileSystemModel();
+        FileSystemInterface fileSystem = new FileSystemModel();
         DirectoryModel A = new DirectoryModel("A");
         DirectoryModel B = new DirectoryModel("B");
         DirectoryModel C = new DirectoryModel("C");

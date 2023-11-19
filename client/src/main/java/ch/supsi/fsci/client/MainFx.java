@@ -3,7 +3,8 @@ package ch.supsi.fsci.client;
 import ch.supsi.fsci.client.model.CommandExecutionModel;
 import ch.supsi.fsci.client.controller.CommandExecutionController;
 import ch.supsi.fsci.engine.Controller.PreferencesController;
-import ch.supsi.fsci.engine.FileSystemModel;
+import ch.supsi.fsci.engine.Model.FileSystemModel;
+import ch.supsi.fsci.engine.Interface.FileSystemInterface;
 import ch.supsi.fsci.engine.Localization;
 import ch.supsi.fsci.engine.Model.PreferencesModel;
 import javafx.application.Application;
@@ -89,7 +90,7 @@ public class MainFx extends Application {
         Scene mainScene = new Scene(borderPane);
 
         // FileSystemModel
-        final FileSystemModel fileSystemModel = new FileSystemModel();
+        final FileSystemInterface fileSystemModel = new FileSystemModel();
 
         // CommandDispatcher
         final CommandExecutionModel commandExecutionModel = new CommandExecutionModel(fileSystemModel);

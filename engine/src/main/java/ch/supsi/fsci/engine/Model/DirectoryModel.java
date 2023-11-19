@@ -1,4 +1,4 @@
-package ch.supsi.fsci.engine;
+package ch.supsi.fsci.engine.Model;
 
 import java.util.ArrayList;
 import java.util.List;

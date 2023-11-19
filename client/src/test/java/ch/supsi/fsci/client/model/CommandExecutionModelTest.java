@@ -4,7 +4,7 @@ import ch.supsi.fsci.engine.CommandPattern.CommandInterface;
 import ch.supsi.fsci.engine.CommandPattern.Commands.*;
 import ch.supsi.fsci.engine.Exceptions.WrongCommandArgumentNumberException;
 import ch.supsi.fsci.engine.Exceptions.WrongCommandNameException;
-import ch.supsi.fsci.engine.FileSystemModel;
+import ch.supsi.fsci.engine.Model.FileSystemModel;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

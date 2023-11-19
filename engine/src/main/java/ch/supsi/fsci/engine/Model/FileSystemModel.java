@@ -1,13 +1,14 @@
-package ch.supsi.fsci.engine;
+package ch.supsi.fsci.engine.Model;
 
 import ch.supsi.fsci.engine.Exceptions.DirectoryNotFound;
+import ch.supsi.fsci.engine.Interface.FileSystemInterface;
+import ch.supsi.fsci.engine.Localization;
 
-import java.nio.file.FileSystems;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
-public class FileSystemModel {
+public class FileSystemModel implements FileSystemInterface {
     private final DirectoryModel root;
     private DirectoryModel cur;
     private final String separator = "/";
@@ -55,7 +56,7 @@ public class FileSystemModel {
      * toDo: se il path non esiste, é il caso di ritornare null? È una buona soluzione?
      * toDo: implementare la ricerca per path relativo
      * */
-    protected DirectoryModel search(final String path){
+    public DirectoryModel search(final String path){
         if(isAbsolutePath(path)){//caso path assoluto \B\F
             List<String> orderedPath = (Arrays.stream(path.split(separator)).skip(1).toList());
             return iterate(root, orderedPath);
@@ -197,15 +198,15 @@ public class FileSystemModel {
         return "clear";
     }
 
-    // Todo: Remove package-protected, make method private
+    // Todo: Make method private
     // When command to add new sub directories is finished
     // (currently this is used in tests for the equals method, but it shouldn't)
-    void add(final String directoryName){
+    public void add(final String directoryName){
         DirectoryModel newDir = new DirectoryModel(directoryName);
         root.getDir().add(newDir);
     }
 
-    protected void add(final DirectoryModel dir){
+    public void add(final DirectoryModel dir){
         root.getDir().add(dir);
     }
 
