@@ -38,6 +38,7 @@ public class CommandExecutionController {
         try {
             final CommandInterface command = commandExecutionModel.getDispatchedCommand(input);
             return command.execute();
+            // Get response
         }
         catch (final Exception e) {
             e.printStackTrace();
