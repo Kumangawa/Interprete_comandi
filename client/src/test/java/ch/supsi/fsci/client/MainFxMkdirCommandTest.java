@@ -12,19 +12,17 @@ public class MainFxMkdirCommandTest  extends AbstractMainGUITest {
 
     @Test
     public void testMkdirCommand() {
+        String lettera = "A";
+        String a = String.format(Localization.getSingleton().localize("command.mkdir")) + lettera +"\n";
         step("Test command mkdir", () -> {
             interact(() -> {
                 TextField commandTextField = lookup("#commandTextField").query();
-                commandTextField.setText("mkdir A");
+                commandTextField.setText("mkdir "+lettera);
             });
-
             sleep(SLEEP_INTERVAL);
-
             interact(() -> type(ENTER));
-
             verifyThat("#commandTextField", TextInputControlMatchers.hasText(""));
-
-            verifyThat("#outputArea", TextInputControlMatchers.hasText(String.format(Localization.getSingleton().localize("command.mkdir")) + "A\n"));
+            verifyThat("#outputArea", TextInputControlMatchers.hasText(a));
         });
     }
 }

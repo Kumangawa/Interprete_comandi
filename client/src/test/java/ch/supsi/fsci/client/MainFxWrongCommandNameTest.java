@@ -12,16 +12,17 @@ public class MainFxWrongCommandNameTest extends AbstractMainGUITest{
 
     @Test
     public void testWrongCommandName() {
+        String command = "abc";
+        String a = String.format(Localization.getSingleton().localize("WrongCommand.NameException"), command) + "\n";
         step("Test wrong command name", () -> {
             interact(() -> {
                 TextField commandTextField = lookup("#commandTextField").query();
-                commandTextField.setText("abc");
+                commandTextField.setText(command);
             });
             sleep(SLEEP_INTERVAL);
             interact(() -> type(ENTER));
             verifyThat("#commandTextField", TextInputControlMatchers.hasText(""));
-            String a = String.format(Localization.getSingleton().localize("WrongCommand.NameException"), "abc");
-            verifyThat("#outputArea", TextInputControlMatchers.hasText(a + "\n"));
+            verifyThat("#outputArea", TextInputControlMatchers.hasText(a));
         });
     }
 }

@@ -12,16 +12,17 @@ public class MainFxDirectoryNotFoundTest extends AbstractMainGUITest{
 
     @Test
     public void testDirectoryNotFound() {
+        String lettera = "A";
+        String a = String.format(Localization.getSingleton().localize("DirectoryNotFound"), lettera, "["+ lettera +"]") + "\n";
         step("Test directory not found", () -> {
             interact(() -> {
                 TextField commandTextField = lookup("#commandTextField").query();
-                commandTextField.setText("cd /A");
+                commandTextField.setText("cd /"+lettera);
             });
             sleep(SLEEP_INTERVAL);
             interact(() -> type(ENTER));
             verifyThat("#commandTextField", TextInputControlMatchers.hasText(""));
-            String a = String.format(Localization.getSingleton().localize("DirectoryNotFound"), "A", "[A]");
-            verifyThat("#outputArea", TextInputControlMatchers.hasText(a + "\n"));
+            verifyThat("#outputArea", TextInputControlMatchers.hasText(a));
         });
     }
 }

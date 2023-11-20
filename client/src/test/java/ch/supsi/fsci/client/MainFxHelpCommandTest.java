@@ -12,20 +12,16 @@ public class MainFxHelpCommandTest  extends AbstractMainGUITest {
 
     @Test
     public void testHelpCommand() {
+        String a = String.format(Localization.getSingleton().localize("command.help")) + "\n";
         step("Test command help", () -> {
-
             interact(() -> {
                 TextField commandTextField = lookup("#commandTextField").query();
                 commandTextField.setText("help");
             });
-
             sleep(SLEEP_INTERVAL);
-
             interact(() -> type(ENTER));
-
             verifyThat("#commandTextField", TextInputControlMatchers.hasText(""));
-
-            verifyThat("#outputArea", TextInputControlMatchers.hasText(String.format(Localization.getSingleton().localize("command.help")) + "\n"));
+            verifyThat("#outputArea", TextInputControlMatchers.hasText(a));
         });
     }
 }

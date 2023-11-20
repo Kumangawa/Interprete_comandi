@@ -13,60 +13,64 @@ public class MainFxRmCommandTest  extends AbstractMainGUITest  {
     @Test
     public void
     testRmCommand() {
-        step("Test command rm", () -> {
+        String lettera = "A";
+        String a = String.format(Localization.getSingleton().localize("command.mkdir")) +lettera+"\n";
+        String b = String.format(Localization.getSingleton().localize("command.rm.remove.success")) + lettera+"\n";
+        String c = String.format(Localization.getSingleton().localize("command.mkdir")) +lettera +"\n";
+        String d = lettera+"\n";
+        String e = String.format(Localization.getSingleton().localize("command.rm.remove.failed")) +"\n";
+        String f = String.format(Localization.getSingleton().localize("command.rm.remove.root")) +"\n";
+        step("Test command rm, create " + lettera + " and then remove it", () -> {
             interact(() -> {
                 TextField commandTextField = lookup("#commandTextField").query();
-                commandTextField.setText("mkdir A");
+                commandTextField.setText("mkdir " + lettera);
             });
             sleep(SLEEP_INTERVAL);
             interact(() -> type(ENTER));
             verifyThat("#commandTextField", TextInputControlMatchers.hasText(""));
-            String a = String.format(Localization.getSingleton().localize("command.mkdir")) +"A\n";
             verifyThat("#outputArea", TextInputControlMatchers.hasText(a));
 
 
             interact(() -> {
                 TextField commandTextField = lookup("#commandTextField").query();
-                commandTextField.setText("rm A");
+                commandTextField.setText("rm " + lettera);
             });
             sleep(SLEEP_INTERVAL);
             interact(() -> type(ENTER));
             verifyThat("#commandTextField", TextInputControlMatchers.hasText(""));
-            String b = String.format(Localization.getSingleton().localize("command.rm.remove.success")) +"A\n";
-            verifyThat("#outputArea", TextInputControlMatchers.hasText(a+b));
+            verifyThat("#outputArea", TextInputControlMatchers.hasText(a + b));
+        });
 
-
+        step("Test command rm, create " + lettera + " move in it, and the try to remove it", () -> {
             interact(() -> {
                 TextField commandTextField = lookup("#commandTextField").query();
-                commandTextField.setText("mkdir A");
+                commandTextField.setText("mkdir "+lettera);
             });
             sleep(SLEEP_INTERVAL);
             interact(() -> type(ENTER));
             verifyThat("#commandTextField", TextInputControlMatchers.hasText(""));
-            String c = String.format(Localization.getSingleton().localize("command.mkdir")) +"A\n";
             verifyThat("#outputArea", TextInputControlMatchers.hasText(a+b+c));
 
-
             interact(() -> {
                 TextField commandTextField = lookup("#commandTextField").query();
-                commandTextField.setText("cd A");
+                commandTextField.setText("cd "+lettera);
             });
             sleep(SLEEP_INTERVAL);
             interact(() -> type(ENTER));
             verifyThat("#commandTextField", TextInputControlMatchers.hasText(""));
-            String d = "A\n";
             verifyThat("#outputArea", TextInputControlMatchers.hasText(a+b+c+d));
 
             interact(() -> {
                 TextField commandTextField = lookup("#commandTextField").query();
-                commandTextField.setText("rm /A");
+                commandTextField.setText("rm /"+lettera);
             });
             sleep(SLEEP_INTERVAL);
             interact(() -> type(ENTER));
             verifyThat("#commandTextField", TextInputControlMatchers.hasText(""));
-            String e = String.format(Localization.getSingleton().localize("command.rm.remove.failed")) +"\n";
             verifyThat("#outputArea", TextInputControlMatchers.hasText(a+b+c+d+e));
+        });
 
+        step("Test command rm, try to remove root", () -> {
             interact(() -> {
                 TextField commandTextField = lookup("#commandTextField").query();
                 commandTextField.setText("rm /");
@@ -74,7 +78,6 @@ public class MainFxRmCommandTest  extends AbstractMainGUITest  {
             sleep(SLEEP_INTERVAL);
             interact(() -> type(ENTER));
             verifyThat("#commandTextField", TextInputControlMatchers.hasText(""));
-            String f = String.format(Localization.getSingleton().localize("command.rm.remove.root")) +"\n";
             verifyThat("#outputArea", TextInputControlMatchers.hasText(a+b+c+d+e+f));
         });
     }

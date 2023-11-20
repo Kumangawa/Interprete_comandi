@@ -12,38 +12,44 @@ public class MainFxPwdCommandTest  extends AbstractMainGUITest {
 
     @Test
     public void testPwdCommand() {
-        step("Test command pwd", () -> {
+        String a = String.format(Localization.getSingleton().localize("command.pwd")) +"/\n";
+
+        step("Test command pwd in root", () -> {
             interact(() -> {
                 TextField commandTextField = lookup("#commandTextField").query();
                 commandTextField.setText("pwd");
             });
-
             sleep(SLEEP_INTERVAL);
             interact(() -> type(ENTER));
             verifyThat("#commandTextField", TextInputControlMatchers.hasText(""));
-            String a = String.format(Localization.getSingleton().localize("command.pwd")) +"/\n";
             verifyThat("#outputArea", TextInputControlMatchers.hasText(a));
+        });
 
 
+        String lettera = "A";
+        String b = String.format(Localization.getSingleton().localize("command.mkdir")) + lettera +"\n";
+        String c = lettera+"\n";
+        String d = String.format(Localization.getSingleton().localize("command.pwd")) +"/" +lettera +"\n";
+
+        step("Test command pwd in "+lettera, () -> {
             interact(() -> {
                 TextField commandTextField = lookup("#commandTextField").query();
-                commandTextField.setText("mkdir A");
+                commandTextField.setText("mkdir "+ lettera);
             });
             sleep(SLEEP_INTERVAL);
             interact(() -> type(ENTER));
             verifyThat("#commandTextField", TextInputControlMatchers.hasText(""));
-            String b = String.format(Localization.getSingleton().localize("command.mkdir")) +"A\n";
             verifyThat("#outputArea", TextInputControlMatchers.hasText(a + b));
 
 
             interact(() -> {
                 TextField commandTextField = lookup("#commandTextField").query();
-                commandTextField.setText("cd A");
+                commandTextField.setText("cd "+lettera);
             });
             sleep(SLEEP_INTERVAL);
             interact(() -> type(ENTER));
             verifyThat("#commandTextField", TextInputControlMatchers.hasText(""));
-            String c = "A\n";
+
             verifyThat("#outputArea", TextInputControlMatchers.hasText(a+b+c));
 
 
@@ -51,11 +57,9 @@ public class MainFxPwdCommandTest  extends AbstractMainGUITest {
                 TextField commandTextField = lookup("#commandTextField").query();
                 commandTextField.setText("pwd");
             });
-
             sleep(SLEEP_INTERVAL);
             interact(() -> type(ENTER));
             verifyThat("#commandTextField", TextInputControlMatchers.hasText(""));
-            String d = String.format(Localization.getSingleton().localize("command.pwd")) +"/A\n";
             verifyThat("#outputArea", TextInputControlMatchers.hasText(a+b+c+d));
         });
     }

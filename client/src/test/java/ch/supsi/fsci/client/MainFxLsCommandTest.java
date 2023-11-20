@@ -12,25 +12,28 @@ public class MainFxLsCommandTest  extends AbstractMainGUITest {
 
     @Test
     public void testLsCommand() {
+        String primaLettera = "A";
+        String secondaLettera = "B";
+        String a = String.format(Localization.getSingleton().localize("command.mkdir")) +primaLettera+"\n";
+        String b = String.format(Localization.getSingleton().localize("command.mkdir")) +secondaLettera+"\n";
+        String c = "A B " + "\n";
         step("Test command ls", () -> {
             interact(() -> {
                 TextField commandTextField = lookup("#commandTextField").query();
-                commandTextField.setText("mkdir A");
+                commandTextField.setText("mkdir "+primaLettera);
             });
             sleep(SLEEP_INTERVAL);
             interact(() -> type(ENTER));
             verifyThat("#commandTextField", TextInputControlMatchers.hasText(""));
-            String a = String.format(Localization.getSingleton().localize("command.mkdir")) +"A\n";
             verifyThat("#outputArea", TextInputControlMatchers.hasText(a));
 
             interact(() -> {
                 TextField commandTextField = lookup("#commandTextField").query();
-                commandTextField.setText("mkdir B");
+                commandTextField.setText("mkdir "+secondaLettera);
             });
             sleep(SLEEP_INTERVAL);
             interact(() -> type(ENTER));
             verifyThat("#commandTextField", TextInputControlMatchers.hasText(""));
-            String b = String.format(Localization.getSingleton().localize("command.mkdir")) +"B\n";
             verifyThat("#outputArea", TextInputControlMatchers.hasText(a + b));
 
 
@@ -38,14 +41,10 @@ public class MainFxLsCommandTest  extends AbstractMainGUITest {
                 TextField commandTextField = lookup("#commandTextField").query();
                 commandTextField.setText("ls");
             });
-
             sleep(SLEEP_INTERVAL);
-
             interact(() -> type(ENTER));
-
             verifyThat("#commandTextField", TextInputControlMatchers.hasText(""));
-
-            verifyThat("#outputArea", TextInputControlMatchers.hasText(a+b+"A B " + "\n"));
+            verifyThat("#outputArea", TextInputControlMatchers.hasText(a+b+c));
         });
     }
 }

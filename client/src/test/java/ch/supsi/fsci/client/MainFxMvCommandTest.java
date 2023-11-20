@@ -12,38 +12,39 @@ public class MainFxMvCommandTest  extends AbstractMainGUITest {
 
     @Test
     public void testMvCommand() {
+        String primaLettera = "A";
+        String a = String.format(Localization.getSingleton().localize("command.mkdir")) +primaLettera +"\n";
+        String secondaLettera = "B";
+        String b = String.format(Localization.getSingleton().localize("command.mkdir")) +secondaLettera +"\n";
+        // TODO: da mettere a posto le risposte del comando mv, al momento è arcodato
+        String c = "Impossibile spostare la directory di origine.\n";
         step("Test command mv", () -> {
             interact(() -> {
                 TextField commandTextField = lookup("#commandTextField").query();
-                commandTextField.setText("mkdir A");
+                commandTextField.setText("mkdir "+primaLettera);
             });
             sleep(SLEEP_INTERVAL);
             interact(() -> type(ENTER));
             verifyThat("#commandTextField", TextInputControlMatchers.hasText(""));
-            String a = String.format(Localization.getSingleton().localize("command.mkdir")) +"A\n";
             verifyThat("#outputArea", TextInputControlMatchers.hasText(a));
 
             interact(() -> {
                 TextField commandTextField = lookup("#commandTextField").query();
-                commandTextField.setText("mkdir B");
+                commandTextField.setText("mkdir "+secondaLettera);
             });
             sleep(SLEEP_INTERVAL);
             interact(() -> type(ENTER));
             verifyThat("#commandTextField", TextInputControlMatchers.hasText(""));
-            String b = String.format(Localization.getSingleton().localize("command.mkdir")) +"B\n";
             verifyThat("#outputArea", TextInputControlMatchers.hasText(a + b));
 
 
             interact(() -> {
                 TextField commandTextField = lookup("#commandTextField").query();
-                commandTextField.setText("mv A B");
+                commandTextField.setText("mv /" + primaLettera + " /" + secondaLettera);
             });
-
             sleep(SLEEP_INTERVAL);
             interact(() -> type(ENTER));
             verifyThat("#commandTextField", TextInputControlMatchers.hasText(""));
-            // TODO: da mettere a posto le risposte del comando mv, al momento è arcodato
-            String c = "Impossibile spostare la directory di origine.\n";
             verifyThat("#outputArea", TextInputControlMatchers.hasText(a+b+c));
         });
     }

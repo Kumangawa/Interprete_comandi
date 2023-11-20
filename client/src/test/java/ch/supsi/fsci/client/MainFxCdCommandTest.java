@@ -10,34 +10,29 @@ import static org.testfx.api.FxAssert.verifyThat;
 public class MainFxCdCommandTest  extends AbstractMainGUITest {
     @Test
     public void testCdCommand() {
+
+        String lettera = "A";
+        String a = String.format(Localization.getSingleton().localize("command.mkdir")) +lettera+"\n";
+        String b = lettera +"\n";
+
         step("Test command cd", () -> {
             interact(() -> {
                 TextField commandTextField = lookup("#commandTextField").query();
-                commandTextField.setText("mkdir A");
+                commandTextField.setText("mkdir "+lettera);
             });
-
             sleep(SLEEP_INTERVAL);
-
             interact(() -> type(ENTER));
-
             verifyThat("#commandTextField", TextInputControlMatchers.hasText(""));
-
-            verifyThat("#outputArea", TextInputControlMatchers.hasText(String.format(Localization.getSingleton().localize("command.mkdir")) +"A\n"));
-
-
+            verifyThat("#outputArea", TextInputControlMatchers.hasText(a));
 
             interact(() -> {
                 TextField commandTextField = lookup("#commandTextField").query();
-                commandTextField.setText("cd A");
+                commandTextField.setText("cd "+lettera);
             });
-
             sleep(SLEEP_INTERVAL);
-
             interact(() -> type(ENTER));
-
             verifyThat("#commandTextField", TextInputControlMatchers.hasText(""));
-
-            verifyThat("#outputArea", TextInputControlMatchers.hasText(String.format(Localization.getSingleton().localize("command.mkdir")) + "A" + "\n" + "A" + "\n"));
+            verifyThat("#outputArea", TextInputControlMatchers.hasText(a+b));
         });
     }
 }
