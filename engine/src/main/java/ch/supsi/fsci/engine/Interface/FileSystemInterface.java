@@ -2,6 +2,8 @@ package ch.supsi.fsci.engine.Interface;
 
 import ch.supsi.fsci.engine.Model.DirectoryModel;
 
+import java.util.List;
+
 public interface FileSystemInterface {
     DirectoryModel cd(String path);
     String pwd();
@@ -20,4 +22,7 @@ public interface FileSystemInterface {
     String getSeparator();
 
     DirectoryModel search(final String path);
+    DirectoryModel iterate(DirectoryModel startingDirectory, List<String> orderedPath);
+    List<String> getOrderedAbsolutePath(final String absolutePath);
+    List<String> getOrderedRelativePath(final String relativePath);
 }

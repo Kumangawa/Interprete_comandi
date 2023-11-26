@@ -49,6 +49,13 @@ public class FileSystemModel implements FileSystemInterface {
         return cur_temp;
     }
 
+    public List<String> getOrderedAbsolutePath(final String absolutePath){
+        return (Arrays.stream(absolutePath.split(separator)).skip(1).toList());
+    }
+
+    public List<String> getOrderedRelativePath(final String relativePath){
+        return (Arrays.stream(relativePath.split(separator)).toList());
+    }
 
     /*
      *Questo metodo restituisce la cartella che dovrebbe ottenere tramite il path specificato
@@ -58,10 +65,10 @@ public class FileSystemModel implements FileSystemInterface {
      * */
     public DirectoryModel search(final String path){
         if(isAbsolutePath(path)){//caso path assoluto \B\F
-            List<String> orderedPath = (Arrays.stream(path.split(separator)).skip(1).toList());
+            List<String> orderedPath = getOrderedAbsolutePath(path);
             return iterate(root, orderedPath);
         } else {
-            List<String> orderedRelativePath = (Arrays.stream(path.split(separator)).toList());
+            List<String> orderedRelativePath = getOrderedRelativePath(path);
             return iterate(cur, orderedRelativePath);
         }
     }

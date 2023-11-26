@@ -3,83 +3,129 @@ package ch.supsi.fsci.engine.Model;
 import ch.supsi.fsci.engine.Exceptions.DirectoryNotFound;
 import ch.supsi.fsci.engine.Interface.FileSystemInterface;
 import ch.supsi.fsci.engine.Localization;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 public class FileSystemTest {
-    private FileSystemInterface fileSystemModel;
-    private FileSystemInterface sameFileSystemModel;
-    private FileSystemInterface differentFileSystemModel;
+    private FileSystemInterface fileSystemModelA;
+    private FileSystemInterface sameFileSystemModelA;
+    private FileSystemInterface fileSystemModelB;
 
     @BeforeEach
     public void setUp() {
         DirectoryModel A = new DirectoryModel("A");
         DirectoryModel B = new DirectoryModel("B");
         DirectoryModel C = new DirectoryModel("C");
+
         A.add(new DirectoryModel("D"));
         B.add(new DirectoryModel("E"));
         B.add(new DirectoryModel("F"));
         C.add(new DirectoryModel("G"));
-        fileSystemModel = new FileSystemModel();
-        sameFileSystemModel = new FileSystemModel();
-        differentFileSystemModel = new FileSystemModel();
-        fileSystemModel.add(A);
-        fileSystemModel.add(B);
-        fileSystemModel.add(C);
 
-        sameFileSystemModel.add(A);
-        sameFileSystemModel.add(B);
-        sameFileSystemModel.add(C);
+        fileSystemModelA = new FileSystemModel();
+        sameFileSystemModelA = new FileSystemModel();
+        fileSystemModelA.add(A);
+        fileSystemModelA.add(B);
+        fileSystemModelA.add(C);
+
+        sameFileSystemModelA.add(A);
+        sameFileSystemModelA.add(B);
+        sameFileSystemModelA.add(C);
+
+        fileSystemModelB = new FileSystemModel();
+    }
+
+    @AfterEach
+    public void clear(){
+        fileSystemModelA = null;
+        sameFileSystemModelA = null;
+        fileSystemModelB = null;
     }
 
     @Test
     public void testEqualsWithSameInstance() {
-        assertTrue(fileSystemModel.equals(fileSystemModel));
+        assertTrue(fileSystemModelA.equals(fileSystemModelA));
     }
 
     @Test
     public void testEqualsWithEqualInstances() {
-        assertTrue(fileSystemModel.equals(sameFileSystemModel));
+        assertTrue(fileSystemModelA.equals(sameFileSystemModelA));
     }
 
     @Test
     public void testEqualsWithDifferentInstances() {
-        assertFalse(fileSystemModel.equals(differentFileSystemModel));
+        assertFalse(fileSystemModelA.equals(fileSystemModelB));
+    }
+
+    @Test
+    public void testIterate(){
+        DirectoryModel N = new DirectoryModel("N");
+        fileSystemModelA.add(N);
+
+        DirectoryModel root = fileSystemModelA.getRoot();
+        DirectoryModel cur = fileSystemModelA.getCur();
+
+        //test absolute path corretto:
+        String absolutePath = "/N";
+        List<String> orderedAbsolutePath = fileSystemModelA.getOrderedAbsolutePath(absolutePath);
+        assertEquals(N, fileSystemModelA.iterate(root, orderedAbsolutePath));
+
+        //test relative path corretto:
+        String relativePath = "N";
+        List<String> orderedRelativePath = fileSystemModelA.getOrderedRelativePath(relativePath);
+        assertEquals(N, fileSystemModelA.iterate(cur, orderedRelativePath));
+
+        //test dell'exception, absolute path sbagliato:
+        String wrongAbsolutePath = "/W";
+        List<String> orderedWrongPath = fileSystemModelA.getOrderedAbsolutePath(wrongAbsolutePath);
+        Exception ex = assertThrows(DirectoryNotFound.class, () -> fileSystemModelA.iterate(root, orderedWrongPath));
+        assertEquals(String.format(Localization.getSingleton().localize("DirectoryNotFound"), orderedWrongPath.get(orderedWrongPath.size()-1), orderedWrongPath) , ex.getMessage());
+
+        //test dell'exception, relative path sbagliato:
+        String wrongRelativePath = "Y";
+        List<String> orderedWrongRelativePath = fileSystemModelA.getOrderedRelativePath(wrongRelativePath);
+        ex = assertThrows(DirectoryNotFound.class, () -> fileSystemModelA.iterate(cur, orderedWrongRelativePath));
+        assertEquals(String.format(Localization.getSingleton().localize("DirectoryNotFound"), orderedWrongRelativePath.get(orderedWrongRelativePath.size()-1), orderedWrongRelativePath) , ex.getMessage());
     }
 
     //testare ancora
     @Test
     public void testCd() {
-        final String res = fileSystemModel.cd(fileSystemModel.getSeparator() + "A").getName();
+        final String res = fileSystemModelA.cd(fileSystemModelA.getSeparator() + "A").getName();
         assertEquals("A", res);
+
+        //testare il lancio dell'exception nel caso non esista la cartella di destinazione
     }
 
     @Test
     public void testPwd() {
         // Initially pwd should return the root
-        assertEquals("Current working directory: " + fileSystemModel.getSeparator(), fileSystemModel.pwd());
-        fileSystemModel.cd("A");
-        assertEquals("Current working directory: " + fileSystemModel.getSeparator()+ "A", fileSystemModel.pwd());
-        fileSystemModel.cd("D");
-        assertEquals("Current working directory: " + fileSystemModel.getSeparator() + "A" + fileSystemModel.getSeparator() + "D", fileSystemModel.pwd());
+        assertEquals("Current working directory: " + fileSystemModelA.getSeparator(), fileSystemModelA.pwd());
+        fileSystemModelA.cd("A");
+        assertEquals("Current working directory: " + fileSystemModelA.getSeparator()+ "A", fileSystemModelA.pwd());
+        fileSystemModelA.cd("D");
+        assertEquals("Current working directory: " + fileSystemModelA.getSeparator() + "A" + fileSystemModelA.getSeparator() + "D", fileSystemModelA.pwd());
     }
 
     @Test
     public void testConstructor() {
-        final DirectoryModel root = fileSystemModel.getRoot();
+        final DirectoryModel root = fileSystemModelA.getRoot();
         assertNotNull(root);
         assertEquals(3, root.getDir().size());
-        assertEquals(root.getDir().size(), sameFileSystemModel.getRoot().getDir().size());
+        assertEquals(root.getDir().size(), sameFileSystemModelA.getRoot().getDir().size());
     }
 
     @Test
     public void testMkdir(){
         final String nomeCartella = "H";
-        fileSystemModel.cd(fileSystemModel.getSeparator() + "C");
-        fileSystemModel.mkdir(nomeCartella);
-        assertEquals((new DirectoryModel(nomeCartella)), fileSystemModel.cd(fileSystemModel.getSeparator() + "C" + fileSystemModel.getSeparator() + "H"));
+        fileSystemModelA.cd(fileSystemModelA.getSeparator() + "C");
+        fileSystemModelA.mkdir(nomeCartella);
+        assertEquals((new DirectoryModel(nomeCartella)), fileSystemModelA.cd(fileSystemModelA.getSeparator() + "C" + fileSystemModelA.getSeparator() + "H"));
     }
 
     @Test
@@ -93,18 +139,18 @@ public class FileSystemTest {
 
     @Test
     public void testSize(){
-        assertEquals(3, fileSystemModel.getRoot().getDir().size());
+        assertEquals(3, fileSystemModelA.getRoot().getDir().size());
     }
 
     @Test
     public void testSearch(){
-        final String absolutePath = fileSystemModel.getSeparator() + "B" + fileSystemModel.getSeparator() + "F";
-        final String wrongAbsolutePath = fileSystemModel.getSeparator() + "B" + fileSystemModel.getSeparator() + "X";
-        final String relativePath = "B" + fileSystemModel.getSeparator() + "F";
+        final String absolutePath = fileSystemModelA.getSeparator() + "B" + fileSystemModelA.getSeparator() + "F";
+        final String wrongAbsolutePath = fileSystemModelA.getSeparator() + "B" + fileSystemModelA.getSeparator() + "X";
+        final String relativePath = "B" + fileSystemModelA.getSeparator() + "F";
         final DirectoryModel expectedF = new DirectoryModel("F");
-        assertEquals(expectedF, fileSystemModel.search(absolutePath));
-        assertEquals(expectedF, fileSystemModel.search(relativePath));
-        assertThrows(DirectoryNotFound.class, () -> fileSystemModel.search(wrongAbsolutePath));
+        assertEquals(expectedF, fileSystemModelA.search(absolutePath));
+        assertEquals(expectedF, fileSystemModelA.search(relativePath));
+        assertThrows(DirectoryNotFound.class, () -> fileSystemModelA.search(wrongAbsolutePath));
     }
 
     @Test
@@ -158,8 +204,8 @@ public class FileSystemTest {
         String destinationPath = "/C";
 
         assertEquals("Spostamento avvenuto con successo: "
-                + fileSystemModel.search(originPath).getName() + " spostata in "
-                + destinationPath, fileSystemModel.mv(originPath, destinationPath));
+                + fileSystemModelA.search(originPath).getName() + " spostata in "
+                + destinationPath, fileSystemModelA.mv(originPath, destinationPath));
 
     }
 }
