@@ -1,6 +1,6 @@
 package ch.supsi.fsci.engine.Controller;
 
-import ch.supsi.fsci.engine.Model.DirectoryModel;
+import ch.supsi.fsci.engine.Data.Directory;
 import ch.supsi.fsci.engine.Interface.FileSystemInterface;
 
 public class FileSystemController {
@@ -10,7 +10,7 @@ public class FileSystemController {
         this.fileSystemModel = fileSystemModel;
     }
 
-    public DirectoryModel cd(final String path) {
+    public Directory cd(final String path) {
         return fileSystemModel.cd(path);
     }
 

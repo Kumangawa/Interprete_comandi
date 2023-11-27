@@ -1,5 +1,6 @@
 package ch.supsi.fsci.engine.Model;
 
+import ch.supsi.fsci.engine.Data.Directory;
 import ch.supsi.fsci.engine.Exceptions.DirectoryNotFound;
 import ch.supsi.fsci.engine.Interface.FileSystemInterface;
 import ch.supsi.fsci.engine.Localization;
@@ -9,12 +10,12 @@ import java.util.List;
 import java.util.Objects;
 
 public class FileSystemModel implements FileSystemInterface {
-    private final DirectoryModel root;
-    private DirectoryModel cur;
+    private final Directory root;
+    private Directory cur;
     private final String separator = "/";
 
     public FileSystemModel() {
-        DirectoryModel root = new DirectoryModel(separator);
+        Directory root = new Directory(separator);
         this.root = root;
         this.cur = root;
     }
@@ -27,13 +28,13 @@ public class FileSystemModel implements FileSystemInterface {
         return path.startsWith(separator);
     }
 
-    public DirectoryModel iterate(DirectoryModel startingDirectory, List<String> orderedPath){
+    public Directory iterate(Directory startingDirectory, List<String> orderedPath){
         int counter = 0;
         int oldCounter = 0;
-        DirectoryModel cur_temp = startingDirectory;
+        Directory cur_temp = startingDirectory;
         while(counter!=orderedPath.size()){ //quando si arriva alla fine del path corrisponde alla cartella di dest.
             oldCounter = counter;
-            for(DirectoryModel dir : cur_temp.getDir()){
+            for(Directory dir : cur_temp.getDir()){
                 if(dir.getName().equals(orderedPath.get(counter))){ //al livello corrente si controlla la cartella giusta
                     cur_temp = dir;//quando si trova la cartella giusta si cambia la cur
                     counter++;//scendiamo di un livello di profondità nella gerarchia
@@ -63,7 +64,7 @@ public class FileSystemModel implements FileSystemInterface {
      * toDo: se il path non esiste, é il caso di ritornare null? È una buona soluzione?
      * toDo: implementare la ricerca per path relativo
      * */
-    public DirectoryModel search(final String path){
+    public Directory search(final String path){
         if(isAbsolutePath(path)){//caso path assoluto \B\F
             List<String> orderedPath = getOrderedAbsolutePath(path);
             return iterate(root, orderedPath);
@@ -82,14 +83,14 @@ public class FileSystemModel implements FileSystemInterface {
      */
 
     //testare
-    public DirectoryModel cd(final String path){ // /B/E
+    public Directory cd(final String path){ // /B/E
         cur = search(path);
         return cur;
     }
 
     public String pwd() {
         final StringBuilder stringBuilder = new StringBuilder();
-        DirectoryModel currentDirectory = cur;
+        Directory currentDirectory = cur;
 
         while (currentDirectory != null) {
             stringBuilder.insert(0, (currentDirectory != root ? separator : "") + currentDirectory.getName());
@@ -100,11 +101,11 @@ public class FileSystemModel implements FileSystemInterface {
         return stringBuilder.toString();
     }
 
-    private DirectoryModel getParentDirectory(final DirectoryModel directory) {
+    private Directory getParentDirectory(final Directory directory) {
         if (directory == root) {
             return null;
         }
-        for (final DirectoryModel subDir : root.getDir()) {
+        for (final Directory subDir : root.getDir()) {
             if (subDir.getDir().contains(directory)) {
                 return subDir;
             }
@@ -113,14 +114,14 @@ public class FileSystemModel implements FileSystemInterface {
     }
 
     public String mkdir(final String nomeCartella) {
-        cur.add(new DirectoryModel(nomeCartella));
+        cur.add(new Directory(nomeCartella));
         return String.format(Localization.getSingleton().localize("command.mkdir")) + nomeCartella;
     }
 
     public String ls() {
-        List<DirectoryModel> contenutoCur = cur.getDir();
+        List<Directory> contenutoCur = cur.getDir();
         StringBuilder contenuto = new StringBuilder();
-        for(DirectoryModel dir : contenutoCur){
+        for(Directory dir : contenutoCur){
             contenuto.append(dir.getName()).append(" ");
         }
         return contenuto.toString();
@@ -130,7 +131,7 @@ public class FileSystemModel implements FileSystemInterface {
         // TODO: da completare
         try {
             // Cerca la directory di origine
-            DirectoryModel sourceDir = search(origin);
+            Directory sourceDir = search(origin);
 
             // Verifica se il percorso di destinazione è la radice ("/")
             if (destination.equals(separator)) {
@@ -138,7 +139,7 @@ public class FileSystemModel implements FileSystemInterface {
             }
 
             // Cerca la directory di destinazione
-            DirectoryModel destinationDir = search(destination);
+            Directory destinationDir = search(destination);
 
             // Verifica se il percorso di destinazione è una sottodirectory della directory di origine
             if (isDescendant(sourceDir, destinationDir)) {
@@ -146,7 +147,7 @@ public class FileSystemModel implements FileSystemInterface {
             }
 
             // Rimuovi la directory di origine dal suo genitore
-            DirectoryModel sourceParentDir = getParentDirectory(sourceDir);
+            Directory sourceParentDir = getParentDirectory(sourceDir);
             if (sourceParentDir != null) {
                 sourceParentDir.getDir().remove(sourceDir);
 
@@ -167,16 +168,16 @@ public class FileSystemModel implements FileSystemInterface {
         }
 
         try {
-            DirectoryModel targetDir = search(path);
+            Directory targetDir = search(path);
 
             if (targetDir == cur || isDescendant(targetDir, cur)) {
                 return String.format(Localization.getSingleton().localize("command.rm.remove.failed"));
             }
-            DirectoryModel parentDir = getParentDirectory(targetDir);
+            Directory parentDir = getParentDirectory(targetDir);
             if (parentDir != null) {
                 parentDir.getDir().remove(targetDir);
             } else {
-                DirectoryModel d = getRoot();
+                Directory d = getRoot();
                 d.getDir().remove(targetDir);
             }
             return String.format(Localization.getSingleton().localize("command.rm.remove.success"))+ targetDir.getName();
@@ -186,7 +187,7 @@ public class FileSystemModel implements FileSystemInterface {
         }
     }
 
-    private boolean isDescendant(DirectoryModel ancestor, DirectoryModel descendant) {
+    private boolean isDescendant(Directory ancestor, Directory descendant) {
         while (descendant != null) {
             if (descendant == ancestor) {
                 return true;
@@ -209,26 +210,26 @@ public class FileSystemModel implements FileSystemInterface {
     // When command to add new sub directories is finished
     // (currently this is used in tests for the equals method, but it shouldn't)
     public void add(final String directoryName){
-        DirectoryModel newDir = new DirectoryModel(directoryName);
+        Directory newDir = new Directory(directoryName);
         root.getDir().add(newDir);
     }
 
-    public void add(final DirectoryModel dir){
+    public void add(final Directory dir){
         root.getDir().add(dir);
     }
 
-    public DirectoryModel getRoot() {
+    public Directory getRoot() {
         return root;
     }
 
-    public DirectoryModel getCur() {
+    public Directory getCur() {
         return cur;
     }
 
     @Override
     public String toString() {
         String print = "\n";
-        for(DirectoryModel dir : root.getDir()){
+        for(Directory dir : root.getDir()){
             String currentDir = dir.getName() + "\t";
             print = print+currentDir;
         }

@@ -1,5 +1,6 @@
 package ch.supsi.fsci.engine.Model;
 
+import ch.supsi.fsci.engine.Data.Directory;
 import ch.supsi.fsci.engine.Exceptions.DirectoryNotFound;
 import ch.supsi.fsci.engine.Interface.FileSystemInterface;
 import ch.supsi.fsci.engine.Localization;
@@ -18,14 +19,14 @@ public class FileSystemTest {
 
     @BeforeEach
     public void setUp() {
-        DirectoryModel A = new DirectoryModel("A");
-        DirectoryModel B = new DirectoryModel("B");
-        DirectoryModel C = new DirectoryModel("C");
+        Directory A = new Directory("A");
+        Directory B = new Directory("B");
+        Directory C = new Directory("C");
 
-        A.add(new DirectoryModel("D"));
-        B.add(new DirectoryModel("E"));
-        B.add(new DirectoryModel("F"));
-        C.add(new DirectoryModel("G"));
+        A.add(new Directory("D"));
+        B.add(new Directory("E"));
+        B.add(new Directory("F"));
+        C.add(new Directory("G"));
 
         fileSystemModelA = new FileSystemModel();
         sameFileSystemModelA = new FileSystemModel();
@@ -64,11 +65,11 @@ public class FileSystemTest {
 
     @Test
     public void testIterate(){
-        DirectoryModel N = new DirectoryModel("N");
+        Directory N = new Directory("N");
         fileSystemModelA.add(N);
 
-        DirectoryModel root = fileSystemModelA.getRoot();
-        DirectoryModel cur = fileSystemModelA.getCur();
+        Directory root = fileSystemModelA.getRoot();
+        Directory cur = fileSystemModelA.getCur();
 
         //test absolute path corretto:
         String absolutePath = "/N";
@@ -114,7 +115,7 @@ public class FileSystemTest {
 
     @Test
     public void testConstructor() {
-        final DirectoryModel root = fileSystemModelA.getRoot();
+        final Directory root = fileSystemModelA.getRoot();
         assertNotNull(root);
         assertEquals(3, root.getDir().size());
         assertEquals(root.getDir().size(), sameFileSystemModelA.getRoot().getDir().size());
@@ -125,7 +126,7 @@ public class FileSystemTest {
         final String nomeCartella = "H";
         fileSystemModelA.cd(fileSystemModelA.getSeparator() + "C");
         fileSystemModelA.mkdir(nomeCartella);
-        assertEquals((new DirectoryModel(nomeCartella)), fileSystemModelA.cd(fileSystemModelA.getSeparator() + "C" + fileSystemModelA.getSeparator() + "H"));
+        assertEquals((new Directory(nomeCartella)), fileSystemModelA.cd(fileSystemModelA.getSeparator() + "C" + fileSystemModelA.getSeparator() + "H"));
     }
 
     @Test
@@ -147,7 +148,7 @@ public class FileSystemTest {
         final String absolutePath = fileSystemModelA.getSeparator() + "B" + fileSystemModelA.getSeparator() + "F";
         final String wrongAbsolutePath = fileSystemModelA.getSeparator() + "B" + fileSystemModelA.getSeparator() + "X";
         final String relativePath = "B" + fileSystemModelA.getSeparator() + "F";
-        final DirectoryModel expectedF = new DirectoryModel("F");
+        final Directory expectedF = new Directory("F");
         assertEquals(expectedF, fileSystemModelA.search(absolutePath));
         assertEquals(expectedF, fileSystemModelA.search(relativePath));
         assertThrows(DirectoryNotFound.class, () -> fileSystemModelA.search(wrongAbsolutePath));
@@ -189,12 +190,12 @@ public class FileSystemTest {
     public void testMv() {
 
         FileSystemInterface fileSystem = new FileSystemModel();
-        DirectoryModel A = new DirectoryModel("A");
-        DirectoryModel B = new DirectoryModel("B");
-        DirectoryModel C = new DirectoryModel("C");
-        B.add(new DirectoryModel("E"));
-        B.add(new DirectoryModel("F"));
-        C.add(new DirectoryModel("D"));
+        Directory A = new Directory("A");
+        Directory B = new Directory("B");
+        Directory C = new Directory("C");
+        B.add(new Directory("E"));
+        B.add(new Directory("F"));
+        C.add(new Directory("D"));
         fileSystem = new FileSystemModel();
         fileSystem.add(A);
         fileSystem.add(B);

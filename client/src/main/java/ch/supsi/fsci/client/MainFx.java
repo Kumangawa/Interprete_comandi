@@ -4,6 +4,7 @@ import ch.supsi.fsci.client.model.CommandExecutionModel;
 import ch.supsi.fsci.client.controller.CommandExecutionController;
 import ch.supsi.fsci.engine.Controller.FileSystemController;
 import ch.supsi.fsci.engine.Controller.PreferencesController;
+import ch.supsi.fsci.engine.Data.PreferencesData;
 import ch.supsi.fsci.engine.Model.FileSystemModel;
 import ch.supsi.fsci.engine.Interface.FileSystemInterface;
 import ch.supsi.fsci.engine.Localization;
@@ -34,8 +35,9 @@ public class MainFx extends Application {
     private int prefInsetsSize;
 
     public MainFx(){
-        PreferencesController preferencesController = new PreferencesController();
-        PreferencesModel preferencesModel = preferencesController.loadPreferences();
+        PreferencesData preferencesData = new PreferencesData();
+        PreferencesModel preferencesModel = preferencesData.loadPreferences();
+        PreferencesController preferencesController = new PreferencesController(preferencesModel, preferencesData);
 
         this.applicationTitle = "command interpreter for fs simulator";
         this.commandLabel = new Label("command");
@@ -47,9 +49,9 @@ public class MainFx extends Application {
 
         this.prefCommandSpacerWidth = 11;
         this.prefInsetsSize = 7;
-        Localization.getSingleton().initialize("i18n.translations", Locale.forLanguageTag(preferencesModel.getPreference("language")));
-        this.commandFieldPrefColumnCount = Integer.parseInt(preferencesModel.getPreference("commandFieldPrefColumnCount"));
-        this.prefOutputAreaRowCount = Integer.parseInt(preferencesModel.getPreference("prefOutputAreaRowCount"));
+        Localization.getSingleton().initialize("i18n.translations", Locale.forLanguageTag(preferencesController.getPreference("language")));
+        this.commandFieldPrefColumnCount = Integer.parseInt(preferencesController.getPreference("commandFieldPrefColumnCount"));
+        this.prefOutputAreaRowCount = Integer.parseInt(preferencesController.getPreference("prefOutputAreaRowCount"));
 
     }
 

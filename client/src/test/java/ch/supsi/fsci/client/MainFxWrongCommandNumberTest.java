@@ -10,10 +10,22 @@ import static org.testfx.api.FxAssert.verifyThat;
 
 public class MainFxWrongCommandNumberTest extends AbstractMainGUITest{
 
+    private String output;
+
     @Test
     public void testWrongCommandNumber() {
-        String cd = String.format(Localization.getSingleton().localize("WrongCommand.ArgumentNumberException"), "cd",1,0,"cd <path>")+ "\n";
-        step("Test wrong command number cd", () -> {
+        testCd();
+        testClear();
+        testHelp();
+        testLs();
+        testMkdir();
+        testMv();
+        testPwd();
+        testRm();
+    }
+    private void testCd() {
+        output = String.format(Localization.getSingleton().localize("WrongCommand.ArgumentNumberException"), "cd",1,0,"cd <path>")+ "\n";
+        step("Cd 0 arguments", () -> {
             interact(() -> {
                 TextField commandTextField = lookup("#commandTextField").query();
                 commandTextField.setText("cd ");
@@ -21,11 +33,25 @@ public class MainFxWrongCommandNumberTest extends AbstractMainGUITest{
             sleep(SLEEP_INTERVAL);
             interact(() -> type(ENTER));
             verifyThat("#commandTextField", TextInputControlMatchers.hasText(""));
-            verifyThat("#outputArea", TextInputControlMatchers.hasText(cd));
+            verifyThat("#outputArea", TextInputControlMatchers.hasText(output));
         });
 
-        String clear = String.format(Localization.getSingleton().localize("WrongCommand.ArgumentNumberException"), "clear",0,1,"clear")+ "\n";
-        step("Test wrong command number clear", () -> {
+        output += String.format(Localization.getSingleton().localize("WrongCommand.ArgumentNumberException"), "cd",1,2,"cd <path>")+ "\n";
+        step("Cd too many arguments", () -> {
+            interact(() -> {
+                TextField commandTextField = lookup("#commandTextField").query();
+                commandTextField.setText("cd a b");
+            });
+            sleep(SLEEP_INTERVAL);
+            interact(() -> type(ENTER));
+            verifyThat("#commandTextField", TextInputControlMatchers.hasText(""));
+            verifyThat("#outputArea", TextInputControlMatchers.hasText(output));
+        });
+    }
+
+    private void testClear() {
+        output += String.format(Localization.getSingleton().localize("WrongCommand.ArgumentNumberException"), "clear",0,1,"clear")+ "\n";
+        step("Clear too many arguments", () -> {
             interact(() -> {
                 TextField commandTextField = lookup("#commandTextField").query();
                 commandTextField.setText("clear uno");
@@ -33,11 +59,13 @@ public class MainFxWrongCommandNumberTest extends AbstractMainGUITest{
             sleep(SLEEP_INTERVAL);
             interact(() -> type(ENTER));
             verifyThat("#commandTextField", TextInputControlMatchers.hasText(""));
-            verifyThat("#outputArea", TextInputControlMatchers.hasText(cd+clear));
+            verifyThat("#outputArea", TextInputControlMatchers.hasText(output));
         });
+    }
 
-        String help = String.format(Localization.getSingleton().localize("WrongCommand.ArgumentNumberException"), "help",0,1,"help")+ "\n";
-        step("Test wrong command number clear", () -> {
+    private void testHelp() {
+        output += String.format(Localization.getSingleton().localize("WrongCommand.ArgumentNumberException"), "help",0,1,"help")+ "\n";
+        step("Help too many arguments", () -> {
             interact(() -> {
                 TextField commandTextField = lookup("#commandTextField").query();
                 commandTextField.setText("help uno");
@@ -45,11 +73,13 @@ public class MainFxWrongCommandNumberTest extends AbstractMainGUITest{
             sleep(SLEEP_INTERVAL);
             interact(() -> type(ENTER));
             verifyThat("#commandTextField", TextInputControlMatchers.hasText(""));
-            verifyThat("#outputArea", TextInputControlMatchers.hasText(cd+clear+help));
+            verifyThat("#outputArea", TextInputControlMatchers.hasText(output));
         });
+    }
 
-        String ls = String.format(Localization.getSingleton().localize("WrongCommand.ArgumentNumberException"), "ls",0,1,"ls")+ "\n";
-        step("Test wrong command number ls", () -> {
+    private void testLs() {
+        output += String.format(Localization.getSingleton().localize("WrongCommand.ArgumentNumberException"), "ls",0,1,"ls")+ "\n";
+        step("Ls too many arguments", () -> {
             interact(() -> {
                 TextField commandTextField = lookup("#commandTextField").query();
                 commandTextField.setText("ls uno");
@@ -57,11 +87,13 @@ public class MainFxWrongCommandNumberTest extends AbstractMainGUITest{
             sleep(SLEEP_INTERVAL);
             interact(() -> type(ENTER));
             verifyThat("#commandTextField", TextInputControlMatchers.hasText(""));
-            verifyThat("#outputArea", TextInputControlMatchers.hasText(cd+clear+help+ls));
+            verifyThat("#outputArea", TextInputControlMatchers.hasText(output));
         });
+    }
 
-        String mkdir = String.format(Localization.getSingleton().localize("WrongCommand.ArgumentNumberException"), "mkdir",1,0,"mkdir <directory>")+ "\n";
-        step("Test wrong command number mkdir", () -> {
+    private void testMkdir() {
+        output+= String.format(Localization.getSingleton().localize("WrongCommand.ArgumentNumberException"), "mkdir",1,0,"mkdir <directory>")+ "\n";
+        step("Mkdir 0 arguments", () -> {
             interact(() -> {
                 TextField commandTextField = lookup("#commandTextField").query();
                 commandTextField.setText("mkdir ");
@@ -69,11 +101,25 @@ public class MainFxWrongCommandNumberTest extends AbstractMainGUITest{
             sleep(SLEEP_INTERVAL);
             interact(() -> type(ENTER));
             verifyThat("#commandTextField", TextInputControlMatchers.hasText(""));
-            verifyThat("#outputArea", TextInputControlMatchers.hasText(cd+clear+help+ls+mkdir));
+            verifyThat("#outputArea", TextInputControlMatchers.hasText(output));
         });
 
-        String mv = String.format(Localization.getSingleton().localize("WrongCommand.ArgumentNumberException"), "mv",2,0,"mv <src> <dest>")+ "\n";
-        step("Test wrong command number mv", () -> {
+        output+= String.format(Localization.getSingleton().localize("WrongCommand.ArgumentNumberException"), "mkdir",1,2,"mkdir <directory>")+ "\n";
+        step("Mkdir too many arguments", () -> {
+            interact(() -> {
+                TextField commandTextField = lookup("#commandTextField").query();
+                commandTextField.setText("mkdir a b");
+            });
+            sleep(SLEEP_INTERVAL);
+            interact(() -> type(ENTER));
+            verifyThat("#commandTextField", TextInputControlMatchers.hasText(""));
+            verifyThat("#outputArea", TextInputControlMatchers.hasText(output));
+        });
+    }
+
+    private void testMv() {
+        output+= String.format(Localization.getSingleton().localize("WrongCommand.ArgumentNumberException"), "mv",2,0,"mv <src> <dest>")+ "\n";
+        step("Mkdir 0 arguments", () -> {
             interact(() -> {
                 TextField commandTextField = lookup("#commandTextField").query();
                 commandTextField.setText("mv ");
@@ -81,11 +127,25 @@ public class MainFxWrongCommandNumberTest extends AbstractMainGUITest{
             sleep(SLEEP_INTERVAL);
             interact(() -> type(ENTER));
             verifyThat("#commandTextField", TextInputControlMatchers.hasText(""));
-            verifyThat("#outputArea", TextInputControlMatchers.hasText(cd+clear+help+ls+mkdir+mv));
+            verifyThat("#outputArea", TextInputControlMatchers.hasText(output));
         });
 
-        String pwd = String.format(Localization.getSingleton().localize("WrongCommand.ArgumentNumberException"), "pwd",0,1,"pwd")+ "\n";
-        step("Test wrong command number pwd", () -> {
+        output+= String.format(Localization.getSingleton().localize("WrongCommand.ArgumentNumberException"), "mv",2,3,"mv <src> <dest>")+ "\n";
+        step("Mkdir too many arguments", () -> {
+            interact(() -> {
+                TextField commandTextField = lookup("#commandTextField").query();
+                commandTextField.setText("mv a b c");
+            });
+            sleep(SLEEP_INTERVAL);
+            interact(() -> type(ENTER));
+            verifyThat("#commandTextField", TextInputControlMatchers.hasText(""));
+            verifyThat("#outputArea", TextInputControlMatchers.hasText(output));
+        });
+    }
+
+    private void testPwd() {
+        output += String.format(Localization.getSingleton().localize("WrongCommand.ArgumentNumberException"), "pwd",0,1,"pwd")+ "\n";
+        step("Pwd too many arguments", () -> {
             interact(() -> {
                 TextField commandTextField = lookup("#commandTextField").query();
                 commandTextField.setText("pwd uno");
@@ -93,11 +153,13 @@ public class MainFxWrongCommandNumberTest extends AbstractMainGUITest{
             sleep(SLEEP_INTERVAL);
             interact(() -> type(ENTER));
             verifyThat("#commandTextField", TextInputControlMatchers.hasText(""));
-            verifyThat("#outputArea", TextInputControlMatchers.hasText(cd+clear+help+ls+mkdir+mv+pwd));
+            verifyThat("#outputArea", TextInputControlMatchers.hasText(output));
         });
+    }
 
-        String rm = String.format(Localization.getSingleton().localize("WrongCommand.ArgumentNumberException"), "rm",1,0,"rm <path>")+ "\n";
-        step("Test wrong command number rm", () -> {
+    private void testRm() {
+        output += String.format(Localization.getSingleton().localize("WrongCommand.ArgumentNumberException"), "rm",1,0,"rm <path>")+ "\n";
+        step("Rm 0 arguments", () -> {
             interact(() -> {
                 TextField commandTextField = lookup("#commandTextField").query();
                 commandTextField.setText("rm ");
@@ -105,8 +167,19 @@ public class MainFxWrongCommandNumberTest extends AbstractMainGUITest{
             sleep(SLEEP_INTERVAL);
             interact(() -> type(ENTER));
             verifyThat("#commandTextField", TextInputControlMatchers.hasText(""));
-            verifyThat("#outputArea", TextInputControlMatchers.hasText(cd+clear+help+ls+mkdir+mv+pwd+
-                    rm));
+            verifyThat("#outputArea", TextInputControlMatchers.hasText(output));
+        });
+
+        output += String.format(Localization.getSingleton().localize("WrongCommand.ArgumentNumberException"), "rm",1,2,"rm <path>")+ "\n";
+        step("Rm too many arguments", () -> {
+            interact(() -> {
+                TextField commandTextField = lookup("#commandTextField").query();
+                commandTextField.setText("rm a b");
+            });
+            sleep(SLEEP_INTERVAL);
+            interact(() -> type(ENTER));
+            verifyThat("#commandTextField", TextInputControlMatchers.hasText(""));
+            verifyThat("#outputArea", TextInputControlMatchers.hasText(output));
         });
     }
 }

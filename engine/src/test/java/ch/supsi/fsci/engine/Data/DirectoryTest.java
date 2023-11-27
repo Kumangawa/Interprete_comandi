@@ -1,6 +1,6 @@
-package ch.supsi.fsci.engine;
+package ch.supsi.fsci.engine.Data;
 
-import ch.supsi.fsci.engine.Model.DirectoryModel;
+import ch.supsi.fsci.engine.Data.Directory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import java.util.List;
@@ -8,15 +8,15 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class DirectoryTest {
 
-    private DirectoryModel rootDir;
-    private DirectoryModel subDir1;
-    private DirectoryModel subDir2;
+    private Directory rootDir;
+    private Directory subDir1;
+    private Directory subDir2;
 
     @BeforeEach
     public void setUp() {
-        rootDir = new DirectoryModel("root");
-        subDir1 = new DirectoryModel("subDir1");
-        subDir2 = new DirectoryModel("subDir2");
+        rootDir = new Directory("root");
+        subDir1 = new Directory("subDir1");
+        subDir2 = new Directory("subDir2");
 
         rootDir.add(subDir1);
         rootDir.add(subDir2);
@@ -30,7 +30,7 @@ public class DirectoryTest {
 
     @Test
     public void getDirTest() {
-        List<DirectoryModel> subDirs = rootDir.getDir();
+        List<Directory> subDirs = rootDir.getDir();
         assertEquals(2, subDirs.size());
         assertTrue(subDirs.contains(subDir1));
         assertTrue(subDirs.contains(subDir2));
@@ -38,9 +38,9 @@ public class DirectoryTest {
 
     @Test
     public void equalsTest() {
-        DirectoryModel rootDirCopy = new DirectoryModel("root");
-        rootDirCopy.add(new DirectoryModel("subDir1"));
-        rootDirCopy.add(new DirectoryModel("subDir2"));
+        Directory rootDirCopy = new Directory("root");
+        rootDirCopy.add(new Directory("subDir1"));
+        rootDirCopy.add(new Directory("subDir2"));
 
         assertEquals(rootDir, rootDir);
         assertEquals(rootDir, rootDirCopy);

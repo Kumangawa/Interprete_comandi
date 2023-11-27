@@ -1,28 +1,28 @@
-package ch.supsi.fsci.engine.Model;
+package ch.supsi.fsci.engine.Data;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class DirectoryModel {
+public class Directory {
     private final String name;
-    private final List<DirectoryModel> dir;
+    private final List<Directory> dir;
 
-    public DirectoryModel(final String name, final List<DirectoryModel> dir) {
+    public Directory(final String name, final List<Directory> dir) {
         this.name = name;
         this.dir = dir;
     }
 
-    public DirectoryModel(final String name){
+    public Directory(final String name){
         this.name=name;
         this.dir = new ArrayList<>();
     }
 
     /*
-    * questo modo é momentaneo, serve solo per comodità per fare dei test
-    * */
+     * questo modo é momentaneo, serve solo per comodità per fare dei test
+     * */
 
-    public void add(final DirectoryModel dirToAdd){
+    public void add(final Directory dirToAdd){
         dir.add(dirToAdd);
     }
 
@@ -30,7 +30,7 @@ public class DirectoryModel {
         return name;
     }
 
-    public List<DirectoryModel> getDir() {
+    public List<Directory> getDir() {
         return dir;
     }
 
@@ -38,7 +38,7 @@ public class DirectoryModel {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        DirectoryModel that = (DirectoryModel) o;
+        Directory that = (Directory) o;
         return Objects.equals(name, that.name) && Objects.equals(dir, that.dir);
     }
 
@@ -46,4 +46,5 @@ public class DirectoryModel {
     public int hashCode() {
         return Objects.hash(name, dir);
     }
+
 }
