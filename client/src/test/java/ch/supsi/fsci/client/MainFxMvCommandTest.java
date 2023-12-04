@@ -13,11 +13,10 @@ public class MainFxMvCommandTest  extends AbstractMainGUITest {
     @Test
     public void testMvCommand() {
         String primaLettera = "A";
-        String a = String.format(Localization.getSingleton().localize("command.mkdir")) +primaLettera +"\n";
+        String a = String.format(Localization.getSingleton().localize("command.mkdir"),primaLettera)+"\n";
         String secondaLettera = "B";
-        String b = String.format(Localization.getSingleton().localize("command.mkdir")) +secondaLettera +"\n";
-        // TODO: da mettere a posto le risposte del comando mv, al momento è arcodato
-        String c = "Impossibile spostare la directory di origine.\n";
+        String b = String.format(Localization.getSingleton().localize("command.mkdir"),secondaLettera)+"\n";
+        String c = String.format(Localization.getSingleton().localize("command.mv.root")) +"\n";
         step("Test command mv", () -> {
             interact(() -> {
                 TextField commandTextField = lookup("#commandTextField").query();

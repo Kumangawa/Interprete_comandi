@@ -14,12 +14,12 @@ public class MainFxRmCommandTest  extends AbstractMainGUITest  {
     public void
     testRmCommand() {
         String lettera = "A";
-        String a = String.format(Localization.getSingleton().localize("command.mkdir")) +lettera+"\n";
-        String b = String.format(Localization.getSingleton().localize("command.rm.remove.success")) + lettera+"\n";
-        String c = String.format(Localization.getSingleton().localize("command.mkdir")) +lettera +"\n";
+        String a = String.format(Localization.getSingleton().localize("command.mkdir"), lettera)+"\n";
+        String b = String.format(Localization.getSingleton().localize("command.rm.success"), lettera) + "\n";
+        String c = String.format(Localization.getSingleton().localize("command.mkdir"), lettera) +"\n";
         String d = lettera+"\n";
-        String e = String.format(Localization.getSingleton().localize("command.rm.remove.failed")) +"\n";
-        String f = String.format(Localization.getSingleton().localize("command.rm.remove.root")) +"\n";
+        String e = String.format(Localization.getSingleton().localize("command.rm.failed")) +"\n";
+        String f = String.format(Localization.getSingleton().localize("command.rm.root"), "/") +"\n";
         step("Test command rm, create " + lettera + " and then remove it", () -> {
             interact(() -> {
                 TextField commandTextField = lookup("#commandTextField").query();

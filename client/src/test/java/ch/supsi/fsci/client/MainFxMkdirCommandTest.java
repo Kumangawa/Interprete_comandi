@@ -13,7 +13,7 @@ public class MainFxMkdirCommandTest  extends AbstractMainGUITest {
     @Test
     public void testMkdirCommand() {
         String lettera = "A";
-        String a = String.format(Localization.getSingleton().localize("command.mkdir")) + lettera +"\n";
+        String a = String.format(Localization.getSingleton().localize("command.mkdir"),lettera) +"\n";
         step("Test command mkdir", () -> {
             interact(() -> {
                 TextField commandTextField = lookup("#commandTextField").query();

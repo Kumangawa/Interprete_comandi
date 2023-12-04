@@ -3,7 +3,7 @@ package ch.supsi.fsci.engine.Model;
 import ch.supsi.fsci.engine.Data.Directory;
 import ch.supsi.fsci.engine.Exceptions.DirectoryNotFound;
 import ch.supsi.fsci.engine.Interface.FileSystemInterface;
-import ch.supsi.fsci.engine.Localization;
+import ch.supsi.fsci.engine.Respons;
 
 import java.util.Arrays;
 import java.util.List;
@@ -14,7 +14,10 @@ public class FileSystemModel implements FileSystemInterface {
     private Directory cur;
     private final String separator = "/";
 
+    private final Respons respons;
+
     public FileSystemModel() {
+        respons = new Respons();
         Directory root = new Directory(separator);
         this.root = root;
         this.cur = root;
@@ -43,10 +46,9 @@ public class FileSystemModel implements FileSystemInterface {
             }
             if(oldCounter==counter){//se counter non é stato incrementato, significa che non si é trovata la dir e quindi non esiste
                 //dovrà ritornare la cartella cur
-                throw new DirectoryNotFound(String.format(Localization.getSingleton().localize("DirectoryNotFound"), orderedPath.get(orderedPath.size()-1), orderedPath));
+                throw new DirectoryNotFound(respons.keyAndTwoParameter("DirectoryNotFound",orderedPath.get(orderedPath.size()-1), orderedPath.toString()));
             }
         }
-        System.out.println("Directory di destinazione: " + cur_temp.getName());
         return cur_temp;
     }
 
@@ -97,7 +99,7 @@ public class FileSystemModel implements FileSystemInterface {
             currentDirectory = getParentDirectory(currentDirectory);
         }
 
-        stringBuilder.insert(0, String.format(Localization.getSingleton().localize("command.pwd")));
+        stringBuilder.insert(0, respons.onlyKey("command.pwd"));
         return stringBuilder.toString();
     }
 
@@ -115,7 +117,7 @@ public class FileSystemModel implements FileSystemInterface {
 
     public String mkdir(final String nomeCartella) {
         cur.add(new Directory(nomeCartella));
-        return String.format(Localization.getSingleton().localize("command.mkdir")) + nomeCartella;
+        return respons.keyAndOneParameter("command.mkdir",nomeCartella);
     }
 
     public String ls() {
@@ -135,7 +137,7 @@ public class FileSystemModel implements FileSystemInterface {
 
             // Verifica se il percorso di destinazione è la radice ("/")
             if (destination.equals(separator)) {
-                return "/ non può essere spostata!";
+                return respons.onlyKey("command.mv.root");
             }
 
             // Cerca la directory di destinazione
@@ -143,7 +145,7 @@ public class FileSystemModel implements FileSystemInterface {
 
             // Verifica se il percorso di destinazione è una sottodirectory della directory di origine
             if (isDescendant(sourceDir, destinationDir)) {
-                return "Impossibile spostare la directory all'interno di una sua sottodirectory.";
+                return respons.onlyKey("command.mv.failed.descendant");
             }
 
             // Rimuovi la directory di origine dal suo genitore
@@ -153,9 +155,9 @@ public class FileSystemModel implements FileSystemInterface {
 
                 // Aggiungi la directory di origine alla directory di destinazione
                 destinationDir.getDir().add(sourceDir);
-                return "Spostamento avvenuto con successo: " + sourceDir.getName() + " spostata in " + destination;
+                return respons.keyAndTwoParameter("command.mv.success",sourceDir.getName(), destination);
             } else {
-                return "Impossibile spostare la directory di origine.";
+                return respons.onlyKey("command.mv.root");
             }
         } catch (DirectoryNotFound e) {
             return e.getMessage();
@@ -164,14 +166,14 @@ public class FileSystemModel implements FileSystemInterface {
 
     public String rm(final String path) {
         if (path.equals(separator)) {
-            return String.format(Localization.getSingleton().localize("command.rm.remove.root"));
+            return respons.keyAndOneParameter("command.rm.root", separator);
         }
 
         try {
             Directory targetDir = search(path);
 
             if (targetDir == cur || isDescendant(targetDir, cur)) {
-                return String.format(Localization.getSingleton().localize("command.rm.remove.failed"));
+                return respons.onlyKey("command.rm.failed");
             }
             Directory parentDir = getParentDirectory(targetDir);
             if (parentDir != null) {
@@ -180,7 +182,7 @@ public class FileSystemModel implements FileSystemInterface {
                 Directory d = getRoot();
                 d.getDir().remove(targetDir);
             }
-            return String.format(Localization.getSingleton().localize("command.rm.remove.success"))+ targetDir.getName();
+            return respons.keyAndOneParameter("command.rm.success", targetDir.getName());
 
         } catch (DirectoryNotFound e) {
             return e.getMessage();
@@ -198,11 +200,10 @@ public class FileSystemModel implements FileSystemInterface {
     }
 
     public String help() {
-        return String.format(Localization.getSingleton().localize("command.help"));
+        return respons.onlyKey("command.help");
     }
 
     public String clear() {
-
         return "clear";
     }
 

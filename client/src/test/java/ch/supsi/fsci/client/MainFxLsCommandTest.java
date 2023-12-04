@@ -14,8 +14,8 @@ public class MainFxLsCommandTest  extends AbstractMainGUITest {
     public void testLsCommand() {
         String primaLettera = "A";
         String secondaLettera = "B";
-        String a = String.format(Localization.getSingleton().localize("command.mkdir")) +primaLettera+"\n";
-        String b = String.format(Localization.getSingleton().localize("command.mkdir")) +secondaLettera+"\n";
+        String a = String.format(Localization.getSingleton().localize("command.mkdir"),primaLettera)+"\n";
+        String b = String.format(Localization.getSingleton().localize("command.mkdir"),secondaLettera)+"\n";
         String c = "A B " + "\n";
         step("Test command ls", () -> {
             interact(() -> {

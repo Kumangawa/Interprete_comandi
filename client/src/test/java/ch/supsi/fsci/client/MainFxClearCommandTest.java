@@ -13,7 +13,7 @@ public class MainFxClearCommandTest  extends AbstractMainGUITest {
     @Test
     public void testClearCommand() {
         String lettera = "A";
-        String a = String.format(Localization.getSingleton().localize("command.mkdir")) + lettera +"\n";
+        String a = String.format(Localization.getSingleton().localize("command.mkdir"),lettera) +"\n";
         step("Test command clear", () -> {
             interact(() -> {
                 TextField commandTextField = lookup("#commandTextField").query();

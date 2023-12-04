@@ -27,7 +27,7 @@ public class MainFxPwdCommandTest  extends AbstractMainGUITest {
 
 
         String lettera = "A";
-        String b = String.format(Localization.getSingleton().localize("command.mkdir")) + lettera +"\n";
+        String b = String.format(Localization.getSingleton().localize("command.mkdir"), lettera) +"\n";
         String c = lettera+"\n";
         String d = String.format(Localization.getSingleton().localize("command.pwd")) +"/" +lettera +"\n";
 

@@ -177,7 +177,7 @@ public class FileSystemTest {
 
         fileSystemToTest.cd(fileSystemToTest.getSeparator() + "I");
         fileSystemToTest.mkdir("O");
-        assertEquals(String.format(Localization.getSingleton().localize("command.rm.remove.failed")), fileSystemToTest.rm(fileSystemToTest.getSeparator() + "I"));
+        assertEquals(String.format(Localization.getSingleton().localize("command.rm.failed")), fileSystemToTest.rm(fileSystemToTest.getSeparator() + "I"));
         assertEquals("O ", fileSystemToTest.ls());
 
         fileSystemToTest.cd(fileSystemToTest.getSeparator() + "I" + fileSystemToTest.getSeparator() + "O");
@@ -204,9 +204,7 @@ public class FileSystemTest {
         String originPath = "/A/D";
         String destinationPath = "/C";
 
-        assertEquals("Spostamento avvenuto con successo: "
-                + fileSystemModelA.search(originPath).getName() + " spostata in "
-                + destinationPath, fileSystemModelA.mv(originPath, destinationPath));
+        assertEquals(String.format(Localization.getSingleton().localize("command.mv.success"), originPath, destinationPath), fileSystemModelA.mv(originPath, destinationPath));
 
     }
 }
