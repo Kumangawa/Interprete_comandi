@@ -116,9 +116,9 @@ public class FileSystemTest {
         // Initially pwd should return the root
         assertEquals("Current working directory: " + fileSystemModelA.getSeparator(), fileSystemModelA.pwd().localize());
         fileSystemModelA.cd("A");
-        assertEquals("Current working directory: " + fileSystemModelA.getSeparator()+ "A/", fileSystemModelA.pwd().localize());
+        assertEquals("Current working directory: " + fileSystemModelA.getSeparator()+ "A", fileSystemModelA.pwd().localize());
         fileSystemModelA.cd("D");
-        assertEquals("Current working directory: " + fileSystemModelA.getSeparator() + "A" + fileSystemModelA.getSeparator() + "D/", fileSystemModelA.pwd().localize());
+        assertEquals("Current working directory: " + fileSystemModelA.getSeparator() + "A" + fileSystemModelA.getSeparator() + "D", fileSystemModelA.pwd().localize());
     }
 
     @Test
