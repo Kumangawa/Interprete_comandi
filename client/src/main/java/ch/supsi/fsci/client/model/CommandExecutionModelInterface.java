@@ -6,5 +6,5 @@ import java.lang.reflect.InvocationTargetException;
 
 public interface CommandExecutionModelInterface {
     void initializeAllCommands(final String packageToScan);
-    CommandInterface getDispatchedCommand(final String input)throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException;
+    CommandInterface getDispatchedCommand(final String input) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException;
 }

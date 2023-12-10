@@ -13,7 +13,7 @@ public class MainFxCdCommandTest  extends AbstractMainGUITest {
 
         String lettera = "A";
         String a = String.format(Localization.getSingleton().localize("command.mkdir"), lettera) +"\n";
-        String b = lettera +"\n";
+        String b = String.format(Localization.getSingleton().localize("command.cd.success"), lettera) +"\n";
 
         step("Test command cd", () -> {
             interact(() -> {

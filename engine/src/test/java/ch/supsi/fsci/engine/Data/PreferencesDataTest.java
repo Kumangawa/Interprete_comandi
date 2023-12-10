@@ -1,10 +1,14 @@
 package ch.supsi.fsci.engine.Data;
 
 import ch.supsi.fsci.engine.Model.PreferencesModel;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Paths;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -12,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class PreferencesDataTest {
     private PreferencesData preferencesData;
-    private String testFilePath;
+    private static String testFilePath;
 
     @BeforeEach
     public void setUp() {
@@ -21,13 +25,21 @@ public class PreferencesDataTest {
         preferencesData.setPreferenceFilePath(testFilePath);
     }
 
+    @AfterAll
+    public static void cleanUp() {
+        try {
+            Files.deleteIfExists(Paths.get(testFilePath));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     @Test
     public void testSaveAndLoadPreferences() {
-        PreferencesModel originalPreferences = preferencesData.loadPreferences();
+        PreferencesModel originalPreferences = new PreferencesModel(preferencesData);
         originalPreferences.setPreference("key1", "value1");
         originalPreferences.setPreference("key2", "value2");
-        preferencesData.savePreferences(originalPreferences);
-        PreferencesModel loadedPreferences = preferencesData.loadPreferences();
+        PreferencesModel loadedPreferences = new PreferencesModel(preferencesData);
         assertEquals(originalPreferences.getPreference("key1"), loadedPreferences.getPreference("key1"));
         assertEquals(originalPreferences.getPreference("key2"), loadedPreferences.getPreference("key2"));
     }

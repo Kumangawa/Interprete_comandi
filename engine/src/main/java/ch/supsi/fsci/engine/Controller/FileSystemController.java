@@ -1,7 +1,7 @@
 package ch.supsi.fsci.engine.Controller;
 
-import ch.supsi.fsci.engine.Data.Directory;
 import ch.supsi.fsci.engine.Interface.FileSystemInterface;
+import ch.supsi.fsci.engine.Response;
 
 public class FileSystemController {
     private final FileSystemInterface fileSystemModel;
@@ -10,35 +10,31 @@ public class FileSystemController {
         this.fileSystemModel = fileSystemModel;
     }
 
-    public Directory cd(final String path) {
+    public Response cd(final String path) {
         return fileSystemModel.cd(path);
     }
 
-    public String pwd() {
+    public Response pwd() {
         return fileSystemModel.pwd();
     }
 
-    public String mkdir(final String nomeCartella) {
-        return fileSystemModel.mkdir(nomeCartella);
+    public Response mkdir(final String folderName) {
+        return fileSystemModel.mkdir(folderName);
     }
 
-    public String ls() {
+    public Response ls() {
         return fileSystemModel.ls();
     }
 
-    public String mv(final String origin, final String destination) {
+    public Response mv(final String origin, final String destination) {
         return fileSystemModel.mv(origin, destination);
     }
 
-    public String rm(final String path) {
+    public Response rm(final String path) {
         return fileSystemModel.rm(path);
     }
 
-    public String help() {
+    public Response help() {
         return fileSystemModel.help();
-    }
-
-    public String clear() {
-        return fileSystemModel.clear();
     }
 }

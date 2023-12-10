@@ -2,8 +2,15 @@ package ch.supsi.fsci.client.controller;
 
 import ch.supsi.fsci.client.model.CommandExecutionModelInterface;
 import ch.supsi.fsci.engine.CommandPattern.CommandInterface;
+import ch.supsi.fsci.engine.Exceptions.ApplicationBaseException;
+import ch.supsi.fsci.engine.Exceptions.DirectoryNotFound;
+import ch.supsi.fsci.engine.Exceptions.WrongCommandArgumentNumberException;
+import ch.supsi.fsci.engine.Response;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+
+import java.lang.reflect.InvocationTargetException;
+import java.util.Arrays;
 
 public class CommandExecutionController {
 
@@ -17,32 +24,35 @@ public class CommandExecutionController {
         this.commandExecutionModel = commandExecutionModel;
     }
 
-    public void initialize(){
-        // EventHandler for the "Enter" key in the TextField
+    public void initialize() {
         textField.setOnAction(event -> {
-            // Get the entered text
-            String input = textField.getText();
-            String output = elaborateText(input);
-            // Clear the text field
-            textField.clear();
-            // Add the text in the output area
-            if (output.equals("clear")) {
+            final String input = textField.getText();
+            if (input.equals("clear")) {
                 outputArea.clear();
-            } else {
-                outputArea.appendText(output+'\n');
+                textField.clear();
+                return;
             }
+            Response output = null;
+            try {
+                output = elaborateText(input);
+            } catch (Exception e) {
+                System.out.println(Arrays.toString(e.getStackTrace()));
+            }
+            textField.clear();
+
+            assert output != null;
+            outputArea.appendText(output.localize() + '\n');
         });
     }
 
-    private String elaborateText(final String input) {
+    private Response elaborateText(final String input) throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
         try {
             final CommandInterface command = commandExecutionModel.getDispatchedCommand(input);
             return command.execute();
-            // Get response
         }
-        catch (final Exception e) {
-            e.printStackTrace();
-            return e.getMessage();
+        catch (final ApplicationBaseException e) {
+            return new Response(e.getKey(), e.getAdditionalParameters());
         }
+
     }
 }

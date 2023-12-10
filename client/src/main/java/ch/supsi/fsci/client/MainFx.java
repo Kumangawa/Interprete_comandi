@@ -36,8 +36,8 @@ public class MainFx extends Application {
 
     public MainFx(){
         PreferencesData preferencesData = new PreferencesData();
-        PreferencesModel preferencesModel = preferencesData.loadPreferences();
-        PreferencesController preferencesController = new PreferencesController(preferencesModel, preferencesData);
+        PreferencesModel preferencesModel = new PreferencesModel(preferencesData);
+        PreferencesController preferencesController = new PreferencesController(preferencesModel);
 
         this.applicationTitle = "command interpreter for fs simulator";
         this.commandLabel = new Label("command");

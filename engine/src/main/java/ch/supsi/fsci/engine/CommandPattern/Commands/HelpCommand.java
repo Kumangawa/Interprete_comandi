@@ -4,6 +4,7 @@ import ch.supsi.fsci.engine.CommandPattern.CommandInfo;
 import ch.supsi.fsci.engine.CommandPattern.CommandInterface;
 import ch.supsi.fsci.engine.Controller.FileSystemController;
 import ch.supsi.fsci.engine.Interface.FileSystemInterface;
+import ch.supsi.fsci.engine.Response;
 
 @CommandInfo(name = "help", totalArguments = 0, commandSyntax = "help")
 public class HelpCommand implements CommandInterface {
@@ -14,7 +15,7 @@ public class HelpCommand implements CommandInterface {
     }
 
     @Override
-    public String execute() {
+    public Response execute() {
         return receiver.help();
     }
 }

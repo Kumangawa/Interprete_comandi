@@ -55,7 +55,6 @@ public class CommandsTest {
         testCommandAnnotationNameInternal(MkdirCommand.class, "mkdir");
         testCommandAnnotationNameInternal(MvCommand.class, "mv");
         testCommandAnnotationNameInternal(PwdCommand.class, "pwd");
-        testCommandAnnotationNameInternal(ClearCommand.class, "clear");
         testCommandAnnotationNameInternal(RmCommand.class, "rm");
     }
 
@@ -68,6 +67,5 @@ public class CommandsTest {
         testCommandAnnotationArgumentsNumberInternal(MvCommand.class, 2);
         testCommandAnnotationArgumentsNumberInternal(PwdCommand.class, 0);
         testCommandAnnotationArgumentsNumberInternal(RmCommand.class, 1);
-        testCommandAnnotationArgumentsNumberInternal(ClearCommand.class, 0);
     }
 }

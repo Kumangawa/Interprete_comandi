@@ -17,7 +17,7 @@ public class MainFxRmCommandTest  extends AbstractMainGUITest  {
         String a = String.format(Localization.getSingleton().localize("command.mkdir"), lettera)+"\n";
         String b = String.format(Localization.getSingleton().localize("command.rm.success"), lettera) + "\n";
         String c = String.format(Localization.getSingleton().localize("command.mkdir"), lettera) +"\n";
-        String d = lettera+"\n";
+        String d = String.format(Localization.getSingleton().localize("command.cd.success"), lettera) +"\n";
         String e = String.format(Localization.getSingleton().localize("command.rm.failed")) +"\n";
         String f = String.format(Localization.getSingleton().localize("command.rm.root"), "/") +"\n";
         step("Test command rm, create " + lettera + " and then remove it", () -> {

@@ -73,7 +73,12 @@ public class CommandExecutionModel implements CommandExecutionModelInterface{
                 final CommandInfo annotation = genericCommand.getAnnotation(CommandInfo.class);
 
                 if (annotation.totalArguments() != tokenizer.countTokens()) {
-                    throw new WrongCommandArgumentNumberException(String.format(Localization.getSingleton().localize("WrongCommand.ArgumentNumberException"),commandName,annotation.totalArguments(),tokenizer.countTokens(),annotation.commandSyntax()));
+                    throw new WrongCommandArgumentNumberException(
+                            "WrongCommand.ArgumentNumberException",
+                            commandName,
+                            Integer.toString(annotation.totalArguments()), Integer.toString(tokenizer.countTokens()),
+                            annotation.commandSyntax()
+                    );
                 }
 
                 // Implement a pattern for delayed construction?
@@ -81,7 +86,7 @@ public class CommandExecutionModel implements CommandExecutionModelInterface{
                         ? genericCommand.getConstructor(FileSystemController.class, StringTokenizer.class).newInstance(fileSystemController, tokenizer)
                         : genericCommand.getConstructor(FileSystemController.class).newInstance(fileSystemController);
             }
-            throw new WrongCommandNameException(String.format(Localization.getSingleton().localize("WrongCommand.NameException"), commandName));
+            throw new WrongCommandNameException("WrongCommand.NameException", commandName);
         }
         throw new IllegalArgumentException("Input is empty.");
     }

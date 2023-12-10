@@ -18,9 +18,7 @@ public class Directory {
         this.dir = new ArrayList<>();
     }
 
-    /*
-     * questo modo é momentaneo, serve solo per comodità per fare dei test
-     * */
+
 
     public void add(final Directory dirToAdd){
         dir.add(dirToAdd);

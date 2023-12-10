@@ -2,6 +2,7 @@ package ch.supsi.fsci.client.controller;
 
 import ch.supsi.fsci.client.model.CommandExecutionModelInterface;
 import ch.supsi.fsci.engine.CommandPattern.CommandInterface;
+import ch.supsi.fsci.engine.Response;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import org.junit.jupiter.api.BeforeEach;
@@ -36,7 +37,7 @@ public class CommandExecutionControllerTest extends ApplicationTest  {
 
         CommandInterface mockCommand = Mockito.mock(CommandInterface.class);
         when(commandExecutionModel.getDispatchedCommand(input)).thenReturn(mockCommand);
-        when(mockCommand.execute()).thenReturn(expectedOutput);
+        when(mockCommand.execute()).thenReturn(new Response("test output"));
 
         textField.setText(input);
         textField.fireEvent(new javafx.event.ActionEvent());
