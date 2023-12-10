@@ -75,29 +75,39 @@ public class FileSystemModel implements FileSystemInterface {
         }
     }
     public Response pwd() {
-        final StringBuilder stringBuilder = new StringBuilder("");
+        StringBuilder sb = new StringBuilder();
         Directory currentDirectory = cur;
 
         while (currentDirectory != null) {
-            stringBuilder.insert(0, (currentDirectory != root ? separator : "") + currentDirectory.getName());
+            if (currentDirectory != root) {
+                sb.insert(0, separator);
+            }
+            sb.insert(0, currentDirectory.getName());
             currentDirectory = getParentDirectory(currentDirectory);
         }
 
-        return new Response("command.pwd", stringBuilder.toString());
+        return new Response("command.pwd", sb.toString());
     }
-
 
     private Directory getParentDirectory(final Directory directory) {
-        if (directory == root) {
-            return null;
+        return (directory == root) ? null : findParentDirectory(root, directory);
+    }
+
+    private Directory findParentDirectory(Directory current, Directory target) {
+        if (current.getDir().contains(target)) {
+            return current;
         }
-        for (final Directory subDir : root.getDir()) {
-            if (subDir.getDir().contains(directory)) {
-                return subDir;
+
+        for (Directory subDir : current.getDir()) {
+            Directory result = findParentDirectory(subDir, target);
+            if (result != null) {
+                return result;
             }
         }
+
         return null;
     }
+
 
     public Response mkdir(final String folderName) {
         cur.add(new Directory(folderName));
