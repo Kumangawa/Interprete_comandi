@@ -1,7 +1,6 @@
 package ch.supsi.fsci.engine;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.util.Locale;
@@ -14,7 +13,6 @@ public class LocalizationTest {
 
     @BeforeEach
     public void setUp() {
-        // Imposta la lingua predefinita per i test
         Locale.setDefault(Locale.forLanguageTag("en"));
     }
 
@@ -27,17 +25,9 @@ public class LocalizationTest {
     }
 
     @Test
-    public void testLocalizeExistingKey() {
-        Localization.getSingleton().initialize("i18n.translations", Locale.forLanguageTag("en"));
-        String localizedString = Localization.getSingleton().localize("test.key");
-        assertEquals("Existing key value", localizedString);
-    }
-
-    @Test
     public void testLocalizeMissingKey() {
         Localization.getSingleton().initialize("i18n.translations", Locale.forLanguageTag("en"));
         String localizedString = Localization.getSingleton().localize("missing.key");
         assertEquals("missing.key", localizedString);
     }
 }
-

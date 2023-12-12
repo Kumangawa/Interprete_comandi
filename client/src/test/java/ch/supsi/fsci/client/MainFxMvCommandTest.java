@@ -17,7 +17,9 @@ public class MainFxMvCommandTest  extends AbstractMainGUITest {
         String secondaLettera = "B";
         String b = String.format(Localization.getSingleton().localize("command.mkdir"),secondaLettera)+"\n";
         String c = String.format(Localization.getSingleton().localize("command.mv.root")) +"\n";
-        step("Test command mv", () -> {
+        String d = a+b+c+String.format(Localization.getSingleton().localize("command.mv.success"),secondaLettera ,primaLettera) +"\n";
+
+        step("Test command mv, move root", () -> {
             interact(() -> {
                 TextField commandTextField = lookup("#commandTextField").query();
                 commandTextField.setText("mkdir "+primaLettera);
@@ -39,12 +41,105 @@ public class MainFxMvCommandTest  extends AbstractMainGUITest {
 
             interact(() -> {
                 TextField commandTextField = lookup("#commandTextField").query();
-                commandTextField.setText("mv /" + primaLettera + " /" + secondaLettera);
+                commandTextField.setText("mv / /" + secondaLettera);
             });
             sleep(SLEEP_INTERVAL);
             interact(() -> type(ENTER));
             verifyThat("#commandTextField", TextInputControlMatchers.hasText(""));
             verifyThat("#outputArea", TextInputControlMatchers.hasText(a+b+c));
+        });
+
+        step("Test command mv, move the directory " + secondaLettera + " in " + primaLettera, () -> {
+            interact(() -> {
+                TextField commandTextField = lookup("#commandTextField").query();
+                commandTextField.setText("mv "+ secondaLettera + " "+ primaLettera);
+            });
+            sleep(SLEEP_INTERVAL);
+            interact(() -> type(ENTER));
+            verifyThat("#commandTextField", TextInputControlMatchers.hasText(""));
+            verifyThat("#outputArea", TextInputControlMatchers.hasText(d));
+        });
+
+        String terzaLettera = "C";
+        String destinationPath = "/C";
+        String e = String.format(Localization.getSingleton().localize("command.mkdir"),terzaLettera)+"\n";
+        String f = String.format(Localization.getSingleton().localize("command.cd.success"), primaLettera) +"\n";
+        String g = d+e+f+Localization.getSingleton().localize("command.mv.failed.current") + "\n";
+
+        step("Test command mv, move in " + primaLettera + " and try to move " + primaLettera + " in "+ terzaLettera, () -> {
+            interact(() -> {
+                TextField commandTextField = lookup("#commandTextField").query();
+                commandTextField.setText("mkdir "+terzaLettera);
+            });
+            sleep(SLEEP_INTERVAL);
+            interact(() -> type(ENTER));
+            verifyThat("#commandTextField", TextInputControlMatchers.hasText(""));
+            verifyThat("#outputArea", TextInputControlMatchers.hasText(d+e));
+
+            interact(() -> {
+                TextField commandTextField = lookup("#commandTextField").query();
+                commandTextField.setText("cd "+primaLettera);
+            });
+            sleep(SLEEP_INTERVAL);
+            interact(() -> type(ENTER));
+            verifyThat("#commandTextField", TextInputControlMatchers.hasText(""));
+            verifyThat("#outputArea", TextInputControlMatchers.hasText(d+e+f));
+
+            interact(() -> {
+                TextField commandTextField = lookup("#commandTextField").query();
+                commandTextField.setText("mv /"+ primaLettera + " "+ destinationPath);
+            });
+            sleep(SLEEP_INTERVAL);
+            interact(() -> type(ENTER));
+            verifyThat("#commandTextField", TextInputControlMatchers.hasText(""));
+            verifyThat("#outputArea", TextInputControlMatchers.hasText(g));
+        });
+
+        String h = String.format(Localization.getSingleton().localize("command.cd.success"), secondaLettera) +"\n";
+        String i = g+h+Localization.getSingleton().localize("command.mv.failed.descendant") + "\n";
+
+        step("Test command mv, move in " + secondaLettera + " and try to move " + primaLettera + " in "+ terzaLettera, () -> {
+            interact(() -> {
+                TextField commandTextField = lookup("#commandTextField").query();
+                commandTextField.setText("cd /"+primaLettera + "/"+secondaLettera);
+            });
+            sleep(SLEEP_INTERVAL);
+            interact(() -> type(ENTER));
+            verifyThat("#commandTextField", TextInputControlMatchers.hasText(""));
+            verifyThat("#outputArea", TextInputControlMatchers.hasText(g+h));
+
+            interact(() -> {
+                TextField commandTextField = lookup("#commandTextField").query();
+                commandTextField.setText("mv /"+ primaLettera + " "+ destinationPath);
+            });
+            sleep(SLEEP_INTERVAL);
+            interact(() -> type(ENTER));
+            verifyThat("#commandTextField", TextInputControlMatchers.hasText(""));
+            verifyThat("#outputArea", TextInputControlMatchers.hasText(i));
+        });
+
+        String l = String.format(Localization.getSingleton().localize("command.cd.success"), primaLettera) +"\n";
+        String path = "/"+ primaLettera + "/"+ secondaLettera;
+        String m = i+l+String.format(Localization.getSingleton().localize("command.mv.success"),path,destinationPath )+"\n";
+
+        step("Test command mv, move in " + primaLettera + " and try to move " + secondaLettera + " in "+ terzaLettera, () -> {
+            interact(() -> {
+                TextField commandTextField = lookup("#commandTextField").query();
+                commandTextField.setText("cd /"+primaLettera);
+            });
+            sleep(SLEEP_INTERVAL);
+            interact(() -> type(ENTER));
+            verifyThat("#commandTextField", TextInputControlMatchers.hasText(""));
+            verifyThat("#outputArea", TextInputControlMatchers.hasText(i+l));
+
+            interact(() -> {
+                TextField commandTextField = lookup("#commandTextField").query();
+                commandTextField.setText("mv " + path + " " + destinationPath);
+            });
+            sleep(SLEEP_INTERVAL);
+            interact(() -> type(ENTER));
+            verifyThat("#commandTextField", TextInputControlMatchers.hasText(""));
+            verifyThat("#outputArea", TextInputControlMatchers.hasText(m));
         });
     }
 }

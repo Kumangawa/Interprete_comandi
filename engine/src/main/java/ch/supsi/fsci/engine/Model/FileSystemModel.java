@@ -54,7 +54,6 @@ public class FileSystemModel implements FileSystemInterface {
         return (Arrays.stream(relativePath.split(separator)).toList());
     }
 
-
     public Directory search(final String path){
         if(isAbsolutePath(path)) {
             List<String> orderedPath = getOrderedAbsolutePath(path);
@@ -64,7 +63,6 @@ public class FileSystemModel implements FileSystemInterface {
             return iterate(cur, orderedRelativePath);
         }
     }
-
 
     public Response cd(final String path) {
         try {
@@ -86,7 +84,6 @@ public class FileSystemModel implements FileSystemInterface {
         return new Response("command.pwd", stringBuilder.toString());
     }
 
-
     private Directory getParentDirectory(final Directory directory) {
         if (directory == root) {
             return null;
@@ -99,8 +96,17 @@ public class FileSystemModel implements FileSystemInterface {
         return null;
     }
 
-    public Response mkdir(final String folderName) {
-        cur.add(new Directory(folderName));
+    public Response mkdir(String folderName) {
+        if (folderName.startsWith(separator)){
+            String[] tmp = folderName.split(separator);
+            String parentPath = String.join(separator, Arrays.copyOf(tmp, tmp.length - 1));
+            folderName = tmp[tmp.length - 1];
+
+            Directory parent = search(parentPath);
+            parent.add(new Directory(folderName));
+        } else {
+            cur.add(new Directory(folderName));
+        }
         return new Response("command.mkdir", folderName);
     }
 
@@ -113,36 +119,39 @@ public class FileSystemModel implements FileSystemInterface {
         return new Response("command.ls.success", content.toString().trim());
     }
 
-    public Response mv(final String origin, final String destination) {
-        // TODO: da completare
+    public Response mv(final String move, final String destination) {
         try {
-            // Cerca la directory di origine
-            Directory sourceDir = search(origin);
-
             // Verifica se il percorso di destinazione è la radice ("/")
-            if (destination.equals(separator)) {
+            if (move.equals(separator)) {
                 return new Response("command.mv.root");
+            }
+
+            // Cerca la directory di origine
+            Directory sourceDir = search(move);
+
+            // Verifica se il percorso di destinazione è la cartella corrente
+            if (move.equals(separator + cur.getName())) {
+                return new Response("command.mv.failed.current");
             }
 
             // Cerca la directory di destinazione
             Directory destinationDir = search(destination);
 
             // Verifica se il percorso di destinazione è una sottodirectory della directory di origine
-            if (isDescendant(sourceDir, destinationDir)) {
+            if (isDescendant(sourceDir, cur)) {
                 return new Response("command.mv.failed.descendant");
             }
 
             // Rimuovi la directory di origine dal suo genitore
             Directory sourceParentDir = getParentDirectory(sourceDir);
-            if (sourceParentDir != null) {
-                sourceParentDir.getDir().remove(sourceDir);
-
-                // Aggiungi la directory di origine alla directory di destinazione
-                destinationDir.getDir().add(sourceDir);
-                return new Response("command.mv.success", origin, destination);
-            } else {
-                return new Response("command.mv.root");
+            if (sourceParentDir == null) {
+                sourceParentDir = root;
             }
+            sourceParentDir.getDir().remove(sourceDir);
+            // Aggiungi la directory di origine alla directory di destinazione
+            destinationDir.getDir().add(sourceDir);
+            return new Response("command.mv.success", move, destination);
+
         } catch (DirectoryNotFound e) {
             return new Response(e.getKey(), e.getAdditionalParameters());
         }

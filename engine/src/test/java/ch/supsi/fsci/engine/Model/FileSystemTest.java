@@ -1,218 +1,140 @@
 package ch.supsi.fsci.engine.Model;
 
 import ch.supsi.fsci.engine.Data.Directory;
-import ch.supsi.fsci.engine.Exceptions.ApplicationBaseException;
 import ch.supsi.fsci.engine.Exceptions.DirectoryNotFound;
 import ch.supsi.fsci.engine.Interface.FileSystemInterface;
 import ch.supsi.fsci.engine.Localization;
-import ch.supsi.fsci.engine.Response;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 public class FileSystemTest {
-    private FileSystemInterface fileSystemModelA;
-    private FileSystemInterface sameFileSystemModelA;
-    private FileSystemInterface fileSystemModelB;
-
+    private FileSystemInterface fileSystem;
+    private Directory A;
     @BeforeEach
     public void setUp() {
-        Directory A = new Directory("A");
-        Directory B = new Directory("B");
-        Directory C = new Directory("C");
-
+        fileSystem = new FileSystemModel();
+        A = new Directory("A");
         A.add(new Directory("D"));
-        B.add(new Directory("E"));
-        B.add(new Directory("F"));
-        C.add(new Directory("G"));
-
-        fileSystemModelA = new FileSystemModel();
-        sameFileSystemModelA = new FileSystemModel();
-        fileSystemModelA.add(A);
-        fileSystemModelA.add(B);
-        fileSystemModelA.add(C);
-
-        sameFileSystemModelA.add(A);
-        sameFileSystemModelA.add(B);
-        sameFileSystemModelA.add(C);
-
-        fileSystemModelB = new FileSystemModel();
+        fileSystem.add(A);
     }
-
     @AfterEach
     public void clear(){
-        fileSystemModelA = null;
-        sameFileSystemModelA = null;
-        fileSystemModelB = null;
+        fileSystem = null;
+        A = null;
     }
-
     @Test
     public void testEqualsWithSameInstance() {
-        assertTrue(fileSystemModelA.equals(fileSystemModelA));
+        assertTrue(fileSystem.equals(fileSystem));
     }
-
     @Test
     public void testEqualsWithEqualInstances() {
-        assertTrue(fileSystemModelA.equals(sameFileSystemModelA));
+        FileSystemInterface sameFileSystemModelA = new FileSystemModel();
+        sameFileSystemModelA.add(A);
+        assertTrue(fileSystem.equals(sameFileSystemModelA));
     }
-
     @Test
     public void testEqualsWithDifferentInstances() {
-        assertFalse(fileSystemModelA.equals(fileSystemModelB));
+        FileSystemInterface fileSystemModelB = new FileSystemModel();
+        assertFalse(fileSystem.equals(fileSystemModelB));
     }
-
-    /*
-    @Test
-    public void testIterate(){
-        Directory N = new Directory("N");
-        fileSystemModelA.add(N);
-
-        Directory root = fileSystemModelA.getRoot();
-        Directory cur = fileSystemModelA.getCur();
-
-        //test absolute path corretto:
-        String absolutePath = "/N";
-        List<String> orderedAbsolutePath = fileSystemModelA.getOrderedAbsolutePath(absolutePath);
-        assertEquals(N, fileSystemModelA.iterate(root, orderedAbsolutePath));
-
-        //test relative path corretto:
-        String relativePath = "N";
-        List<String> orderedRelativePath = fileSystemModelA.getOrderedRelativePath(relativePath);
-        assertEquals(N, fileSystemModelA.iterate(cur, orderedRelativePath));
-
-        //test dell'exception, absolute path sbagliato:
-        String wrongAbsolutePath = "/W";
-        List<String> orderedWrongPath = fileSystemModelA.getOrderedAbsolutePath(wrongAbsolutePath);
-        ApplicationBaseException ex = assertThrows(DirectoryNotFound.class, () -> fileSystemModelA.iterate(root, orderedWrongPath));
-        assertEquals(String.format(Localization.getSingleton().localize("DirectoryNotFound"), orderedWrongPath.get(orderedWrongPath.size()-1), orderedWrongPath),
-                new Response(ex.getKey(), ex.getAdditionalParameters()).localize());
-
-        //test dell'exception, relative path sbagliato:
-        String wrongRelativePath = "Y";
-        List<String> orderedWrongRelativePath = fileSystemModelA.getOrderedRelativePath(wrongRelativePath);
-        ex = assertThrows(DirectoryNotFound.class, () -> fileSystemModelA.iterate(cur, orderedWrongRelativePath));
-        assertEquals(String.format(Localization.getSingleton().localize("DirectoryNotFound"), orderedWrongRelativePath.get(orderedWrongRelativePath.size()-1), orderedWrongRelativePath),
-                new Response(ex.getKey(), ex.getAdditionalParameters()).localize());
-    }
-
-
-     */
-
-    //testare ancora
-    @Test
-    public void testCd() {
-       // final String res = fileSystemModelA.cd(fileSystemModelA.getSeparator() + "A").getName();
-       // assertEquals("A", res);
-
-        //testare il lancio dell'exception nel caso non esista la cartella di destinazione
-    }
-
-    @Test
-    public void testPwd() {
-        // Initially pwd should return the root
-        assertEquals("Current working directory: " + fileSystemModelA.getSeparator(), fileSystemModelA.pwd().localize());
-        fileSystemModelA.cd("A");
-        assertEquals("Current working directory: " + fileSystemModelA.getSeparator()+ "A", fileSystemModelA.pwd().localize());
-        fileSystemModelA.cd("D");
-        assertEquals("Current working directory: " + fileSystemModelA.getSeparator() + "A" + fileSystemModelA.getSeparator() + "D", fileSystemModelA.pwd().localize());
-    }
-
     @Test
     public void testConstructor() {
-        final Directory root = fileSystemModelA.getRoot();
+        final Directory root = fileSystem.getRoot();
         assertNotNull(root);
-        assertEquals(3, root.getDir().size());
-        assertEquals(root.getDir().size(), sameFileSystemModelA.getRoot().getDir().size());
+        assertEquals(1, root.getDir().size());
+        assertEquals(root.getDir().size(), fileSystem.getRoot().getDir().size());
     }
-
+    @Test
+    public void testCd() {
+        final String message = String.format(Localization.getSingleton().localize("command.cd.success"),  "A");
+        final String res = fileSystem.cd(fileSystem.getSeparator() + "A").localize();
+        assertEquals(message, res);
+    }
+    @Test
+    public void testPwd() {
+        String message = String.format(Localization.getSingleton().localize("command.pwd"), fileSystem.getSeparator());
+        assertEquals(message, fileSystem.pwd().localize());
+        fileSystem.cd("A");
+        message += "A";
+        assertEquals(message, fileSystem.pwd().localize());
+        fileSystem.cd("D");
+        message += fileSystem.getSeparator() + "D";
+        assertEquals(message, fileSystem.pwd().localize());
+    }
     @Test
     public void testMkdir(){
         final String nomeCartella = "H";
-        fileSystemModelA.cd(fileSystemModelA.getSeparator() + "C");
-        fileSystemModelA.mkdir(nomeCartella);
-        assertEquals(fileSystemModelA.search(nomeCartella), new Directory(nomeCartella));
-    }
+        fileSystem.cd(fileSystem.getSeparator() + "A");
+        assertEquals(String.format(Localization.getSingleton().localize("command.mkdir"),nomeCartella), fileSystem.mkdir(nomeCartella).localize());
 
+        fileSystem.cd(fileSystem.getSeparator() + "A" + fileSystem.getSeparator() + nomeCartella);
+        final String destinazion = fileSystem.getSeparator()+"A"+fileSystem.getSeparator()+nomeCartella+fileSystem.getSeparator()+"B";
+        assertEquals(String.format(Localization.getSingleton().localize("command.mkdir"),"B"), fileSystem.mkdir(destinazion).localize());
+    }
     @Test
     public void testLs(){
-        FileSystemInterface fileSystemToTest = new FileSystemModel();
-        fileSystemToTest.mkdir("A");
-        fileSystemToTest.mkdir("B");
-        fileSystemToTest.mkdir("C");
-        assertEquals("Content of current directory: A B C", fileSystemToTest.ls().localize());
+        final String message = String.format(Localization.getSingleton().localize("command.ls.success"),  "A B C");
+        fileSystem.mkdir("B");
+        fileSystem.mkdir("C");
+        assertEquals(message, fileSystem.ls().localize());
     }
-
     @Test
     public void testSize(){
-        assertEquals(3, fileSystemModelA.getRoot().getDir().size());
+        assertEquals(1, fileSystem.getRoot().getDir().size());
     }
-
     @Test
     public void testSearch(){
-        final String absolutePath = fileSystemModelA.getSeparator() + "B" + fileSystemModelA.getSeparator() + "F";
-        final String wrongAbsolutePath = fileSystemModelA.getSeparator() + "B" + fileSystemModelA.getSeparator() + "X";
-        final String relativePath = "B" + fileSystemModelA.getSeparator() + "F";
+        A.add(new Directory("F"));
+        final String absolutePath = fileSystem.getSeparator() + "A" + fileSystem.getSeparator() + "F";
+        final String wrongAbsolutePath = fileSystem.getSeparator() + "A" + fileSystem.getSeparator() + "X";
+        final String relativePath = "A" + fileSystem.getSeparator() + "F";
         final Directory expectedF = new Directory("F");
-        assertEquals(expectedF, fileSystemModelA.search(absolutePath));
-        assertEquals(expectedF, fileSystemModelA.search(relativePath));
-        assertThrows(DirectoryNotFound.class, () -> fileSystemModelA.search(wrongAbsolutePath));
+        assertEquals(expectedF, fileSystem.search(absolutePath));
+        assertEquals(expectedF, fileSystem.search(relativePath));
+        assertThrows(DirectoryNotFound.class, () -> fileSystem.search(wrongAbsolutePath));
     }
-
     @Test
     public void testRm(){
-        FileSystemInterface fileSystemToTest = new FileSystemModel();
-        fileSystemToTest.mkdir("G");
-        fileSystemToTest.mkdir("H");
-        fileSystemToTest.mkdir("I");
-        fileSystemToTest.rm(fileSystemToTest.getSeparator() + "G");
-        assertEquals("Content of current directory: H I", fileSystemToTest.ls().localize());
+        assertEquals(String.format(Localization.getSingleton().localize("command.rm.root"), fileSystem.getSeparator()), fileSystem.rm(fileSystem.getSeparator()).localize());
 
-        fileSystemToTest.cd(fileSystemToTest.getSeparator() + "H");
-        fileSystemToTest.mkdir("T");
-        fileSystemToTest.rm("T");
-        assertEquals("Content of current directory: ", fileSystemToTest.ls().localize());
+        fileSystem.mkdir("G");
+        assertEquals(String.format(Localization.getSingleton().localize("command.rm.success"), "G"), fileSystem.rm(fileSystem.getSeparator() + "G").localize());
 
-        fileSystemToTest.rm(fileSystemToTest.getSeparator() + "H");
-        assertEquals("Content of current directory: ", fileSystemToTest.ls().localize());
+        fileSystem.mkdir("H");
+        fileSystem.cd(fileSystem.getSeparator() + "H");
+        assertEquals(Localization.getSingleton().localize("command.rm.failed"), fileSystem.rm(fileSystem.getSeparator() + "H").localize());
 
-        fileSystemToTest.cd(fileSystemToTest.getSeparator());
-        fileSystemToTest.rm(fileSystemToTest.getSeparator() + "H");
-        assertEquals("Content of current directory: I", fileSystemToTest.ls().localize());
+        fileSystem.mkdir("T");
+        fileSystem.cd(fileSystem.getSeparator() + "H"+fileSystem.getSeparator() + "T");
+        assertEquals(Localization.getSingleton().localize("command.rm.failed"), fileSystem.rm(fileSystem.getSeparator() + "H").localize());
 
-        fileSystemToTest.cd(fileSystemToTest.getSeparator() + "I");
-        fileSystemToTest.mkdir("O");
-        assertEquals(String.format(Localization.getSingleton().localize("command.rm.failed")), fileSystemToTest.rm(fileSystemToTest.getSeparator() + "I").localize());
-        assertEquals("Content of current directory: O", fileSystemToTest.ls().localize());
-
-        fileSystemToTest.cd(fileSystemToTest.getSeparator() + "I" + fileSystemToTest.getSeparator() + "O");
-        fileSystemToTest.rm(fileSystemToTest.getSeparator() + "I");
-        fileSystemToTest.cd(fileSystemToTest.getSeparator() + "I");
-        assertEquals("Content of current directory: O", fileSystemToTest.ls().localize());
     }
-
     @Test
     public void testMv() {
-
-        FileSystemInterface fileSystem = new FileSystemModel();
-        Directory A = new Directory("A");
         Directory B = new Directory("B");
         Directory C = new Directory("C");
-        B.add(new Directory("E"));
-        B.add(new Directory("F"));
-        C.add(new Directory("D"));
-        fileSystem = new FileSystemModel();
-        fileSystem.add(A);
         fileSystem.add(B);
         fileSystem.add(C);
+        String originPath = fileSystem.getSeparator();
+        String destinationPath = fileSystem.getSeparator()+"C";
 
-        String originPath = "/A/D";
-        String destinationPath = "/C";
+        assertEquals(Localization.getSingleton().localize("command.mv.root"), fileSystem.mv(originPath, destinationPath).localize());
 
-        assertEquals(String.format(Localization.getSingleton().localize("command.mv.success"), originPath, destinationPath), fileSystemModelA.mv(originPath, destinationPath).localize());
+        originPath = "B";
+        assertEquals(String.format(Localization.getSingleton().localize("command.mv.success"),"B",destinationPath ), fileSystem.mv(originPath, destinationPath).localize());
 
+        fileSystem.cd(fileSystem.getSeparator()+"A");
+        originPath = fileSystem.getSeparator()+"A";
+        assertEquals(Localization.getSingleton().localize("command.mv.failed.current"), fileSystem.mv(originPath, destinationPath).localize());
+
+        fileSystem.cd(fileSystem.getSeparator()+"A"+fileSystem.getSeparator()+"D");
+        assertEquals(Localization.getSingleton().localize("command.mv.failed.descendant"), fileSystem.mv(originPath, destinationPath).localize());
+
+        fileSystem.cd(fileSystem.getSeparator()+"A");
+        originPath = fileSystem.getSeparator()+"A"+fileSystem.getSeparator()+"D";
+        assertEquals(String.format(Localization.getSingleton().localize("command.mv.success"),originPath,destinationPath ), fileSystem.mv(originPath, destinationPath).localize());
     }
 }
