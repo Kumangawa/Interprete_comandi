@@ -14,7 +14,11 @@ public class MainFxMkdirCommandTest  extends AbstractMainGUITest {
     public void testMkdirCommand() {
         String lettera = "A";
         String a = String.format(Localization.getSingleton().localize("command.mkdir"),lettera) +"\n";
-        step("Test command mkdir", () -> {
+        String path = "/A/B";
+        String secondLetter = "B";
+        String b = String.format(Localization.getSingleton().localize("command.mkdir"),secondLetter) +"\n";
+
+        step("Test command mkdir, relative path", () -> {
             interact(() -> {
                 TextField commandTextField = lookup("#commandTextField").query();
                 commandTextField.setText("mkdir "+lettera);
@@ -24,5 +28,16 @@ public class MainFxMkdirCommandTest  extends AbstractMainGUITest {
             verifyThat("#commandTextField", TextInputControlMatchers.hasText(""));
             verifyThat("#outputArea", TextInputControlMatchers.hasText(a));
         });
+
+        step("Test command mkdir, absolute path", () -> {
+            interact(() -> {
+                TextField commandTextField = lookup("#commandTextField").query();
+                commandTextField.setText("mkdir "+path);
+            });
+            sleep(SLEEP_INTERVAL);
+            interact(() -> type(ENTER));
+            verifyThat("#commandTextField", TextInputControlMatchers.hasText(""));
+            verifyThat("#outputArea", TextInputControlMatchers.hasText(a+b));});
+        }
     }
-}
+
