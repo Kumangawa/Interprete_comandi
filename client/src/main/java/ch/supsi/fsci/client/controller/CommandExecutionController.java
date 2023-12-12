@@ -27,7 +27,7 @@ public class CommandExecutionController {
     public void initialize() {
         textField.setOnAction(event -> {
             final String input = textField.getText();
-            if (input.equals("clear")) {
+            if (input.equals("clear") || input.startsWith("clear ")) {
                 outputArea.clear();
                 textField.clear();
                 return;

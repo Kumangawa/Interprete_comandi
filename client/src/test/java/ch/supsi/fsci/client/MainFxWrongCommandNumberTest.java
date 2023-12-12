@@ -15,7 +15,6 @@ public class MainFxWrongCommandNumberTest extends AbstractMainGUITest{
     @Test
     public void testWrongCommandNumber() {
         testCd();
-        //testClear();
         testHelp();
         testLs();
         testMkdir();
@@ -48,23 +47,6 @@ public class MainFxWrongCommandNumberTest extends AbstractMainGUITest{
             verifyThat("#outputArea", TextInputControlMatchers.hasText(output));
         });
     }
-
-    // Clear is not part of "normal" commands, should this be deleted?
-    // e.g. "clear blabla" works fine (same as Windows' CMD)
-    /*
-    private void testClear() {
-        output += String.format(Localization.getSingleton().localize("WrongCommand.ArgumentNumberException"), "clear",0,1,"clear")+ "\n";
-        step("Clear too many arguments", () -> {
-            interact(() -> {
-                TextField commandTextField = lookup("#commandTextField").query();
-                commandTextField.setText("clear uno");
-            });
-            sleep(SLEEP_INTERVAL);
-            interact(() -> type(ENTER));
-            verifyThat("#commandTextField", TextInputControlMatchers.hasText(""));
-            verifyThat("#outputArea", TextInputControlMatchers.hasText(output));
-        });
-    }*/
 
     private void testHelp() {
         output += String.format(Localization.getSingleton().localize("WrongCommand.ArgumentNumberException"), "help",0,1,"help")+ "\n";

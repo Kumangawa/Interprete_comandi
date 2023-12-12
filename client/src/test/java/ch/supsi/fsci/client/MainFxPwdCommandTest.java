@@ -1,6 +1,7 @@
 package ch.supsi.fsci.client;
 
 import ch.supsi.fsci.engine.Localization;
+import ch.supsi.fsci.engine.Model.FileSystemModel;
 import javafx.scene.control.TextField;
 import org.junit.jupiter.api.Test;
 import org.testfx.matcher.control.TextInputControlMatchers;
@@ -12,7 +13,8 @@ public class MainFxPwdCommandTest  extends AbstractMainGUITest {
 
     @Test
     public void testPwdCommand() {
-        String a = String.format(Localization.getSingleton().localize("command.pwd"), '/') + "\n";
+        FileSystemModel fileSystemModel = new FileSystemModel();
+        String a = String.format(Localization.getSingleton().localize("command.pwd"), fileSystemModel.getSeparator()) + "\n";
 
         step("Test command pwd in root", () -> {
             interact(() -> {
@@ -29,7 +31,7 @@ public class MainFxPwdCommandTest  extends AbstractMainGUITest {
         String lettera = "A";
         String b = String.format(Localization.getSingleton().localize("command.mkdir"), lettera) +"\n";
         String c = String.format(Localization.getSingleton().localize("command.cd.success"), lettera) +"\n";
-        String d = String.format(Localization.getSingleton().localize("command.pwd"), '/') +lettera +"\n";
+        String d = String.format(Localization.getSingleton().localize("command.pwd"), fileSystemModel.getSeparator()+lettera) +"\n";
 
         step("Test command pwd in "+lettera, () -> {
             interact(() -> {

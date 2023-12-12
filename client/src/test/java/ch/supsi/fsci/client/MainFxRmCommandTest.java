@@ -1,6 +1,7 @@
 package ch.supsi.fsci.client;
 
 import ch.supsi.fsci.engine.Localization;
+import ch.supsi.fsci.engine.Model.FileSystemModel;
 import javafx.scene.control.TextField;
 import org.junit.jupiter.api.Test;
 import org.testfx.matcher.control.TextInputControlMatchers;
@@ -13,13 +14,15 @@ public class MainFxRmCommandTest  extends AbstractMainGUITest  {
     @Test
     public void
     testRmCommand() {
+        FileSystemModel fileSystemModel = new FileSystemModel();
+        String separator = fileSystemModel.getSeparator();
         String lettera = "A";
         String a = String.format(Localization.getSingleton().localize("command.mkdir"), lettera)+"\n";
         String b = String.format(Localization.getSingleton().localize("command.rm.success"), lettera) + "\n";
         String c = String.format(Localization.getSingleton().localize("command.mkdir"), lettera) +"\n";
         String d = String.format(Localization.getSingleton().localize("command.cd.success"), lettera) +"\n";
         String e = String.format(Localization.getSingleton().localize("command.rm.failed")) +"\n";
-        String f = String.format(Localization.getSingleton().localize("command.rm.root"), "/") +"\n";
+        String f = String.format(Localization.getSingleton().localize("command.rm.root"), separator) +"\n";
         step("Test command rm, create " + lettera + " and then remove it", () -> {
             interact(() -> {
                 TextField commandTextField = lookup("#commandTextField").query();
@@ -62,7 +65,7 @@ public class MainFxRmCommandTest  extends AbstractMainGUITest  {
 
             interact(() -> {
                 TextField commandTextField = lookup("#commandTextField").query();
-                commandTextField.setText("rm /"+lettera);
+                commandTextField.setText("rm "+ separator+lettera);
             });
             sleep(SLEEP_INTERVAL);
             interact(() -> type(ENTER));
@@ -73,7 +76,7 @@ public class MainFxRmCommandTest  extends AbstractMainGUITest  {
         step("Test command rm, try to remove root", () -> {
             interact(() -> {
                 TextField commandTextField = lookup("#commandTextField").query();
-                commandTextField.setText("rm /");
+                commandTextField.setText("rm "+separator);
             });
             sleep(SLEEP_INTERVAL);
             interact(() -> type(ENTER));

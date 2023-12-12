@@ -1,6 +1,7 @@
 package ch.supsi.fsci.client;
 
 import ch.supsi.fsci.engine.Localization;
+import ch.supsi.fsci.engine.Model.FileSystemModel;
 import javafx.scene.control.TextField;
 import org.junit.jupiter.api.Test;
 import org.testfx.matcher.control.TextInputControlMatchers;
@@ -12,9 +13,11 @@ public class MainFxMkdirCommandTest  extends AbstractMainGUITest {
 
     @Test
     public void testMkdirCommand() {
+        FileSystemModel fileSystemModel = new FileSystemModel();
+        String separator = fileSystemModel.getSeparator();
         String lettera = "A";
         String a = String.format(Localization.getSingleton().localize("command.mkdir"),lettera) +"\n";
-        String path = "/A/B";
+        String path = separator+"A" + separator +"B";
         String secondLetter = "B";
         String b = String.format(Localization.getSingleton().localize("command.mkdir"),secondLetter) +"\n";
 
@@ -37,7 +40,8 @@ public class MainFxMkdirCommandTest  extends AbstractMainGUITest {
             sleep(SLEEP_INTERVAL);
             interact(() -> type(ENTER));
             verifyThat("#commandTextField", TextInputControlMatchers.hasText(""));
-            verifyThat("#outputArea", TextInputControlMatchers.hasText(a+b));});
-        }
+            verifyThat("#outputArea", TextInputControlMatchers.hasText(a+b));
+        });
     }
+}
 

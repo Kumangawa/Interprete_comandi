@@ -13,7 +13,6 @@ public class Response {
         final String localizedMessage = Localization.getSingleton().localize(key);
 
         if (additionalParameters != null && additionalParameters.length > 0) {
-            System.out.println(localizedMessage);
             return String.format(localizedMessage, (Object[]) additionalParameters);
         }
 

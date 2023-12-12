@@ -1,6 +1,7 @@
 package ch.supsi.fsci.client;
 
 import ch.supsi.fsci.engine.Localization;
+import ch.supsi.fsci.engine.Model.FileSystemModel;
 import javafx.scene.control.TextField;
 import org.junit.jupiter.api.Test;
 import org.testfx.matcher.control.TextInputControlMatchers;
@@ -12,6 +13,8 @@ public class MainFxMvCommandTest  extends AbstractMainGUITest {
 
     @Test
     public void testMvCommand() {
+        FileSystemModel fileSystemModel = new FileSystemModel();
+        String separator = fileSystemModel.getSeparator();
         String primaLettera = "A";
         String a = String.format(Localization.getSingleton().localize("command.mkdir"),primaLettera)+"\n";
         String secondaLettera = "B";
@@ -41,7 +44,7 @@ public class MainFxMvCommandTest  extends AbstractMainGUITest {
 
             interact(() -> {
                 TextField commandTextField = lookup("#commandTextField").query();
-                commandTextField.setText("mv / /" + secondaLettera);
+                commandTextField.setText("mv " + separator + " " + separator+ secondaLettera);
             });
             sleep(SLEEP_INTERVAL);
             interact(() -> type(ENTER));
@@ -61,7 +64,7 @@ public class MainFxMvCommandTest  extends AbstractMainGUITest {
         });
 
         String terzaLettera = "C";
-        String destinationPath = "/C";
+        String destinationPath = separator + "C";
         String e = String.format(Localization.getSingleton().localize("command.mkdir"),terzaLettera)+"\n";
         String f = String.format(Localization.getSingleton().localize("command.cd.success"), primaLettera) +"\n";
         String g = d+e+f+Localization.getSingleton().localize("command.mv.failed.current") + "\n";
@@ -87,7 +90,7 @@ public class MainFxMvCommandTest  extends AbstractMainGUITest {
 
             interact(() -> {
                 TextField commandTextField = lookup("#commandTextField").query();
-                commandTextField.setText("mv /"+ primaLettera + " "+ destinationPath);
+                commandTextField.setText("mv "+ separator + primaLettera + " "+ destinationPath);
             });
             sleep(SLEEP_INTERVAL);
             interact(() -> type(ENTER));
@@ -101,7 +104,7 @@ public class MainFxMvCommandTest  extends AbstractMainGUITest {
         step("Test command mv, move in " + secondaLettera + " and try to move " + primaLettera + " in "+ terzaLettera, () -> {
             interact(() -> {
                 TextField commandTextField = lookup("#commandTextField").query();
-                commandTextField.setText("cd /"+primaLettera + "/"+secondaLettera);
+                commandTextField.setText("cd "+ separator+ primaLettera+ separator+ secondaLettera);
             });
             sleep(SLEEP_INTERVAL);
             interact(() -> type(ENTER));
@@ -110,7 +113,7 @@ public class MainFxMvCommandTest  extends AbstractMainGUITest {
 
             interact(() -> {
                 TextField commandTextField = lookup("#commandTextField").query();
-                commandTextField.setText("mv /"+ primaLettera + " "+ destinationPath);
+                commandTextField.setText("mv "+ separator+ primaLettera+ " "+ destinationPath);
             });
             sleep(SLEEP_INTERVAL);
             interact(() -> type(ENTER));
@@ -119,13 +122,13 @@ public class MainFxMvCommandTest  extends AbstractMainGUITest {
         });
 
         String l = String.format(Localization.getSingleton().localize("command.cd.success"), primaLettera) +"\n";
-        String path = "/"+ primaLettera + "/"+ secondaLettera;
+        String path = separator+ primaLettera + separator+ secondaLettera;
         String m = i+l+String.format(Localization.getSingleton().localize("command.mv.success"),path,destinationPath )+"\n";
 
         step("Test command mv, move in " + primaLettera + " and try to move " + secondaLettera + " in "+ terzaLettera, () -> {
             interact(() -> {
                 TextField commandTextField = lookup("#commandTextField").query();
-                commandTextField.setText("cd /"+primaLettera);
+                commandTextField.setText("cd "+separator+primaLettera);
             });
             sleep(SLEEP_INTERVAL);
             interact(() -> type(ENTER));

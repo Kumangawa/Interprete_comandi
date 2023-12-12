@@ -17,7 +17,7 @@ public class MainFxDirectoryNotFoundTest extends AbstractMainGUITest{
         step("Test directory not found", () -> {
             interact(() -> {
                 TextField commandTextField = lookup("#commandTextField").query();
-                commandTextField.setText("cd /"+lettera);
+                commandTextField.setText("cd "+lettera);
             });
             sleep(SLEEP_INTERVAL);
             interact(() -> type(ENTER));
