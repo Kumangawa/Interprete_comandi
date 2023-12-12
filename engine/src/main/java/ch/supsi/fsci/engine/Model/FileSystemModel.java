@@ -20,7 +20,7 @@ public class FileSystemModel implements FileSystemInterface {
         this.cur = root;
     }
 
-    private boolean isAbsolutePath(final String path){
+    private boolean isAbsolutePath(final String path) {
         return path.startsWith(separator);
     }
 
@@ -46,16 +46,16 @@ public class FileSystemModel implements FileSystemInterface {
     }
 
 
-    private List<String> getOrderedAbsolutePath(final String absolutePath){
+    private List<String> getOrderedAbsolutePath(final String absolutePath) {
         return (Arrays.stream(absolutePath.split(separator)).skip(1).toList());
     }
 
-    private List<String> getOrderedRelativePath(final String relativePath){
+    private List<String> getOrderedRelativePath(final String relativePath) {
         return (Arrays.stream(relativePath.split(separator)).toList());
     }
 
-    public Directory search(final String path){
-        if(isAbsolutePath(path)) {
+    public Directory search(final String path) {
+        if (isAbsolutePath(path)) {
             List<String> orderedPath = getOrderedAbsolutePath(path);
             return iterate(root, orderedPath);
         } else {
@@ -72,6 +72,7 @@ public class FileSystemModel implements FileSystemInterface {
             return new Response(e.getKey(), e.getAdditionalParameters());
         }
     }
+
     public Response pwd() {
         final StringBuilder stringBuilder = new StringBuilder("");
         Directory currentDirectory = cur;
@@ -80,20 +81,32 @@ public class FileSystemModel implements FileSystemInterface {
             stringBuilder.insert(0, (currentDirectory != root ? separator : "") + currentDirectory.getName());
             currentDirectory = getParentDirectory(currentDirectory);
         }
+        if(stringBuilder.length() > 1){
+            stringBuilder.deleteCharAt(0);
+        }
 
         return new Response("command.pwd", stringBuilder.toString());
     }
 
     private Directory getParentDirectory(final Directory directory) {
-        if (directory == root) {
-            return null;
+        return (directory == root) ? null : findParentDirectory(root, directory);
+    }
+
+    private Directory findParentDirectory(Directory current, Directory target) {
+        if (current.getDir().contains(target)) {
+            return current;
         }
-        for (final Directory subDir : root.getDir()) {
-            if (subDir.getDir().contains(directory)) {
-                return subDir;
+
+
+        for (Directory subDir : current.getDir()) {
+            Directory result = findParentDirectory(subDir, target);
+            if (result != null) {
+                return result;
             }
         }
+
         return null;
+
     }
 
     public Response mkdir(String folderName) {
@@ -121,34 +134,27 @@ public class FileSystemModel implements FileSystemInterface {
 
     public Response mv(final String move, final String destination) {
         try {
-            // Verifica se il percorso di destinazione è la radice ("/")
             if (move.equals(separator)) {
                 return new Response("command.mv.root");
             }
 
-            // Cerca la directory di origine
             Directory sourceDir = search(move);
 
-            // Verifica se il percorso di destinazione è la cartella corrente
             if (move.equals(separator + cur.getName())) {
                 return new Response("command.mv.failed.current");
             }
 
-            // Cerca la directory di destinazione
             Directory destinationDir = search(destination);
 
-            // Verifica se il percorso di destinazione è una sottodirectory della directory di origine
             if (isDescendant(sourceDir, cur)) {
                 return new Response("command.mv.failed.descendant");
             }
 
-            // Rimuovi la directory di origine dal suo genitore
             Directory sourceParentDir = getParentDirectory(sourceDir);
             if (sourceParentDir == null) {
                 sourceParentDir = root;
             }
             sourceParentDir.getDir().remove(sourceDir);
-            // Aggiungi la directory di origine alla directory di destinazione
             destinationDir.getDir().add(sourceDir);
             return new Response("command.mv.success", move, destination);
 
