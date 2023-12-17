@@ -144,5 +144,51 @@ public class MainFxMvCommandTest  extends AbstractMainGUITest {
             verifyThat("#commandTextField", TextInputControlMatchers.hasText(""));
             verifyThat("#outputArea", TextInputControlMatchers.hasText(m));
         });
+
+        String q = String.format(Localization.getSingleton().localize("command.cd.success"), separator) +"\n";
+        String quartaLettera = "E";
+        String r = String.format(Localization.getSingleton().localize("command.mkdir"),quartaLettera)+"\n";
+        String pathToSecondaLettera = separator+ quartaLettera + separator+ secondaLettera;
+        String s = String.format(Localization.getSingleton().localize("command.mkdir"),secondaLettera)+"\n";
+        String t = m+q+r+s+Localization.getSingleton().localize("command.mv.failed.samename")+"\n";
+
+
+        step("Test command mv, move in " + separator + " and try to move " + pathToSecondaLettera + " in "+ terzaLettera, () -> {
+            interact(() -> {
+                TextField commandTextField = lookup("#commandTextField").query();
+                commandTextField.setText("cd "+separator);
+            });
+            sleep(SLEEP_INTERVAL);
+            interact(() -> type(ENTER));
+            verifyThat("#commandTextField", TextInputControlMatchers.hasText(""));
+            verifyThat("#outputArea", TextInputControlMatchers.hasText(m+q));
+
+            interact(() -> {
+                TextField commandTextField = lookup("#commandTextField").query();
+                commandTextField.setText("mkdir " + quartaLettera);
+            });
+            sleep(SLEEP_INTERVAL);
+            interact(() -> type(ENTER));
+            verifyThat("#commandTextField", TextInputControlMatchers.hasText(""));
+            verifyThat("#outputArea", TextInputControlMatchers.hasText(m+q+r));
+
+            interact(() -> {
+                TextField commandTextField = lookup("#commandTextField").query();
+                commandTextField.setText("mkdir " + pathToSecondaLettera);
+            });
+            sleep(SLEEP_INTERVAL);
+            interact(() -> type(ENTER));
+            verifyThat("#commandTextField", TextInputControlMatchers.hasText(""));
+            verifyThat("#outputArea", TextInputControlMatchers.hasText(m+q+r+s));
+
+            interact(() -> {
+                TextField commandTextField = lookup("#commandTextField").query();
+                commandTextField.setText("mv " + pathToSecondaLettera + " " + destinationPath);
+            });
+            sleep(SLEEP_INTERVAL);
+            interact(() -> type(ENTER));
+            verifyThat("#commandTextField", TextInputControlMatchers.hasText(""));
+            verifyThat("#outputArea", TextInputControlMatchers.hasText(t));
+        });
     }
 }

@@ -66,19 +66,24 @@ public class FileSystemTest {
     }
     @Test
     public void testMkdir(){
-        final String nomeCartella = "H";
-        fileSystem.cd(fileSystem.getSeparator() + "A");
-        assertEquals(String.format(Localization.getSingleton().localize("command.mkdir"),nomeCartella), fileSystem.mkdir(nomeCartella).localize());
+        assertEquals(Localization.getSingleton().localize("command.mkdir.failed.samename"), fileSystem.mkdir("A").localize());
 
-        fileSystem.cd(fileSystem.getSeparator() + "A" + fileSystem.getSeparator() + nomeCartella);
-        final String destinazion = fileSystem.getSeparator()+"A"+fileSystem.getSeparator()+nomeCartella+fileSystem.getSeparator()+"B";
-        assertEquals(String.format(Localization.getSingleton().localize("command.mkdir"),"B"), fileSystem.mkdir(destinazion).localize());
+        final String nameFirstDir = "H";
+        fileSystem.cd(fileSystem.getSeparator() + "A");
+        assertEquals(String.format(Localization.getSingleton().localize("command.mkdir"),nameFirstDir), fileSystem.mkdir(nameFirstDir).localize());
+
+        final String nameSecondDir = "B";
+        fileSystem.cd(fileSystem.getSeparator() + "A" + fileSystem.getSeparator() + nameFirstDir);
+        final String destinazion = fileSystem.getSeparator()+"A"+fileSystem.getSeparator()+nameFirstDir+fileSystem.getSeparator()+nameSecondDir;
+        assertEquals(String.format(Localization.getSingleton().localize("command.mkdir"),nameSecondDir), fileSystem.mkdir(destinazion).localize());
+
+        assertEquals(Localization.getSingleton().localize("command.mkdir.failed.samename"), fileSystem.mkdir(destinazion).localize());
     }
     @Test
     public void testLs(){
-        final String message = String.format(Localization.getSingleton().localize("command.ls.success"),  "A B C");
         fileSystem.mkdir("B");
         fileSystem.mkdir("C");
+        final String message = String.format(Localization.getSingleton().localize("command.ls.success"),  "A B C");
         assertEquals(message, fileSystem.ls().localize());
     }
     @Test
@@ -89,8 +94,8 @@ public class FileSystemTest {
     public void testSearch(){
         A.add(new Directory("F"));
         final String absolutePath = fileSystem.getSeparator() + "A" + fileSystem.getSeparator() + "F";
-        final String wrongAbsolutePath = fileSystem.getSeparator() + "A" + fileSystem.getSeparator() + "X";
         final String relativePath = "A" + fileSystem.getSeparator() + "F";
+        final String wrongAbsolutePath = fileSystem.getSeparator() + "A" + fileSystem.getSeparator() + "X";
         final Directory expectedF = new Directory("F");
         assertEquals(expectedF, fileSystem.search(absolutePath));
         assertEquals(expectedF, fileSystem.search(relativePath));
@@ -110,14 +115,41 @@ public class FileSystemTest {
         fileSystem.mkdir("T");
         fileSystem.cd(fileSystem.getSeparator() + "H"+fileSystem.getSeparator() + "T");
         assertEquals(Localization.getSingleton().localize("command.rm.failed"), fileSystem.rm(fileSystem.getSeparator() + "H").localize());
-
     }
-    @Test
-    public void testMv() {
+
+    private void setUpMv(){
         Directory B = new Directory("B");
         Directory C = new Directory("C");
+        Directory D = new Directory("D");
+        Directory E = new Directory("E");
+        E.add(D);
         fileSystem.add(B);
         fileSystem.add(C);
+        fileSystem.add(E);
+    }
+    @Test
+    public void testMvRelativePath() {
+        setUpMv();
+        String originPath = fileSystem.getSeparator();
+        String destinationPath = "C";
+
+        assertEquals(Localization.getSingleton().localize("command.mv.root"), fileSystem.mv(originPath, destinationPath).localize());
+
+        originPath = "B";
+        assertEquals(String.format(Localization.getSingleton().localize("command.mv.success"),"B",destinationPath ), fileSystem.mv(originPath, destinationPath).localize());
+
+        fileSystem.cd(fileSystem.getSeparator()+"A");
+        destinationPath = fileSystem.getSeparator()+"C";
+        originPath = "D";
+        assertEquals(String.format(Localization.getSingleton().localize("command.mv.success"),originPath, destinationPath), fileSystem.mv(originPath, destinationPath).localize());
+
+        fileSystem.cd(fileSystem.getSeparator() + "E");
+        assertEquals(Localization.getSingleton().localize("command.mv.failed.samename"),fileSystem.mv(originPath, destinationPath).localize());
+    }
+
+    @Test
+    public void testMvAbsolutePath(){
+        setUpMv();
         String originPath = fileSystem.getSeparator();
         String destinationPath = fileSystem.getSeparator()+"C";
 
@@ -130,11 +162,15 @@ public class FileSystemTest {
         originPath = fileSystem.getSeparator()+"A";
         assertEquals(Localization.getSingleton().localize("command.mv.failed.current"), fileSystem.mv(originPath, destinationPath).localize());
 
+
         fileSystem.cd(fileSystem.getSeparator()+"A"+fileSystem.getSeparator()+"D");
         assertEquals(Localization.getSingleton().localize("command.mv.failed.descendant"), fileSystem.mv(originPath, destinationPath).localize());
 
         fileSystem.cd(fileSystem.getSeparator()+"A");
         originPath = fileSystem.getSeparator()+"A"+fileSystem.getSeparator()+"D";
-        assertEquals(String.format(Localization.getSingleton().localize("command.mv.success"),originPath,destinationPath ), fileSystem.mv(originPath, destinationPath).localize());
+        assertEquals(String.format(Localization.getSingleton().localize("command.mv.success"),originPath, destinationPath), fileSystem.mv(originPath, destinationPath).localize());
+
+        originPath = fileSystem.getSeparator()+"E"+fileSystem.getSeparator()+"D";
+        assertEquals(Localization.getSingleton().localize("command.mv.failed.samename"),fileSystem.mv(originPath, destinationPath).localize());
     }
 }

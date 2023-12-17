@@ -45,7 +45,6 @@ public class FileSystemModel implements FileSystemInterface {
         return curTemp;
     }
 
-
     private List<String> getOrderedAbsolutePath(final String absolutePath) {
         return (Arrays.stream(absolutePath.split(separator)).skip(1).toList());
     }
@@ -97,7 +96,6 @@ public class FileSystemModel implements FileSystemInterface {
             return current;
         }
 
-
         for (Directory subDir : current.getDir()) {
             Directory result = findParentDirectory(subDir, target);
             if (result != null) {
@@ -106,29 +104,28 @@ public class FileSystemModel implements FileSystemInterface {
         }
 
         return null;
-
     }
 
     public Response mkdir(String folderName) {
+        Directory parent;
         if (folderName.startsWith(separator)){
             String[] tmp = folderName.split(separator);
             String parentPath = String.join(separator, Arrays.copyOf(tmp, tmp.length - 1));
             folderName = tmp[tmp.length - 1];
 
-            Directory parent = search(parentPath);
-            parent.add(new Directory(folderName));
+            parent = search(parentPath);
         } else {
-            cur.add(new Directory(folderName));
+            parent = cur;
         }
+        if (searchContent(parent).toString().contains(folderName)){
+            return new Response("command.mkdir.failed.samename");
+        }
+        parent.add(new Directory(folderName));
         return new Response("command.mkdir", folderName);
     }
 
     public Response ls() {
-        final List<Directory> contenutoCur = cur.getDir();
-        StringBuilder content = new StringBuilder();
-        for (final Directory dir : contenutoCur) {
-            content.append(dir.getName()).append(" ");
-        }
+        StringBuilder content = searchContent(cur);
         return new Response("command.ls.success", content.toString().trim());
     }
 
@@ -138,14 +135,11 @@ public class FileSystemModel implements FileSystemInterface {
                 return new Response("command.mv.root");
             }
 
-            Directory sourceDir = search(move);
-
             if (move.equals(separator + cur.getName())) {
                 return new Response("command.mv.failed.current");
             }
 
-            Directory destinationDir = search(destination);
-
+            Directory sourceDir = search(move);
             if (isDescendant(sourceDir, cur)) {
                 return new Response("command.mv.failed.descendant");
             }
@@ -154,6 +148,12 @@ public class FileSystemModel implements FileSystemInterface {
             if (sourceParentDir == null) {
                 sourceParentDir = root;
             }
+
+            Directory destinationDir = search(destination);
+            if (searchContent(destinationDir).toString().contains(sourceDir.getName())) {
+                return new Response("command.mv.failed.samename");
+            }
+
             sourceParentDir.getDir().remove(sourceDir);
             destinationDir.getDir().add(sourceDir);
             return new Response("command.mv.success", move, destination);
@@ -161,6 +161,15 @@ public class FileSystemModel implements FileSystemInterface {
         } catch (DirectoryNotFound e) {
             return new Response(e.getKey(), e.getAdditionalParameters());
         }
+    }
+
+    private StringBuilder searchContent(Directory current){
+        final List<Directory> contenutoCur = current.getDir();
+        StringBuilder content = new StringBuilder();
+        for (final Directory dir : contenutoCur) {
+            content.append(dir.getName()).append(" ");
+        }
+        return content;
     }
 
     public Response rm(final String path) {
@@ -189,6 +198,7 @@ public class FileSystemModel implements FileSystemInterface {
     }
 
     private boolean isDescendant(Directory ancestor, Directory descendant) {
+
         while (descendant != null) {
             if (descendant == ancestor) {
                 return true;

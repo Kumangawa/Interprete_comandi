@@ -51,6 +51,12 @@ public class ResponseTest {
     }
 
     @Test
+    void testLocalizeCommandMkdirFailedSameName() {
+        Response response = new Response("command.mkdir.failed.samename");
+        assertEquals("Cannot create the directory because the destination directory already contains one with the same name", response.localize());
+    }
+
+    @Test
     void testLocalizeCommandRmRoot() {
         Response response = new Response("command.rm.root", "rootDir");
         assertEquals("rootDir cannot be eliminated", response.localize());
@@ -85,7 +91,13 @@ public class ResponseTest {
     @Test
     void testLocalizeCommandMvFailedDescendant() {
         Response response = new Response("command.mv.failed.descendant");
-        assertEquals("Cannot move the directory into one of its subdirectories.", response.localize());
+        assertEquals("Cannot move the directory into one of its subdirectories", response.localize());
+    }
+
+    @Test
+    void testLocalizeCommandMvFailedSameName() {
+        Response response = new Response("command.mv.failed.samename");
+        assertEquals("Cannot move the directory because the destination directory already contains one with the same name", response.localize());
     }
 
     @Test
