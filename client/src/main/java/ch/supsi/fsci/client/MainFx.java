@@ -1,5 +1,14 @@
 package ch.supsi.fsci.client;
 
+import ch.supsi.fsci.client.model.CommandExecutionModel;
+import ch.supsi.fsci.client.controller.CommandExecutionController;
+import ch.supsi.fsci.engine.Controller.FileSystemController;
+import ch.supsi.fsci.engine.Controller.PreferencesController;
+import ch.supsi.fsci.engine.Data.PreferencesData;
+import ch.supsi.fsci.engine.Model.FileSystemModel;
+import ch.supsi.fsci.engine.Interface.FileSystemInterface;
+import ch.supsi.fsci.engine.Localization;
+import ch.supsi.fsci.engine.Model.PreferencesModel;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -13,8 +22,9 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.stage.Stage;
 
-public class MainFx extends Application {
+import java.util.Locale;
 
+public class MainFx extends Application {
     private String applicationTitle;
     private Label commandLabel;
     private int prefCommandSpacerWidth;
@@ -24,19 +34,29 @@ public class MainFx extends Application {
     private int prefOutputAreaRowCount;
     private int prefInsetsSize;
 
-    public MainFx() {
+    public MainFx(){
+        PreferencesData preferencesData = new PreferencesData();
+        PreferencesModel preferencesModel = new PreferencesModel(preferencesData);
+        PreferencesController preferencesController = new PreferencesController(preferencesModel);
+
         this.applicationTitle = "command interpreter for fs simulator";
         this.commandLabel = new Label("command");
-        this.prefCommandSpacerWidth = 11;
+        this.commandLabel.setId("commandLabel");
         this.commandTextField = new TextField();
-        this.commandFieldPrefColumnCount = 80;
+        this.commandTextField.setId("commandTextField");
         this.outputArea = new TextArea();
-        this.prefOutputAreaRowCount = 25;
+        this.outputArea.setId("outputArea");
+
+        this.prefCommandSpacerWidth = 11;
         this.prefInsetsSize = 7;
+        Localization.getSingleton().initialize("i18n.translations", Locale.forLanguageTag(preferencesController.getPreference("language")));
+        this.commandFieldPrefColumnCount = Integer.parseInt(preferencesController.getPreference("commandFieldPrefColumnCount"));
+        this.prefOutputAreaRowCount = Integer.parseInt(preferencesController.getPreference("prefOutputAreaRowCount"));
+
     }
 
     @Override
-    public void start(Stage stage) throws Exception {
+    public void start(Stage stage){
         // spacer
         Region spacer = new Region();
         spacer.setPrefWidth(prefCommandSpacerWidth);
@@ -67,9 +87,20 @@ public class MainFx extends Application {
         BorderPane borderPane = new BorderPane();
         borderPane.setTop(commandLinePane);
         borderPane.setCenter(outputAreaPane);
+        borderPane.setId("borderPane");
 
         // scene
         Scene mainScene = new Scene(borderPane);
+
+        // FileSystemModel
+        final FileSystemInterface fileSystemModel = new FileSystemModel();
+        final FileSystemController fileSystemController = new FileSystemController(fileSystemModel);
+
+        // CommandDispatcher
+        final CommandExecutionModel commandExecutionModel = new CommandExecutionModel(fileSystemController);
+        commandExecutionModel.initializeAllCommands("ch.supsi.fsci.engine.CommandPattern.Commands");
+        final CommandExecutionController commandExecutionController = new CommandExecutionController(commandTextField, outputArea, commandExecutionModel);
+        commandExecutionController.initialize();
 
         // put the scene onto the primary stage
         stage.setTitle(applicationTitle);
