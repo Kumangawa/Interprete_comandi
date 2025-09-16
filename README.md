@@ -15,7 +15,7 @@ Already a pro? Just edit this README.md and make it your own. Want to make it ea
 
 ```
 cd existing_repo
-git remote add origin https://gitlab-edu.supsi.ch/dti-isin/labingsw/labingsw02/20232024/fsci/gruppo06.git
+git remote add origin https://github.com/Kumangawa/Interprete_comandi.git
 git branch -M main
 git push -uf origin main
 ```
